@@ -126,33 +126,35 @@
             margin-top: 1rem;
         }
         
+        /* Navigation Bar Styles */
         .navbar {
-            background-color: #4338ca;
+            background-color: #4338ca; /* Darker Indigo background for navbar */
             padding: 1rem 2rem;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             display: flex;
             justify-content: center;
-            flex-wrap: wrap;
-            gap: 1rem;
+            flex-wrap: wrap; /* Allow items to wrap on smaller screens */
+            gap: 1rem; /* Space between nav items */
         }
 
         .navbar a {
             color: white;
             text-decoration: none;
             padding: 0.75rem 1.5rem;
-            border-radius: 0.75rem;
+            border-radius: 0.75rem; /* Rounded corners for nav links */
             font-weight: 600;
-            transition: background-color 0.3s;
+            transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
         }
 
-        .navbar a.active {
-            font-weight: 700;
-            background-color: #6d28d9;
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
-        }
-        
         .navbar a:hover {
-            background-color: #5b21b6;
+            background-color: #4f46e5; /* Lighter indigo on hover */
+            transform: translateY(-2px);
+        }
+
+        .navbar a.active-nav {
+            background-color: #6d28d9; /* Purple for active link */
+            font-weight: 700;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
         }
 
 
@@ -168,9 +170,9 @@
 </head>
 <body>
     <nav class="navbar">
-        <a href="day1_intro.html">Day 1: Intro to CP</a>
-        <a href="java_basics.html">Day 2: Basic Java Syntax (Part 1)</a>
-        <a href="#" class="active">Day 2: Essential Constructs (Part 2)</a>
+        <a href="index.html" class="active-nav">Intro to CP</a>
+        <a href="java_basics.html">Java Basics</a>
+        <a href="java_basic_2.html">Java Basics II</a>
     </nav>
 
     <main class="content-area">

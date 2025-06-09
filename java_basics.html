@@ -124,7 +124,37 @@
             display: none; /* Hidden by default */
         }
         
-        .navbar { /* Styles from previous context */ }
+        /* Navigation Bar Styles */
+        .navbar {
+            background-color: #4338ca; /* Darker Indigo background for navbar */
+            padding: 1rem 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap; /* Allow items to wrap on smaller screens */
+            gap: 1rem; /* Space between nav items */
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem; /* Rounded corners for nav links */
+            font-weight: 600;
+            transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
+        }
+
+        .navbar a:hover {
+            background-color: #4f46e5; /* Lighter indigo on hover */
+            transform: translateY(-2px);
+        }
+
+        .navbar a.active-nav {
+            background-color: #6d28d9; /* Purple for active link */
+            font-weight: 700;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
 
         @media (max-width: 768px) {
             .content-area { padding: 1rem; }
@@ -137,9 +167,10 @@
     </style>
 </head>
 <body>
-    <nav class="navbar" style="background-color: #4338ca; padding: 1rem 2rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); display: flex; justify-content: center; flex-wrap: wrap; gap: 1rem;">
-        <a href="index.html" style="color: white; text-decoration: none; padding: 0.75rem 1.5rem; border-radius: 0.75rem; font-weight: 600;">Day 1: Intro to CP</a>
-        <a href="day2_java_basics.html" style="color: white; text-decoration: none; padding: 0.75rem 1.5rem; border-radius: 0.75rem; font-weight: 700; background-color: #6d28d9; box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);">Day 2: Basic Java Syntax</a>
+    <nav class="navbar">
+        <a href="index.html" class="active-nav">Intro to CP</a>
+        <a href="java_basics.html">Java Basics</a>
+        <a href="java_basic_2.html">Java Basics II</a>
     </nav>
 
     <main class="content-area">
@@ -375,8 +406,6 @@ System.out.println(fullGreeting);</pre>
 </pre>
             </div>
 
-            <h2>Wrap-up and Further Learning</h2>
-            <!-- ... Content for Wrap-up ... -->
         </div>
     </main>
 
