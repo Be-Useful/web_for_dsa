@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 2: Essential Java Constructs (Part 2)</title>
+    <!-- Tailwind CSS CDN for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Reusing styles from java_basics.html for perfect consistency */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f3f4f6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .content-area {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 2rem;
+            box-sizing: border-box;
+        }
+
+        .presentation-card {
+            background-color: #ffffff;
+            border-radius: 1.5rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            padding: 3rem;
+            width: 90%;
+            max-width: 960px;
+            box-sizing: border-box;
+        }
+
+        .presentation-card h1, .presentation-card h2, .presentation-card h3 {
+            color: #111827;
+            font-weight: 800;
+        }
+        
+        .presentation-card h2 { 
+            font-size: 2.25rem; 
+            margin-top: 3rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #e5e7eb;
+        }
+        .presentation-card h3 { 
+            font-size: 1.5rem; 
+            font-weight: 700; 
+            margin-top: 2.5rem; 
+            margin-bottom: 1rem; 
+            color: #1d4ed8;
+        }
+
+        .presentation-card p, .presentation-card li {
+            color: #374151;
+            line-height: 1.8;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+        
+        .presentation-card code {
+            background-color: #eef2ff;
+            color: #4338ca;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.375rem;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+            font-weight: 600;
+        }
+        
+        .presentation-card pre {
+            background-color: #1e293b;
+            color: #e2e8f0;
+            padding: 1.25rem;
+            border-radius: 0.75rem;
+            overflow-x: auto;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-top: 1rem;
+            border: 1px solid #334155;
+        }
+        
+        .presentation-card pre .code-comment { color: #94a3b8; font-style: italic; }
+        .presentation-card pre .code-keyword { color: #93c5fd; }
+        .presentation-card pre .code-string { color: #fde047; }
+        .presentation-card pre .code-class { color: #6ee7b7; }
+        .presentation-card pre .code-number { color: #fbbf24; }
+        .presentation-card pre .code-method { color: #c4b5fd; }
+
+        .presentation-card ul {
+            list-style-type: disc;
+            margin-left: 1.5rem;
+            padding-left: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .presentation-card ul li { margin-bottom: 0.75rem; }
+
+        .code-toggle-btn {
+            background-color: #4f46e5;
+            color: white;
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+            margin-top: 0.5rem;
+            margin-right: 0.5rem;
+        }
+        .code-toggle-btn:hover {
+            background-color: #4338ca;
+            transform: translateY(-1px);
+        }
+        
+        .code-block {
+            display: none; /* Hidden by default */
+            margin-top: 1rem;
+        }
+        
+        .navbar {
+            background-color: #4338ca;
+            padding: 1rem 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+
+        .navbar a.active {
+            font-weight: 700;
+            background-color: #6d28d9;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .navbar a:hover {
+            background-color: #5b21b6;
+        }
+
+
+        @media (max-width: 768px) {
+            .content-area { padding: 1rem; }
+            .presentation-card { padding: 1.5rem; width: 100%; }
+            .presentation-card h1 { font-size: 2.2rem; }
+            .presentation-card h2 { font-size: 1.8rem; }
+            .navbar { padding: 0.75rem 1rem; gap: 0.5rem; justify-content: flex-start; overflow-x: auto; }
+            .navbar a { padding: 0.6rem 1rem; font-size: 0.9rem; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="day1_intro.html">Day 1: Intro to CP</a>
+        <a href="java_basics.html">Day 2: Basic Java Syntax (Part 1)</a>
+        <a href="#" class="active">Day 2: Essential Constructs (Part 2)</a>
+    </nav>
+
+    <main class="content-area">
+        <div class="presentation-card">
+            <div class="text-center mb-8">
+                <h1 class="text-5xl font-extrabold text-indigo-700 mb-4">Essential Java Constructs</h1>
+                <p class="text-xl text-gray-500">Mastering Conditionals, Loops, I/O, Strings, and Arrays.</p>
+            </div>
+
+            <!-- CONDITIONAL STATEMENTS -->
+            <h2>Conditional Statements: Controlling Program Flow</h2>
+             <h3>Core Concepts</h3>
+             <ul>
+                <li><strong>Boolean Condition:</strong> The expression inside the parentheses of an <code>if</code> statement <strong>must</strong> evaluate to a boolean (<code>true</code> or <code>false</code>).</li>
+                <li><strong>Use Curly Braces <code>{}</code>:</strong> Always use curly braces for <code>if</code> and <code>else</code> blocks, even for a single line. This prevents common logical errors when adding more code later.</li>
+             </ul>
+             <h3>Types of Conditionals</h3>
+<pre><span class="code-comment">// 1. If Statement (one option)</span>
+<span class="code-keyword">if</span> (score >= <span class="code-number">60</span>) {
+    System.out.println(<span class="code-string">"You passed!"</span>);
+}
+
+<span class="code-comment">// 2. If-Else Statement (two options)</span>
+<span class="code-keyword">if</span> (isRaining) {
+    System.out.println(<span class="code-string">"Take an umbrella."</span>);
+} <span class="code-keyword">else</span> {
+    System.out.println(<span class="code-string">"Enjoy the sunshine!"</span>);
+}
+
+<span class="code-comment">// 3. If-Else-If Ladder (multiple options)</span>
+<span class="code-keyword">if</span> (grade >= <span class="code-number">90</span>) {
+    System.out.println(<span class="code-string">"Grade: A"</span>);
+} <span class="code-keyword">else if</span> (grade >= <span class="code-number">80</span>) {
+    System.out.println(<span class="code-string">"Grade: B"</span>);
+} <span class="code-keyword">else</span> {
+    System.out.println(<span class="code-string">"Grade: C or below"</span>);
+}</pre>
+
+            <h3>Practice Questions: Conditionals</h3>
+            <p>1. Write a program to determine if a given year is a leap year. A year is a leap year if it is divisible by 4, except for end-of-century years, which must also be divisible by 400.</p>
+            <button class="code-toggle-btn" data-target="q1-conditional-solution">Show Solution</button>
+            <div id="q1-conditional-solution" class="code-block">
+                <pre><span class="code-keyword">public class</span> <span class="code-class">LeapYearChecker</span> {
+    <span class="code-keyword">public static void</span> <span class="code-method">checkLeapYear</span>(<span class="code-keyword">int</span> year) {
+        <span class="code-comment">// A year is a leap year if it's divisible by 400 OR</span>
+        <span class="code-comment">// if it's divisible by 4 but NOT by 100.</span>
+        <span class="code-keyword">if</span> ((year % <span class="code-number">400</span> == <span class="code-number">0</span>) || (year % <span class="code-number">4</span> == <span class="code-number">0</span> && year % <span class="code-number">100</span> != <span class="code-number">0</span>)) {
+            System.out.println(year + <span class="code-string">" is a leap year."</span>);
+        } <span class="code-keyword">else</span> {
+            System.out.println(year + <span class="code-string">" is not a leap year."</span>);
+        }
+    }
+
+    <span class="code-keyword">public static void</span> <span class="code-method">main</span>(String[] args) {
+        <span class="code-method">checkLeapYear</span>(<span class="code-number">2000</span>); <span class="code-comment">// Leap</span>
+        <span class="code-method">checkLeapYear</span>(<span class="code-number">1900</span>); <span class="code-comment">// Not Leap</span>
+        <span class="code-method">checkLeapYear</span>(<span class="code-number">2024</span>); <span class="code-comment">// Leap</span>
+    }
+}</pre>
+            </div>
+
+            <!-- LOOPING CONSTRUCTS -->
+            <h2>Looping Constructs: Doing Things Repeatedly</h2>
+            <h3>Types of Loops</h3>
+            <ul>
+                <li><strong>For Loop:</strong> The classic, most versatile loop. Perfect for when you know the number of iterations in advance or need access to the index. It consists of three parts: initialization, condition, and update.</li>
+                <li><strong>While Loop:</strong> Repeats a block of code <em>as long as</em> a condition is true. The condition is checked <em>before</em> each iteration. Use this when you don't know the exact number of iterations.</li>
+                <li><strong>Do-While Loop:</strong> Similar to a while loop, but the condition is checked <em>after</em> the iteration. This guarantees the loop body will execute at least once.</li>
+                <li><strong>Enhanced For Loop (for-each):</strong> The cleanest way to iterate through all elements of an array or collection. Use it when you just need the element itself, not its index.</li>
+            </ul>
+
+            <h3>Loop Examples</h3>
+<pre><span class="code-comment">// For Loop: Print numbers 0 to 4</span>
+<span class="code-keyword">for</span> (<span class="code-keyword">int</span> i = <span class="code-number">0</span>; i < <span class="code-number">5</span>; i++) {
+    System.out.println(<span class="code-string">"Current i: "</span> + i);
+}
+
+<span class="code-comment">// While Loop: Count down from 5</span>
+<span class="code-keyword">int</span> countdown = <span class="code-number">5</span>;
+<span class="code-keyword">while</span> (countdown > <span class="code-number">0</span>) {
+    System.out.println(countdown);
+    countdown--;
+}
+
+<span class="code-comment">// Do-While Loop: Executes at least once</span>
+<span class="code-keyword">int</span> num = <span class="code-number">100</span>;
+<span class="code-keyword">do</span> {
+    System.out.println(<span class="code-string">"This prints even though num is not < 10."</span>);
+} <span class="code-keyword">while</span> (num < <span class="code-number">10</span>);
+
+<span class="code-comment">// For-Each Loop: Iterate over an array</span>
+String[] fruits = {<span class="code-string">"Apple"</span>, <span class="code-string">"Banana"</span>, <span class="code-string">"Cherry"</span>};
+<span class="code-keyword">for</span> (String fruit : fruits) {
+    System.out.println(fruit);
+}</pre>
+
+            <h3>Practice Question: Loops</h3>
+            <p>1. Write a program to print all prime numbers up to a given integer `n`.</p>
+            <button class="code-toggle-btn" data-target="q1-loop-solution">Show Solution</button>
+            <div id="q1-loop-solution" class="code-block">
+                <pre><span class="code-keyword">public class</span> <span class="code-class">PrimeNumberPrinter</span> {
+    <span class="code-keyword">public static void</span> <span class="code-method">printPrimesUpTo</span>(<span class="code-keyword">int</span> n) {
+        System.out.println(<span class="code-string">"Prime numbers up to "</span> + n + <span class="code-string">":"</span>);
+        <span class="code-keyword">for</span> (<span class="code-keyword">int</span> num = <span class="code-number">2</span>; num <= n; num++) {
+            <span class="code-keyword">boolean</span> isPrime = <span class="code-keyword">true</span>;
+            <span class="code-comment">// Check for factors from 2 up to sqrt(num) for efficiency</span>
+            <span class="code-keyword">for</span> (<span class="code-keyword">int</span> i = <span class="code-number">2</span>; i * i <= num; i++) {
+                <span class="code-keyword">if</span> (num % i == <span class="code-number">0</span>) {
+                    isPrime = <span class="code-keyword">false</span>;
+                    <span class="code-keyword">break</span>; <span class="code-comment">// No need to check further</span>
+                }
+            }
+            <span class="code-keyword">if</span> (isPrime) {
+                System.out.print(num + <span class="code-string">" "</span>);
+            }
+        }
+        System.out.println();
+    }
+    
+    <span class="code-keyword">public static void</span> <span class="code-method">main</span>(String[] args) {
+        <span class="code-method">printPrimesUpTo</span>(<span class="code-number">30</span>); <span class="code-comment">// Output: 2 3 5 7 11 13 17 19 23 29</span>
+    }
+}</pre>
+            </div>
+            
+            <!-- INPUT/OUTPUT -->
+            <h2>Input and Output</h2>
+            <h3>Console Output</h3>
+            <ul>
+                <li><code>System.out.println()</code>: Prints the argument and moves the cursor to a new line.</li>
+                <li><code>System.out.print()</code>: Prints the argument and leaves the cursor on the same line.</li>
+                <li><code>System.out.printf()</code>: Prints formatted output using format specifiers (e.g., <code>%s</code> for string, <code>%d</code> for integer, <code>%.2f</code> for a float with 2 decimal places).</li>
+            </ul>
+            
+            <h3>Console Input with `Scanner`</h3>
+            <p>The <code>Scanner</code> class (from the <code>java.util</code> package) is the standard way to read user input from the console.</p>
+            <pre><span class="code-comment">// You must import the Scanner class at the top of your file.</span>
+<span class="code-keyword">import</span> java.util.Scanner;
+
+<span class="code-keyword">public class</span> <span class="code-class">UserInputDemo</span> {
+    <span class="code-keyword">public static void</span> <span class="code-method">main</span>(String[] args) {
+        <span class="code-comment">// 1. Create a Scanner object to read from standard input (the console).</span>
+        Scanner scanner = <span class="code-keyword">new</span> Scanner(System.in);
+
+        <span class="code-comment">// 2. Prompt the user.</span>
+        System.out.print(<span class="code-string">"Enter your name: "</span>);
+        String name = scanner.nextLine(); <span class="code-comment">// Reads a full line of text.</span>
+
+        System.out.print(<span class="code-string">"Enter your age: "</span>);
+        <span class="code-keyword">int</span> age = scanner.nextInt(); <span class="code-comment">// Reads an integer.</span>
+
+        <span class="code-comment">// 3. Print a formatted response.</span>
+        System.out.printf(<span class="code-string">"Hello, %s! You are %d years old.%n"</span>, name, age);
+        
+        <span class="code-comment">// 4. Important: Close the scanner when you're done with it.</span>
+        scanner.close();
+    }
+}</pre>
+            
+            <!-- STRINGS -->
+            <h2>Strings: More Than Just Text</h2>
+            <h3>Core Concepts</h3>
+            <ul>
+                <li><strong>String is a Class:</strong> In Java, <code>String</code> is a powerful, built-in class, not a simple character array. This means string variables are objects with access to a rich set of methods.</li>
+                <li><strong>Immutability:</strong> This is a crucial feature. Once a <code>String</code> object is created, its value <strong>cannot be changed</strong>. Any method that seems to modify a string (like <code>.toUpperCase()</code>) actually creates and returns a <em>new</em> string object. This is vital for security, thread safety, and performance.</li>
+                <li><strong>Mutable Alternatives:</strong> For situations requiring many string modifications (e.g., building a long string in a loop), use <code>StringBuilder</code> (faster, not thread-safe) or <code>StringBuffer</code> (slower, thread-safe) to avoid creating excessive temporary objects.</li>
+            </ul>
+
+            <h3>Creating and Comparing Strings</h3>
+            <p>A common pitfall for beginners is knowing how to compare strings correctly.</p>
+            <ul>
+                <li><strong>NEVER use <code>==</code> for content comparison.</strong> The <code>==</code> operator checks if two variables refer to the exact same object in memory.</li>
+                <li><strong>ALWAYS use the <code>.equals()</code> method</strong> to check if two strings contain the same sequence of characters. Use <code>.equalsIgnoreCase()</code> to compare without case sensitivity.</li>
+            </ul>
+             <pre><span class="code-comment">// s1 and s2 point to the same object in the "String Constant Pool" for efficiency.</span>
+String s1 = <span class="code-string">"Java"</span>;
+String s2 = <span class="code-string">"Java"</span>;
+
+<span class="code-comment">// The 'new' keyword explicitly creates a new object on the heap.</span>
+String s3 = <span class="code-keyword">new</span> String(<span class="code-string">"Java"</span>);
+
+System.out.println(s1 == s2);        <span class="code-comment">// true (same object)</span>
+System.out.println(s1 == s3);        <span class="code-comment">// false (different objects)</span>
+System.out.println(s1.equals(s3)); <span class="code-comment">// true (same content)</span></pre>
+
+            <h3>Practice Questions: Strings</h3>
+            <p>1. Write a program that counts the number of vowels (a, e, i, o, u) in a given string.</p>
+            <button class="code-toggle-btn" data-target="q1-string-solution">Show Solution</button>
+            <div id="q1-string-solution" class="code-block">
+                <pre><span class="code-keyword">public class</span> <span class="code-class">VowelCounter</span> {
+    <span class="code-keyword">public static int</span> <span class="code-method">countVowels</span>(String text) {
+        <span class="code-keyword">int</span> count = <span class="code-number">0</span>;
+        String lowerText = text.toLowerCase(); <span class="code-comment">// Handle both upper and lower case</span>
+        <span class="code-keyword">for</span> (<span class="code-keyword">int</span> i = <span class="code-number">0</span>; i < lowerText.length(); i++) {
+            <span class="code-keyword">char</span> ch = lowerText.charAt(i);
+            <span class="code-keyword">if</span> (ch == <span class="code-string">'a'</span> || ch == <span class="code-string">'e'</span> || ch == <span class="code-string">'i'</span> || ch == <span class="code-string">'o'</span> || ch == <span class="code-string">'u'</span>) {
+                count++;
+            }
+        }
+        <span class="code-keyword">return</span> count;
+    }
+
+    <span class="code-keyword">public static void</span> <span class="code-method">main</span>(String[] args) {
+        System.out.println(<span class="code-string">"Vowels in 'Hello World': "</span> + <span class="code-method">countVowels</span>(<span class="code-string">"Hello World"</span>)); <span class="code-comment">// 3</span>
+    }
+}</pre>
+            </div>
+
+            <!-- ARRAYS -->
+            <h2>Arrays: Fixed-Size Collections</h2>
+            <h3>Core Concepts</h3>
+            <ul>
+                <li><strong>Objects:</strong> Like Strings, arrays in Java are objects.</li>
+                <li><strong>Fixed Size:</strong> The length of an array is established when it is created. It cannot be changed afterwards.</li>
+                <li><strong>Typed:</strong> An array can only hold elements of the same declared data type (e.g., an <code>int[]</code> can only hold integers).</li>
+                <li><strong>Indexed:</strong> Elements are accessed via a zero-based index (e.g., <code>myArray[0]</code>). Accessing an index outside the valid range (0 to length-1) will cause an <code>ArrayIndexOutOfBoundsException</code>.</li>
+                <li><strong><code>.length</code> Field:</strong> Arrays have a public final <strong>field</strong> (not a method) called <code>length</code> that gives the number of elements.</li>
+            </ul>
+
+            <h3>Building and Initializing Arrays</h3>
+<pre><span class="code-comment">// One-Step Process: Declare, create, and initialize in one line.</span>
+<span class="code-keyword">int</span>[] scores = { <span class="code-number">88</span>, <span class="code-number">92</span>, <span class="code-number">75</span>, <span class="code-number">100</span>, <span class="code-number">95</span> };
+
+<span class="code-comment">// Two-Step Process: Declare, then allocate memory and assign values.</span>
+<span class="code-keyword">double</span>[] prices = <span class="code-keyword">new double</span>[<span class="code-number">10</span>]; <span class="code-comment">// Creates an array of 10 doubles, initialized to 0.0</span>
+prices[<span class="code-number">0</span>] = <span class="code-number">19.99</span>; <span class="code-comment">// Assign a value to the first element</span></pre>
+
+            <h3>Practice Questions: Arrays</h3>
+            <p>1. Write a program to find the minimum and maximum values in an integer array.</p>
+            <button class="code-toggle-btn" data-target="q1-array-solution">Show Solution</button>
+            <div id="q1-array-solution" class="code-block">
+                <pre><span class="code-keyword">public class</span> <span class="code-class">FindMinMax</span> {
+    <span class="code-keyword">public static void</span> <span class="code-method">main</span>(String[] args) {
+        <span class="code-keyword">int</span>[] numbers = { <span class="code-number">45</span>, <span class="code-number">23</span>, <span class="code-number">89</span>, <span class="code-number">12</span>, <span class="code-number">99</span>, <span class="code-number">4</span>, <span class="code-number">76</span> };
+        <span class="code-keyword">if</span> (numbers.length == <span class="code-number">0</span>) {
+            System.out.println(<span class="code-string">"Array is empty!"</span>);
+            <span class="code-keyword">return</span>;
+        }
+        <span class="code-keyword">int</span> min = numbers[<span class="code-number">0</span>];
+        <span class="code-keyword">int</span> max = numbers[<span class="code-number">0</span>];
+        <span class="code-keyword">for</span> (<span class="code-keyword">int</span> num : numbers) { <span class="code-comment">// Using for-each is cleaner here</span>
+            <span class="code-keyword">if</span> (num < min) min = num;
+            <span class="code-keyword">if</span> (num > max) max = num;
+        }
+        System.out.println(<span class="code-string">"Minimum: "</span> + min); <span class="code-comment">// 4</span>
+        System.out.println(<span class="code-string">"Maximum: "</span> + max); <span class="code-comment">// 99</span>
+    }
+}</pre>
+            </div>
+
+            <!-- WRAP-UP -->
+            <h2>Wrap-up and Further Learning</h2>
+            <h3>Summary of Key Concepts</h3>
+            <ul>
+                <li><strong>Conditionals:</strong> Control program flow with <code>if-else</code> structures based on boolean conditions.</li>
+                <li><strong>Loops:</strong> Execute code repeatedly using <code>for</code>, <code>for-each</code>, <code>while</code>, and <code>do-while</code> loops.</li>
+                <li><strong>Input/Output:</strong> Use <code>System.out</code> for printing and the <code>Scanner</code> class for reading user input.</li>
+                <li><strong>Strings:</strong> Are immutable objects. Use <code>.equals()</code> for content comparison, not <code>==</code>.</li>
+                <li><strong>Arrays:</strong> Are fixed-size objects. Access elements with <code>[]</code> and get the size with the <code>.length</code> field.</li>
+                <li><strong>Practice is Key:</strong> The best way to master these concepts is to write code. Try to solve the practice problems and then experiment with your own ideas!</li>
+            </ul>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const buttons = document.querySelectorAll('.code-toggle-btn');
+            buttons.forEach(button => {
+                button.addEventListener('click', function () {
+                    const targetId = this.dataset.target;
+                    const codeBlock = document.getElementById(targetId);
+                    
+                    if (codeBlock.style.display === 'block') {
+                        codeBlock.style.display = 'none';
+                        this.textContent = this.textContent.replace('Hide', 'Show');
+                    } else {
+                        codeBlock.style.display = 'block';
+                        this.textContent = this.textContent.replace('Show', 'Hide');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

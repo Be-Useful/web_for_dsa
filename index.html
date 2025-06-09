@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 1: Introduction to Competitive Programming</title>
+    <!-- Tailwind CSS CDN for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom CSS for 'Inter' font and base styles */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f3f4f6; /* Light gray background */
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column; /* Stack header, main content, footer vertically */
+        }
+
+        .content-area {
+            flex-grow: 1; /* Allows content to take up available space */
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; /* Align content to top within its area */
+            padding: 2rem; /* Padding around the main content */
+            box-sizing: border-box;
+        }
+
+        .presentation-card {
+            background-color: #ffffff;
+            border-radius: 1.5rem; /* Rounded corners */
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); /* Subtle shadow */
+            padding: 2.5rem; /* Spacious padding */
+            width: 90%;
+            max-width: 960px; /* Max width for desktop content */
+            box-sizing: border-box;
+            overflow-y: auto; /* Allow scrolling if content overflows */
+        }
+
+        .presentation-card h1, .presentation-card h2 {
+            color: #1f2937; /* Darker gray for headings */
+            margin-bottom: 1.5rem;
+            font-weight: 800; /* Extra bold headings */
+        }
+        
+        .presentation-card h3 {
+             color: #1f2937;
+             font-weight: 700;
+        }
+
+        .presentation-card p, .presentation-card li {
+            color: #4b5563; /* Medium gray for text */
+            line-height: 1.7;
+            margin-bottom: 1rem;
+            font-size: 1.05rem;
+        }
+        
+        .presentation-card code {
+            background-color: #eef2ff;
+            color: #4338ca;
+            padding: 0.2rem 0.5rem;
+            border-radius: 0.375rem;
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: 600;
+        }
+
+        .presentation-card .example-box {
+            background-color: #f9fafb;
+            border-left: 4px solid #4f46e5;
+            padding: 1.5rem;
+            margin-top: 1rem;
+            margin-bottom: 2rem;
+            border-radius: 0.5rem;
+        }
+
+        .presentation-card ul {
+            list-style: disc; /* Disc bullet points */
+            margin-left: 1.5rem; /* Indent lists */
+            padding-left: 0;
+            margin-bottom: 1rem;
+        }
+
+        .presentation-card a {
+            color: #4f46e5; /* Indigo for links */
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s ease-in-out;
+        }
+
+        .presentation-card a:hover {
+            color: #3730a3; /* Darker indigo on hover */
+            text-decoration: underline;
+        }
+
+        /* Navigation Bar Styles */
+        .navbar {
+            background-color: #4338ca; /* Darker Indigo background for navbar */
+            padding: 1rem 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap; /* Allow items to wrap on smaller screens */
+            gap: 1rem; /* Space between nav items */
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem; /* Rounded corners for nav links */
+            font-weight: 600;
+            transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
+        }
+
+        .navbar a:hover {
+            background-color: #4f46e5; /* Lighter indigo on hover */
+            transform: translateY(-2px);
+        }
+
+        .navbar a.active-nav {
+            background-color: #6d28d9; /* Purple for active link */
+            font-weight: 700;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .presentation-card {
+                padding: 1.5rem;
+                width: 95%;
+            }
+            .presentation-card h1 { font-size: 2.2rem; margin-bottom: 1rem; }
+            .presentation-card h2 { font-size: 1.8rem; margin-bottom: 1rem; }
+            .presentation-card p, .presentation-card li { font-size: 0.95rem; }
+            .navbar {
+                padding: 0.75rem 1rem;
+                gap: 0.5rem;
+                justify-content: flex-start; /* Align nav items to start on small screens */
+                overflow-x: auto; /* Allow horizontal scrolling for nav if needed */
+            }
+            .navbar a { padding: 0.6rem 1rem; font-size: 0.9rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <a href="index.html" class="active-nav">Day 1: Intro to CP</a>
+        <a href="java_basics.html">Day 2: Java Basics</a>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="content-area">
+        <div class="presentation-card">
+            <!-- SLIDE 1: Title -->
+            <div class="text-center mb-8">
+                <h1 class="text-4xl lg:text-5xl font-extrabold text-indigo-700 mb-4">Introduction to Competitive Programming</h1>
+                <p class="text-lg text-gray-600">The Engineer's Gym for Problem-Solving</p>
+            </div>
+
+            <hr class="my-8 border-t-2 border-gray-200">
+
+            <!-- SLIDE 2: What is CP? (Revised for Engineers) -->
+            <h2 class="text-3xl font-bold mb-6 text-gray-800">What is Competitive Programming?</h2>
+            <div class="space-y-4">
+                <p>Think of Competitive Programming (CP) as a <strong>mind sport</strong> specifically designed for engineers and programmers. It's where you take the theoretical knowledge from your classes—like algorithms, data structures, and mathematics—and apply it in a high-stakes, timed environment. The goal is simple: solve complex problems with code that is not only <strong>correct</strong>, but also incredibly <strong>fast and efficient</strong>.</p>
+                <p>It’s the practical application of theoretical computer science, turning abstract ideas into tangible, high-performance solutions under pressure.</p>
+                
+                <h3 class="text-2xl font-semibold text-gray-700 pt-4">Why Optimization is Not Optional</h3>
+                <p>Let's illustrate why finding an efficient solution is critical with a few classic problems.</p>
+                
+                <h4 class="text-xl font-bold text-gray-800 mt-6 mb-2">Example 1: Sum of Numbers</h4>
+                <div class="example-box">
+                    <p class="mb-3"><strong>The Problem:</strong> Find the sum of all numbers from 1 to a very large number, N.</p>
+                    <p><strong>Standard Approach:</strong> A loop that adds each number one by one. Correct, but for N=1 billion, it's 1 billion operations and too slow.</p>
+                    <p><strong>CP Approach:</strong> Use the mathematical formula <code>N * (N + 1) / 2</code>. This is just 3 operations, making it instantaneous. It's the difference between brute force and analytical elegance.</p>
+                </div>
+
+                <h4 class="text-xl font-bold text-gray-800 mt-6 mb-2">Example 2: Searching in a Phonebook</h4>
+                <div class="example-box">
+                     <p class="mb-3"><strong>The Problem:</strong> Find a name in a massive, sorted phonebook (or any sorted list of data).</p>
+                     <p><strong>Standard Approach (Linear Search):</strong> Start at 'A' and check every single name until you find the one you want. Worst case? The name is at the very end. For a list of 1 billion names, this is again 1 billion checks.</p>
+                     <p><strong>CP Approach (Binary Search):</strong> Open the book to the exact middle. Is your name before or after? You just eliminated half the phonebook in one step. Repeat the process. For 1 billion names, this takes at most <strong>30 steps</strong>. This logarithmic complexity is a cornerstone of efficient algorithms.</p>
+                </div>
+                
+                <h4 class="text-xl font-bold text-gray-800 mt-6 mb-2">Example 3: Calculating Fibonacci Numbers</h4>
+                <div class="example-box">
+                    <p class="mb-3"><strong>The Problem:</strong> Find the Nth Fibonacci number (where each number is the sum of the two preceding ones: 0, 1, 1, 2, 3, 5, 8...).</p>
+                    <p><strong>Standard Approach (Simple Recursion):</strong> Write a function <code>fib(n)</code> that calls <code>fib(n-1) + fib(n-2)</code>. This is elegant but catastrophically slow. To find <code>fib(50)</code>, it re-calculates the same values millions of times over, leading to an exponential number of operations.</p>
+                    <p><strong>CP Approach (Dynamic Programming):</strong> As you calculate each Fibonacci number, you store it in an array. When you need it again, you just look it up instead of re-computing it. This technique, known as "memoization," reduces the task from billions of operations to just N simple additions. It's the difference between an unworkable theory and a practical solution.</p>
+                </div>
+                
+                <h4 class="text-xl font-bold text-gray-800 mt-6 mb-2">Example 4: Cracking a Password</h4>
+                <div class="example-box">
+                    <p class="mb-3"><strong>The Problem:</strong> Brute-force a 9-character password using alphanumeric characters (a-z, A-Z, 0-9).</p>
+                    <p><strong>The Scale:</strong> There are 62 possible characters for each of the 9 positions. This means there are 62<sup>9</sup> total combinations, which is over <strong>13.5 quadrillion</strong> possibilities.</p>
+                    <p><strong>Standard Approach (Brute Force):</strong> Let's say a computer can test 10 million passwords per second. To check every combination would take over <strong>40 years</strong>. This is computationally infeasible.</p>
+                     <p><strong>CP Approach (Find a Flaw):</strong> An optimized approach doesn't try to guess faster. It tries to avoid guessing altogether. A competitive programmer would look for a vulnerability: Can we find a logical flaw that bypasses the password check? Can we use pre-computed tables ("rainbow tables") to look up the password hash? The goal is to change the problem from "checking every answer" to "finding a shortcut to the right answer."</p>
+                </div>
+
+
+                <p class="font-bold text-indigo-700">The takeaway is clear: CP is not just about writing code that works. It's about engineering the most optimal solution to avoid impossible computations.</p>
+            </div>
+
+            <hr class="my-8 border-t-2 border-gray-200">
+
+            <!-- SLIDE 3: Why Should You Do CP? -->
+            <h2 class="text-3xl font-bold mb-6 text-gray-800">Why Should an Engineering Student Do CP?</h2>
+            <ul class="list-disc ml-6 space-y-3">
+                <li><strong class="text-indigo-600">Master Data Structures and Algorithms (DSA):</strong> This is the single best way to go from knowing what a hash map is to understanding precisely when and why to use it. CP makes DSA second nature.</li>
+                <li><strong class="text-indigo-600">Ace Technical Interviews:</strong> Top tech companies (Google, Meta, Amazon, etc.) structure their interviews just like CP problems. A strong CP background is a direct pathway to landing dream internships and jobs.</li>
+                <li><strong class="text-indigo-600">Develop Elite Problem-Solving Skills:</strong> You learn to break down complex problems, identify patterns, and think creatively under pressure—skills that are invaluable in any engineering discipline.</li>
+                <li><strong class="text-indigo-600">Boost Your Resume:</strong> High rankings on platforms like Codeforces or CodeChef are a clear signal to recruiters that you are a top-tier problem solver.</li>
+                <li><strong class="text-indigo-600">Join a Global Community:</strong> Connect with a worldwide network of sharp minds, learn from the best, and participate in prestigious competitions like the ICPC (International Collegiate Programming Contest).</li>
+                <li><strong class="text-indigo-600">Prizes and Recognition:</strong> Contests often come with cash prizes, cool swag, and global recognition for your skills.</li>
+            </ul>
+
+            <hr class="my-8 border-t-2 border-gray-200">
+            
+            <!-- SLIDE 4: CP vs. DSA -->
+            <h2 class="text-3xl font-bold mb-6 text-gray-800">CP vs. DSA - Clarification</h2>
+            <div class="space-y-4">
+                <p><strong class="text-indigo-600">DSA (Data Structures and Algorithms):</strong> This is the <strong>toolbox</strong>. It’s the study of different ways to organize data and the methods to work with it efficiently. You learn about the tools themselves.</p>
+                <p><strong class="text-indigo-600">CP (Competitive Programming):</strong> This is the <strong>workshop</strong> where you use the tools. It's the application of DSA to solve puzzles against the clock. CP teaches you which tool to pick and how to use it masterfully for a specific job.</p>
+                <p class="mt-4"><strong class="text-purple-700">You learn DSA to be able to do CP. You do CP to truly master DSA.</strong></p>
+            </div>
+
+            <hr class="my-8 border-t-2 border-gray-200">
+
+            <!-- SLIDE 5 to 10: The rest of the content remains the same -->
+            <!-- ... (Original content from Slide 5 onwards is here) ... -->
+             <!-- Content for Slide 5 -->
+            <h2 class="text-3xl font-bold mb-6 text-gray-800">Prerequisites for Competitive Programming</h2>
+            <ul class="list-disc ml-6 space-y-3">
+                <li><strong class="text-indigo-600">Basic Programming Knowledge:</strong> You need to know the fundamentals of at least one programming language.</li>
+                <li><strong class="text-indigo-600">Understanding of DSA Fundamentals:</strong> Familiarity with basic data structures (arrays, strings, linked lists, stacks, queues, trees, graphs) and algorithms (searching, sorting) is crucial.</li>
+                <li><strong class="text-indigo-600">Mathematics:</strong> Some mathematical concepts like number theory, combinatorics, bitwise operations, and basic arithmetic are frequently used.</li>
+                <li><strong class="text-indigo-600">Choosing a Language:</strong> While many languages are supported, C++, Java, and Python are most popular in contests due to their efficiency and standard libraries. C++ is often preferred for its speed and extensive Standard Template Library (STL).</li>
+            </ul>
+
+            <hr class="my-8 border-t-2 border-gray-200">
+
+            <!-- Content for Slide 6 -->
+            <h2 class="text-3xl font-bold mb-6 text-gray-800">Key Areas in Competitive Programming (Syllabus Overview)</h2>
+            <p class="mb-4">Competitive programming problems draw upon a wide range of topics in computer science and mathematics. Key areas include:</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
+                <div>
+                    <h3 class="text-2xl font-semibold text-gray-700 mb-2">Core DSA:</h3>
+                    <ul class="list-disc ml-6">
+                        <li>Arrays, Strings, Linked Lists, Stacks, Queues</li>
+                        <li>Trees (Binary Trees, BST)</li>
+                        <li>Graphs, Hash Tables, Heaps</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-2xl font-semibold text-gray-700 mb-2">Algorithms:</h3>
+                    <ul class="list-disc ml-6">
+                        <li>Searching (Binary Search, Linear Search)</li>
+                        <li>Sorting (Quick Sort, Merge Sort, Heap Sort, etc.)</li>
+                        <li>Graph Algorithms (BFS, DFS, Shortest Paths like Dijkstra's, Floyd Warshall, Minimum Spanning Trees like Prim's, Kruskal's, Topological Sort, Strongly Connected Components)</li>
+                        <li>Dynamic Programming (DP)</li>
+                        <li>Greedy Algorithms, Backtracking</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-2xl font-semibold text-gray-700 mb-2">Mathematics:</h3>
+                    <ul class="list-disc ml-6">
+                        <li>Number Theory, Combinatorics, Modular Arithmetic</li>
+                        <li>Matrix Exponentiation, Geometry</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-2xl font-semibold text-gray-700 mb-2">Other Techniques:</h3>
+                    <ul class="list-disc ml-6">
+                        <li>Bit Manipulation, Game Theory, String Algorithms (KMP, Rabin-Karp, Z-Algorithm, Tries)</li>
+                        <li>Segment Trees, Fenwick Trees (BIT), Union Find</li>
+                    </ul>
+                </div>
+            </div>
+
+            <hr class="my-8 border-t-2 border-gray-200">
+
+            <!-- Content for Slide 7 -->
+            <h2 class="text-3xl font-bold mb-6 text-gray-800">Popular Platforms and Resources</h2>
+            <p class="mb-4">There are many excellent online platforms for practicing and competing:</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
+                <div>
+                    <h3 class="text-2xl font-semibold text-gray-700 mb-2">Contest Platforms:</h3>
+                    <ul class="list-disc ml-6">
+                        <li><a href="https://www.codechef.com/" target="_blank">CodeChef</a>: start from beginner-friendly area and move upto highest level, good community of mostly indian people and contain lots of free resources.</li>
+                        <li><a href="https://codeforces.com/" target="_blank">Codeforces</a>: Very active, frequent contests for different skill levels.</li>
+                        <li><a href="https://atcoder.jp/" target="_blank">AtCoder</a>: Popular platform from Japan with contests for all levels and a friendly community.</li>
+                        <li><a href="https://www.topcoder.com/" target="_blank">Topcoder</a>: Another established platform for competitive programming.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-2xl font-semibold text-gray-700 mb-2">Practice & Learning Platforms:</h3>
+                    <ul class="list-disc ml-6">
+                        <li><a href="https://leetcode.com/" target="_blank">LeetCode</a>: Excellent for practicing coding interview problems, many easy problems and learning resources.</li>
+                        <li><a href="https://www.geeksforgeeks.org/" target="_blank">GeeksforGeeks</a>: Offers tutorials, articles, a detailed syllabus, practice problems, and courses covering DSA and CP.</li>
+                        <li><a href="https://www.hackerrank.com/" target="_blank">HackerRank</a>: Provides guides for beginners and supports many languages.</li>
+                    </ul>
+                </div>
+                <div class="md:col-span-2">
+                    <h3 class="text-2xl font-semibold text-gray-700 mb-2">Other Resources:</h3>
+                    <ul class="list-disc ml-6">
+                        <li><a href="https://usaco.guide/" target="_blank">USACO Guide</a>: A guide for the USA Computing Olympiad, useful for learning CP concepts.</li>
+                        <li><a href="https://cpbook.net/" target="_blank">Competitive Programmer's Handbook</a>: A comprehensive book on algorithms and techniques.</li>
+                        <li>Community forums on platforms like Codeforces and CodeChef are great for discussing problems and learning from others.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <hr class="my-8 border-t-2 border-gray-200">
+
+            <!-- Content for Slide 8 -->
+            <h2 class="text-3xl font-bold mb-6 text-gray-800">Tips for Beginners</h2>
+            <p class="mb-4">Starting competitive programming can feel daunting, but here are some tips to help you begin:</p>
+            <ul class="list-disc ml-6 space-y-3">
+                <li><strong class="text-indigo-600">Set Your Goal:</strong> Understand why you want to do CP (e.g., improve problem-solving, job interviews, hobby).</li>
+                <li><strong class="text-indigo-600">Clear Your Fundamentals:</strong> Make sure you have a solid grasp of basic programming concepts, DSA, and essential math.</li>
+                <li><strong class="text-indigo-600">Start with Baby Steps:</strong> Begin with simple, beginner-level problems on beginner-friendly platforms. Don't jump straight into the hardest challenges.</li>
+                <li><strong class="text-indigo-600">Practice Regularly:</strong> Consistency is key to improvement. Try to solve problems daily or weekly.</li>
+                <li><strong class="text-indigo-600">Learn from Others:</strong> If you get stuck, take a break and then try again. If you still can't solve it, look at the editorials or solutions (after attempting yourself) to understand the logic and approach. Use community forums to ask questions and learn different strategies.</li>
+                <li><strong class="text-indigo-600">Don't Be Discouraged:</strong> It's common to face difficulties and lack of progress initially. Persistence and determination are vital. Never give up!</li>
+                <li><strong class="text-indigo-600">Take Breaks:</strong> Avoid burnout by taking breaks and doing non-programming activities.</li>
+                <li><strong class="text-indigo-600">Relate to Real Life:</strong> Try to see how the problem-solving skills apply to everyday situations.</li>
+            </ul>
+
+            <hr class="my-8 border-t-2 border-gray-200">
+
+            <!-- Content for Slide 9 -->
+            <h2 class="text-3xl font-bold mb-6 text-gray-800">Making CP Engaging (Leveraging Gamification)</h2>
+            <p class="mb-4">Competitive Programming inherently uses elements found in games, which can make learning engaging:</p>
+            <ul class="list-disc ml-6 space-y-3">
+                <li><strong class="text-indigo-600">It's a Sport/Game:</strong> Thinking of CP as a "mind sport" or a "game" can make it more fun.</li>
+                <li><strong class="text-indigo-600">Competition & Progress:</strong> Platforms use scoring, ratings, and leaderboards, allowing you to track your progress and compete with others. This can be highly motivating.</li>
+                <li><strong class="text-indigo-600">Challenges & Levels:</strong> Problems are often categorized by difficulty (Easy, Medium, Hard), providing scaffolded challenges that allow you to level up your skills step-by-step.</li>
+                <li><strong class="text-indigo-600">Achievements:</strong> Solving problems or participating in contests can feel like unlocking achievements or earning badges.</li>
+                <li><strong class="text-indigo-600">Community:</strong> Engaging with the community adds a social element, allowing for collaboration and shared learning experiences.</li>
+                <li><strong class="text-indigo-600">Focus on the Puzzle:</strong> Many problems are like intricate puzzles or brain teasers, which some people find incredibly rewarding to solve.</li>
+            </ul>
+
+            <hr class="my-8 border-t-2 border-gray-200">
+
+            <!-- Content for Slide 10 -->
+            <h2 class="text-3xl font-bold mb-6 text-gray-800">Conclusion</h2>
+            <div class="space-y-4 text-center">
+                <p>Competitive programming is a challenging but highly rewarding activity.</p>
+                <p>It's an excellent way to develop critical problem-solving skills, deepen your understanding of DSA, and enhance your coding abilities.</p>
+                <p>The skills you gain are valuable for both academic success and future career opportunities in the tech industry.</p>
+                <p>Remember to start slow, practice consistently, learn from others, and persevere through difficulties.</p>
+                <p class="text-2xl font-semibold text-purple-700 mt-6">Give it a try, and you might find that you enjoy the challenge and the growth it offers!</p>
+                <p class="text-3xl font-extrabold text-indigo-800 mt-8">Happy Problem Solving!</p>
+            </div>
+        </div>
+    </main>
+</body>
+</html>
+<script>
+    // No specific JS needed for this static page, but Tailwind config can be placed here if needed.
+    // This example relies on the CDN and inline styles.
+</script>

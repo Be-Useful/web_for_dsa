@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 2: Basic Java Syntax (Complete & In-Depth)</title>
+    <!-- Tailwind CSS CDN for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Reusing and refining styles for consistency and readability */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f3f4f6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .content-area {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 2rem;
+            box-sizing: border-box;
+        }
+
+        .presentation-card {
+            background-color: #ffffff;
+            border-radius: 1.5rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            padding: 3rem;
+            width: 90%;
+            max-width: 960px;
+            box-sizing: border-box;
+        }
+
+        .presentation-card h1, .presentation-card h2, .presentation-card h3 {
+            color: #111827;
+            font-weight: 800;
+        }
+        
+        .presentation-card h2 { 
+            font-size: 2.25rem; 
+            margin-top: 3rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #e5e7eb;
+        }
+        .presentation-card h3 { 
+            font-size: 1.5rem; 
+            font-weight: 700; 
+            margin-top: 2.5rem; 
+            margin-bottom: 1rem; 
+            color: #1d4ed8;
+        }
+
+        .presentation-card p, .presentation-card li {
+            color: #374151;
+            line-height: 1.8;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+        
+        .presentation-card code {
+            background-color: #eef2ff;
+            color: #4338ca;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.375rem;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+            font-weight: 600;
+        }
+        
+        .presentation-card pre {
+            background-color: #1e293b;
+            color: #e2e8f0;
+            padding: 1.25rem;
+            border-radius: 0.75rem;
+            overflow-x: auto;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-top: 1rem;
+            border: 1px solid #334155;
+        }
+        
+        .presentation-card pre .code-comment { color: #94a3b8; font-style: italic; }
+        .presentation-card pre .code-keyword { color: #93c5fd; }
+        .presentation-card pre .code-string { color: #fde047; }
+        .presentation-card pre .code-class { color: #6ee7b7; }
+        .presentation-card pre .code-number { color: #fbbf24; }
+        .presentation-card pre .code-method { color: #c4b5fd; }
+
+        .presentation-card ul {
+            list-style-type: disc;
+            margin-left: 1.5rem;
+            padding-left: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .presentation-card ul li { margin-bottom: 0.75rem; }
+
+        .code-toggle-btn {
+            background-color: #4f46e5;
+            color: white;
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+            margin-top: 0.5rem;
+        }
+        .code-toggle-btn:hover {
+            background-color: #4338ca;
+            transform: translateY(-1px);
+        }
+        
+        .code-block {
+            display: none; /* Hidden by default */
+        }
+        
+        .navbar { /* Styles from previous context */ }
+
+        @media (max-width: 768px) {
+            .content-area { padding: 1rem; }
+            .presentation-card { padding: 1.5rem; width: 100%; }
+            .presentation-card h1 { font-size: 2.2rem; }
+            .presentation-card h2 { font-size: 1.8rem; }
+            .navbar { padding: 0.75rem 1rem; gap: 0.5rem; justify-content: flex-start; overflow-x: auto; }
+            .navbar a { padding: 0.6rem 1rem; font-size: 0.9rem; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar" style="background-color: #4338ca; padding: 1rem 2rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); display: flex; justify-content: center; flex-wrap: wrap; gap: 1rem;">
+        <a href="index.html" style="color: white; text-decoration: none; padding: 0.75rem 1.5rem; border-radius: 0.75rem; font-weight: 600;">Day 1: Intro to CP</a>
+        <a href="day2_java_basics.html" style="color: white; text-decoration: none; padding: 0.75rem 1.5rem; border-radius: 0.75rem; font-weight: 700; background-color: #6d28d9; box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);">Day 2: Basic Java Syntax</a>
+    </nav>
+
+    <main class="content-area">
+        <div class="presentation-card">
+            <div class="text-center mb-8">
+                <h1 class="text-5xl font-extrabold text-indigo-700 mb-4">A Comprehensive Guide to Basic Java Syntax</h1>
+                <p class="text-xl text-gray-500">Your first step into the world of Java programming.</p>
+            </div>
+            
+            <!-- TOPIC 1 -->
+            <h2>Introduction to Java Syntax</h2>
+            <!-- Content from previous version -->
+            <h3>What is Java?</h3>
+            <ul>
+                <li>Java is a high-level, class-based, object-oriented programming language designed to have as few implementation dependencies as possible.</li>
+                <li>It is renowned for its **simplicity, portability, and robustness**. This makes it a popular choice for everything from web applications to mobile apps (Android) and large-scale enterprise systems.</li>
+                <li>Its most famous feature is the **"Write Once, Run Anywhere" (WORA)** principle. You compile your Java code once into a format called bytecode, which can then be run on any device equipped with a Java Virtual Machine (JVM).</li>
+                <li>For those with a background in C or C++, Java's syntax will feel familiar, which helps in a smoother learning transition.</li>
+            </ul>
+            <h3>Why Learn Basic Java Syntax?</h3>
+            <ul>
+                <li>The syntax of a language is its set of rules for writing correctly structured programs. Mastering it is the **fundamental building block** for any application.</li>
+                <li>Correct syntax ensures your code is readable, logically sound, and free from compiler errors.</li>
+                <li>A solid understanding of variables, data types, operators, and control flow (loops, conditionals) is absolutely essential before tackling more advanced concepts like object-oriented programming.</li>
+            </ul>
+            
+            <!-- TOPIC 2 -->
+            <h2>Basic Java Program Structure</h2>
+            <!-- Content from previous version -->
+            <h3>The "Hello World" Example</h3>
+            <p>The "Hello World" program is a tradition for a reason: it's the simplest complete program you can write, and it demonstrates the core structural components of the language.</p>
+            <pre><span class="code-comment">// Filename: HelloWorld.java</span>
+<span class="code-keyword">public class</span> <span class="code-class">HelloWorld</span> {
+    <span class="code-keyword">public static void</span> <span class="code-method">main</span>(String[] args) {
+        System.out.println(<span class="code-string">"Hello, World!"</span>);
+    }
+}</pre>
+            <h3>Deconstruction of the Code:</h3>
+            <ul>
+                <li><code>public class HelloWorld</code>: This declares a class named `HelloWorld`. A class is a blueprint for creating objects. The `public` keyword is an access modifier that means this class can be accessed from anywhere. In Java, the name of the public class must match the filename (`HelloWorld.java`).</li>
+                <li><code>public static void main(String[] args)</code>: This is the **main method**, the program's entry point. The Java Virtual Machine (JVM) starts execution here.
+                    <ul>
+                        <li><code>public</code>: It can be called from outside the class.</li>
+                        <li><code>static</code>: The method belongs to the `HelloWorld` class, not an instance of it. This allows the JVM to invoke it without creating an object.</li>
+                        <li><code>void</code>: The method doesn't return any value.</li>
+                        <li><code>String[] args</code>: A parameter for command-line arguments. It's an array of `String` objects.</li>
+                    </ul>
+                </li>
+                <li><code>System.out.println("...")</code>: The statement that prints to the console. `System` is a class, `out` is a `PrintStream` object within `System`, and `println` is a method of `out` that prints text and adds a new line.</li>
+                <li>The `java.lang` package, which contains essential classes like `System` and `String`, is automatically imported into every Java program.</li>
+            </ul>
+
+            <!-- TOPIC 3 -->
+            <h2>Compiling and Running a Java Program</h2>
+            <!-- Content from previous version -->
+             <h3>Using the Command Line (the fundamental way)</h3>
+            <ol>
+                <li><strong>Write the Code:</strong> Save the "Hello World" code in a file named `HelloWorld.java`.</li>
+                <li><strong>Compile:</strong> Open a terminal or command prompt, navigate to the directory where you saved the file, and run the Java compiler (`javac`):<br><code>javac HelloWorld.java</code><br>If there are no errors, this creates a new file called `HelloWorld.class`. This file contains the Java bytecode.</li>
+                <li><strong>Run:</strong> Now, use the Java Virtual Machine (`java`) to execute the bytecode. Do not include the `.class` extension.<br><code>java HelloWorld</code><br>Output: `Hello, World!`</li>
+            </ol>
+            <h3>Using an Integrated Development Environment (IDE)</h3>
+            <p>An IDE like Eclipse, IntelliJ IDEA, or VS Code makes development much easier. They provide text editors, debuggers, and build tools in one package. The process is generally:</p>
+            <ol>
+                <li>Create a new Java Project.</li>
+                <li>Create a new Class (e.g., `HelloWorld`).</li>
+                <li>Write your code. The IDE will often compile it automatically as you save.</li>
+                <li>Click a "Run" button (often a green play icon) to execute the program. The IDE handles the compile and run commands for you.</li>
+            </ol>
+
+            <!-- TOPIC 4 -->
+            <h2>Comments in Java</h2>
+            <!-- Content from previous version -->
+            <p>Comments are crucial for making code understandable to yourself and others. They are completely ignored by the compiler.</p>
+            <pre><span class="code-comment">// 1. Single-line comment: Starts with // and goes to the end of the line.</span>
+<span class="code-keyword">int</span> x = <span class="code-number">10</span>; <span class="code-comment">// This is also a single-line comment.</span>
+
+<span class="code-comment">/* 2. Multi-line comment:
+   Starts with /* and ends with */
+/* It can span many lines and is useful for longer explanations. */</span>
+
+<span class="code-comment">/**
+ * 3. Documentation comment (Javadoc):
+ * Starts with /** and ends with */
+/* This special type of comment is used to generate official API documentation.
+ * @author A helpful programmer
+ * @version 1.0
+ */</span></pre>
+
+            <!-- TOPIC 5 - UPDATED -->
+            <h2>Variables and Data Types</h2>
+            <p>Variables are named memory locations that store data. Java is **statically and strongly typed**, meaning every variable must have a declared type, and that type is checked at compile-time for correctness.</p>
+            <h3>Primitive Types: The Building Blocks</h3>
+            <p>These 8 types store simple values directly. Knowing their size and range is crucial for memory efficiency and avoiding errors in competitive programming.</p>
+            <ul>
+                <li><code>byte</code>: <strong>Size:</strong> 8 bits. <strong>Range:</strong> -128 to 127. Useful for saving memory when you know the value is small.</li>
+                <li><code>short</code>: <strong>Size:</strong> 16 bits. <strong>Range:</strong> -32,768 to 32,767.</li>
+                <li><code>int</code>: <strong>Size:</strong> 32 bits. <strong>Range:</strong> -2,147,483,648 to 2,147,483,647 (approx -2 billion to 2 billion). This is the default and most common choice for whole numbers.</li>
+                <li><code>long</code>: <strong>Size:</strong> 64 bits. <strong>Range:</strong> -9 quintillion to 9 quintillion. Use this for very large numbers. You must append an `L` to the value (e.g., <code>long largeNum = 3000000000L;</code>).</li>
+                <li><code>float</code>: <strong>Size:</strong> 32 bits. Single-precision floating point. Less precise than `double`. You must append an `f` to the value (e.g., <code>float price = 19.99f;</code>).</li>
+                <li><code>double</code>: <strong>Size:</strong> 64 bits. Double-precision floating point. This is the default choice for decimal numbers due to its greater precision.</li>
+                <li><code>boolean</code>: <strong>Size:</strong> Not precisely defined, represents 1 bit of information. <strong>Values:</strong> Can only be `true` or `false`.</li>
+                <li><code>char</code>: <strong>Size:</strong> 16 bits. <strong>Range:</strong> 0 to 65,535. Represents a single Unicode character, enclosed in single quotes (e.g., <code>char grade = 'A';</code>).</li>
+            </ul>
+            <h3>Reference Types</h3>
+            <p>Reference types hold a reference (a memory address) to an object, not the object itself. `String`, `Array`, and any class you create are reference types. The default value for any uninitialized reference variable is `null`.</p>
+
+            <!-- TOPIC 6 -->
+            <h2>Scope of Variables</h2>
+            <!-- Content from previous version -->
+            <p>Scope defines the region of your code where a variable can be accessed. A variable's scope is determined by where it is declared.</p>
+            <h3>Types of Variable Scope:</h3>
+            <ul>
+                <li><strong>Local Variables:</strong> Declared inside a method or code block (like a loop). They only exist within that block and must be initialized before use.</li>
+                <li><strong>Instance Variables:</strong> Declared inside a class but outside any method. Each object of the class gets its own copy. They have default values if not explicitly initialized (e.g., `0` for `int`, `null` for `String`).</li>
+                <li><strong>Static (Class) Variables:</strong> Declared with the `static` keyword. There is only one copy of this variable, shared among all instances of the class. It belongs to the class itself.</li>
+                <li><strong>Parameter Scope:</strong> Variables passed into a method's parameters. They are essentially local variables to that method.</li>
+            </ul>
+            <button class="code-toggle-btn" data-target="scope-code-2">Show Scope Demonstration</button>
+            <div id="scope-code-2" class="code-block">
+                <pre><span class="code-keyword">public class</span> <span class="code-class">ScopeDemo</span> {
+    <span class="code-comment">// 1. Static Variable</span>
+    <span class="code-keyword">public static</span> String staticMessage = <span class="code-string">"Shared across all ScopeDemo objects"</span>;
+    
+    <span class="code-comment">// 2. Instance Variable</span>
+    <span class="code-keyword">private</span> String instanceMessage;
+
+    <span class="code-keyword">public</span> <span class="code-method">ScopeDemo</span>(String message) {
+        <span class="code-keyword">this</span>.instanceMessage = message; <span class="code-comment">// 'this' refers to the current object</span>
+    }
+
+    <span class="code-keyword">public void</span> <span class="code-method">demonstrate</span>(<span class="code-keyword">int</span> param) { <span class="code-comment">// 3. Parameter Scope</span>
+        <span class="code-comment">// 4. Local Variable</span>
+        String localMessage = <span class="code-string">"Only visible inside demonstrate()"</span>;
+        
+        System.out.println(<span class="code-string">"Instance msg: "</span> + instanceMessage);
+        System.out.println(<span class="code-string">"Local msg: "</span> + localMessage);
+
+        <span class="code-keyword">if</span> (param > <span class="code-number">5</span>) {
+            <span class="code-comment">// 5. Block Scope</span>
+            String blockMessage = <span class="code-string">"Only visible inside this if-block"</span>;
+            System.out.println(blockMessage);
+        }
+        <span class="code-comment">// System.out.println(blockMessage); // COMPILE ERROR! Out of scope.</span>
+    }
+}</pre>
+            </div>
+            <h3>Best Practices for Scope:</h3>
+            <ul>
+                <li>Declare variables in the smallest scope possible.</li>
+                <li>Initialize local variables before use.</li>
+                <li>Use `private` for instance variables and provide `public` getter/setter methods to control access (encapsulation).</li>
+                <li>Use `final` for variables that should not change (constants).</li>
+            </ul>
+            
+            <!-- TOPIC 7 -->
+            <h2>Operators</h2>
+            <!-- Content from previous version -->
+            <p>Operators are special symbols used to perform operations on variables and values.</p>
+            <h3>Arithmetic Operators</h3>
+            <p>Used for standard mathematical calculations: <code>+</code> (addition), <code>-</code> (subtraction), <code>*</code> (multiplication), <code>/</code> (division), and <code>%</code> (modulo/remainder).</p>
+            <button class="code-toggle-btn" data-target="ops-code-2">Show Operator Examples</button>
+            <div id="ops-code-2" class="code-block">
+<pre><span class="code-keyword">int</span> x = <span class="code-number">10</span>;
+<span class="code-keyword">int</span> y = <span class="code-number">4</span>;
+
+System.out.println(<span class="code-string">"x + y = "</span> + (x + y)); <span class="code-comment">// 14</span>
+System.out.println(<span class="code-string">"x / y = "</span> + (x / y)); <span class="code-comment">// 2 (Integer division truncates the decimal)</span>
+System.out.println(<span class="code-string">"x % y = "</span> + (x % y)); <span class="code-comment">// 2 (The remainder of 10 / 4)</span>
+
+<span class="code-comment">// The + operator is "overloaded" for Strings</span>
+String greeting = <span class="code-string">"Hello"</span>;
+String name = <span class="code-string">"World"</span>;
+String fullGreeting = greeting + <span class="code-string">", "</span> + name + <span class="code-string">"!"</span>; <span class="code-comment">// "Hello, World!"</span>
+System.out.println(fullGreeting);</pre>
+            </div>
+            <h3>Other Important Operator Categories</h3>
+            <ul>
+                <li><strong>Assignment Operators:</strong> <code>=</code>, <code>+=</code>, <code>-=</code>, <code>*=</code>, etc. (e.g., <code>x += 5</code> is shorthand for <code>x = x + 5</code>).</li>
+                <li><strong>Relational Operators:</strong> <code>==</code> (equal to), <code>!=</code> (not equal to), <code>></code>, <code><</code>, <code>>=</code>, <code><=</code>. They always result in a `boolean` value.</li>
+                <li><strong>Logical Operators:</strong> <code>&&</code> (logical AND), <code>||</code> (logical OR), <code>!</code> (logical NOT). Used to combine boolean expressions.</li>
+                <li><strong>Unary Operators:</strong> <code>++</code> (increment), <code>--</code> (decrement).</li>
+            </ul>
+            <h2>Class Structure and Formatting</h2>
+            <p>How you structure your files and format your code is crucial for readability and maintenance. Well-organized code is easier to debug and for others to understand.</p>
+            <h3>File and Class Rules</h3>
+            <ul>
+                <li>A single Java source file (`.java`) can contain multiple class definitions.</li>
+                <li>However, a source file can have **at most one `public` class**.</li>
+                <li>If a source file contains a `public` class, the name of the file **must exactly match** the name of the public class (e.g., `public class MyUtility` must be in a file named `MyUtility.java`).</li>
+            </ul>
+            <h3>Methods within a Class</h3>
+            <ul>
+                <li>A class is a container for data (variables) and behavior (methods). You can define many methods within a single class.</li>
+                <li>As we saw in the `main` method, any method that is called directly from a `static` context (like `main`) must also be declared as `static`.</li>
+                <li>Most regular methods in Object-Oriented Programming that operate on an object's instance variables are **not** static. You need to create an object first to call them.</li>
+            </ul>
+            <h3>The Importance of Code Indentation</h3>
+            <ul>
+                <li>Indentation has no effect on the compiler, but it is **critically important** for human readability.</li>
+                <li>Nested blocks of code (e.g., an `if` statement inside a `for` loop) should be indented further to show the logical structure.</li>
+                <li>The exact style (e.g., 2 spaces, 4 spaces, tabs) can be a matter of personal or team preference, but **consistency is key**. Most projects follow a style guide, like the <a href="https://google.github.io/styleguide/javaguide.html" target="_blank">Google Java Style Guide</a>.</li>
+            </ul>
+            <button class="code-toggle-btn" data-target="class-structure-code">Show Formatting Example</button>
+            <div id="class-structure-code" class="code-block">
+                <pre><span class="code-comment">// This entire class is in a file named GoodStyle.java</span>
+<span class="code-keyword">public class</span> <span class="code-class">GoodStyle</span> {
+    
+    <span class="code-keyword">public static void</span> <span class="code-method">main</span>(String[] args) {
+        <span class="code-comment">// main is static, so it can call other static methods directly</span>
+        <span class="code-method">printWelcomeMessage</span>();
+
+        <span class="code-comment">// To call a non-static method, we must first create an object</span>
+        GoodStyle myObject = <span class="code-keyword">new</span> <span class="code-class">GoodStyle</span>();
+        myObject.<span class="code-method">printInstanceMessage</span>();
+    }
+
+    <span class="code-comment">// This is a static helper method</span>
+    <span class="code-keyword">public static void</span> <span class="code-method">printWelcomeMessage</span>() {
+        System.out.println(<span class="code-string">"--- Welcome to the Style Demo ---"</span>);
+    }
+
+    <span class="code-comment">// This is a non-static (instance) method</span>
+    <span class="code-keyword">public void</span> <span class="code-method">printInstanceMessage</span>() {
+        System.out.println(<span class="code-string">"This message comes from an object instance."</span>);
+    }
+}
+
+<span class="code-comment">// This is a non-public class in the same file. This is allowed.</span>
+<span class="code-keyword">class</span> <span class="code-class">AnotherClass</span> {
+    <span class="code-comment">// ... content for AnotherClass</span>
+}
+</pre>
+            </div>
+
+            <h2>Wrap-up and Further Learning</h2>
+            <!-- ... Content for Wrap-up ... -->
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const buttons = document.querySelectorAll('.code-toggle-btn');
+            buttons.forEach(button => {
+                button.addEventListener('click', function () {
+                    const targetId = this.dataset.target;
+                    const codeBlock = document.getElementById(targetId);
+                    
+                    if (codeBlock.style.display === 'block') {
+                        codeBlock.style.display = 'none';
+                        this.textContent = this.textContent.replace('Hide', 'Show');
+                    } else {
+                        codeBlock.style.display = 'block';
+                        this.textContent = this.textContent.replace('Show', 'Hide');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
