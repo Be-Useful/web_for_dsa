@@ -170,10 +170,11 @@
 </head>
 <body>
     <nav class="navbar">
-        <a href="index.html" class="active-nav">Intro to CP</a>
-        <a href="java_basics.html">Java Basics</a>
-        <a href="java_basic_2.html">Java Basics II</a>
-    </nav>
+    <a href="index.html">Intro to CP</a>
+    <a href="java_basics.html">Java Basics</a>
+    <a href="java_basic_2.html" class="active-nav">Java Basics II</a>
+    <a href="Basic_practice_problems.html">Basic Practice Problems</a>
+</nav>
 
     <main class="content-area">
         <div class="presentation-card">
@@ -345,7 +346,7 @@ String[] fruits = {<span class="code-string">"Apple"</span>, <span class="code-s
             <p>A common pitfall for beginners is knowing how to compare strings correctly.</p>
             <ul>
                 <li><strong>NEVER use <code>==</code> for content comparison.</strong> The <code>==</code> operator checks if two variables refer to the exact same object in memory.</li>
-                <li><strong>ALWAYS use the <code>.equals()</code> method</strong> to check if two strings contain the same sequence of characters. Use <code>.equalsIgnoreCase()</code> to compare without case sensitivity.</li>
+                <li><strong>ALWAYS use the <code>equals()</code> method</strong> to check if two strings contain the same sequence of characters. Use <code>equalsIgnoreCase()</code> to compare without case sensitivity.</li>
             </ul>
              <pre><span class="code-comment">// s1 and s2 point to the same object in the "String Constant Pool" for efficiency.</span>
 String s1 = <span class="code-string">"Java"</span>;
@@ -357,6 +358,43 @@ String s3 = <span class="code-keyword">new</span> String(<span class="code-strin
 System.out.println(s1 == s2);        <span class="code-comment">// true (same object)</span>
 System.out.println(s1 == s3);        <span class="code-comment">// false (different objects)</span>
 System.out.println(s1.equals(s3)); <span class="code-comment">// true (same content)</span></pre>
+
+            <h3>Commonly Used String Methods</h3>
+            <ul>
+                <li><strong>length()</strong> — Returns the number of characters in the string.<br>
+                    <pre>String s = "hello";
+System.out.println(s.length()); // 5</pre>
+                </li>
+                <li><strong>charAt(int index)</strong> — Returns the character at the specified index.<br>
+                    <pre>String s = "hello";
+System.out.println(s.charAt(1)); // 'e'</pre>
+                </li>
+                <li><strong>substring(int start, int end)</strong> — Returns a substring from start (inclusive) to end (exclusive).<br>
+                    <pre>String s = "hello";
+System.out.println(s.substring(1, 4)); // "ell"</pre>
+                </li>
+                <li><strong>toUpperCase(), toLowerCase()</strong> — Converts all characters to upper/lower case.<br>
+                    <pre>String s = "Hello";
+System.out.println(s.toUpperCase()); // "HELLO"</pre>
+                </li>
+                <li><strong>indexOf(String str)</strong> — Returns the index of the first occurrence of the substring, or -1 if not found.<br>
+                    <pre>String s = "banana";
+System.out.println(s.indexOf("na")); // 2</pre>
+                </li>
+                <li><strong>replace(char old, char new)</strong> — Returns a new string with all occurrences of old replaced by new.<br>
+                    <pre>String s = "java";
+System.out.println(s.replace('a', 'o')); // "jovo"</pre>
+                </li>
+                <li><strong>split(String regex)</strong> — Splits the string into an array using the given regex (delimiter).<br>
+                    <pre>String s = "a,b,c";
+String[] arr = s.split(",");
+System.out.println(arr[0]); // "a"</pre>
+                </li>
+                <li><strong>trim()</strong> — Removes leading and trailing whitespace.<br>
+                    <pre>String s = "  hello  ";
+System.out.println(s.trim()); // "hello"</pre>
+                </li>
+            </ul>
 
             <h3>Practice Questions: Strings</h3>
             <p>1. Write a program that counts the number of vowels (a, e, i, o, u) in a given string.</p>
@@ -399,6 +437,41 @@ System.out.println(s1.equals(s3)); <span class="code-comment">// true (same cont
 <span class="code-comment">// Two-Step Process: Declare, then allocate memory and assign values.</span>
 <span class="code-keyword">double</span>[] prices = <span class="code-keyword">new double</span>[<span class="code-number">10</span>]; <span class="code-comment">// Creates an array of 10 doubles, initialized to 0.0</span>
 prices[<span class="code-number">0</span>] = <span class="code-number">19.99</span>; <span class="code-comment">// Assign a value to the first element</span></pre>
+
+            <h3>Commonly Used Array Methods & Operations</h3>
+            <ul>
+                <li><strong>length</strong> — The number of elements in the array (field, not a method).<br>
+                    <pre>int[] arr = {1, 2, 3};
+System.out.println(arr.length); // 3</pre>
+                </li>
+                <li><strong>Arrays.toString(array)</strong> — Returns a string representation of the array (requires <code>import java.util.Arrays;</code>).<br>
+                    <pre>int[] arr = {1, 2, 3};
+System.out.println(Arrays.toString(arr)); // [1, 2, 3]</pre>
+                </li>
+                <li><strong>Arrays.sort(array)</strong> — Sorts the array in ascending order.<br>
+                    <pre>int[] arr = {3, 1, 2};
+Arrays.sort(arr);
+System.out.println(Arrays.toString(arr)); // [1, 2, 3]</pre>
+                </li>
+                <li><strong>Arrays.copyOf(array, newLength)</strong> — Copies the array to a new array of the specified length.<br>
+                    <pre>int[] arr = {1, 2, 3};
+int[] copy = Arrays.copyOf(arr, 5);
+System.out.println(Arrays.toString(copy)); // [1, 2, 3, 0, 0]</pre>
+                </li>
+                <li><strong>Arrays.equals(arr1, arr2)</strong> — Checks if two arrays have the same elements in the same order.<br>
+                    <pre>int[] a = {1, 2};
+int[] b = {1, 2};
+System.out.println(Arrays.equals(a, b)); // true</pre>
+                </li>
+                <li><strong>Enhanced For Loop</strong> — Iterate through all elements easily.<br>
+                    <pre>int[] arr = {1, 2, 3};
+for (int val : arr) {
+    System.out.println(val);
+}</pre>
+                </li>
+            </ul>
+            <p><strong>Note:</strong> Most array utility methods are in <code>java.util.Arrays</code> and require <code>import java.util.Arrays;</code> at the top of your Java file.</p>
+
 
             <h3>Practice Questions: Arrays</h3>
             <p>1. Write a program to find the minimum and maximum values in an integer array.</p>
