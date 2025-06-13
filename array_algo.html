@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lecture 6: Basic Algorithm Problems</title>
+    <!-- Tailwind CSS CDN for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Prism.js for code highlighting -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <style>
+        /* Custom CSS for 'Inter' font and base styles from existing site */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f3f4f6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column; 
+        }
+
+        .content-area {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 2rem;
+            box-sizing: border-box;
+        }
+
+        .presentation-card {
+            background-color: #ffffff;
+            border-radius: 1.5rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            padding: 2.5rem;
+            width: 90%;
+            max-width: 960px;
+            box-sizing: border-box;
+        }
+
+        .presentation-card h1, .presentation-card h2 {
+            color: #1f2937;
+            margin-bottom: 1.5rem;
+            font-weight: 800;
+        }
+        
+        .presentation-card h3 {
+             color: #1f2937;
+             font-weight: 700;
+             margin-top: 1.5rem;
+             margin-bottom: 1rem;
+        }
+
+        .presentation-card p, .presentation-card li {
+            color: #4b5563;
+            line-height: 1.7;
+            margin-bottom: 1rem;
+            font-size: 1.05rem;
+        }
+        
+        .presentation-card code:not(pre > code) {
+            background-color: #eef2ff;
+            color: #4338ca;
+            padding: 0.2rem 0.5rem;
+            border-radius: 0.375rem;
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: 600;
+        }
+        
+        .presentation-card pre {
+            border-radius: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .presentation-card .example-box {
+            background-color: #f9fafb;
+            border-left-width: 4px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            margin-bottom: 2.5rem;
+            border-radius: 0.5rem;
+        }
+        
+        .presentation-card .complexity-tag {
+            display: inline-block;
+            background-color: #eef2ff;
+            color: #4338ca;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Navigation Bar Styles to match site */
+        .navbar {
+            background-color: #4338ca;
+            padding: 1rem 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
+        }
+
+        .navbar a:hover {
+            background-color: #4f46e5;
+            transform: translateY(-2px);
+        }
+
+        .navbar a.active-nav {
+            background-color: #6d28d9;
+            font-weight: 700;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        @media (max-width: 768px) {
+            .presentation-card { padding: 1.5rem; width: 95%; }
+            .presentation-card h1 { font-size: 2.2rem; }
+            .presentation-card h2 { font-size: 1.8rem; }
+            .navbar { justify-content: flex-start; overflow-x: auto; }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar">
+    <a href="index.html">Intro to CP</a>
+    <a href="java_basics.html">Java Basics</a>
+    <a href="java_basic_2.html">Java Basics II</a>
+    <a href="Basic_practice_problems.html">Basic Practice Problems</a>
+    <a href="time_complexity.html">Time Complexity</a>
+    <a href="basic_algo_problems.html" class="active-nav">Basic Algo Problems</a>
+</nav>
+
+<!-- Main Content Area -->
+<main class="content-area">
+    <div class="presentation-card">
+        <div class="text-center mb-8">
+            <h1 class="text-4xl lg:text-5xl font-extrabold text-indigo-700 mb-4">Core Array Algorithms</h1>
+            <p class="text-lg text-gray-600">Fundamental Patterns for Array Manipulation</p>
+        </div>
+
+        <hr class="my-12 border-t-2 border-gray-200">
+        
+        <!-- Kadane's Algorithm -->
+        <h2 class="text-3xl font-bold text-gray-800">1. Kadane's Algorithm</h2>
+        <div class="example-box border-l-blue-500">
+            <h3 class="text-xl font-bold text-gray-800 mt-0">Problem: Find the Maximum Subarray Sum</h3>
+            <p>Given an array containing both positive and negative numbers, find the contiguous subarray with the largest sum.</p>
+            <h3 class="text-xl font-bold text-gray-800 mt-6">Brute-force Approach</h3>
+            <p>The simplest way is to generate every possible subarray, calculate its sum, and keep track of the maximum sum found. This requires two nested loops, making it inefficient for large arrays.</p>
+            <div><span class="complexity-tag">Time: O(n²)</span><span class="complexity-tag">Space: O(1)</span></div>
+            <pre><code class="language-java">int maxSubArraySum_bruteForce(int[] arr) {
+    int maxSum = Integer.MIN_VALUE;
+    for (int i = 0; i < arr.length; i++) {
+        int currentSum = 0;
+        for (int j = i; j < arr.length; j++) {
+            currentSum += arr[j];
+            if (currentSum > maxSum) {
+                maxSum = currentSum;
+            }
+        }
+    }
+    return maxSum;
+}</code></pre>
+            <h3 class="text-xl font-bold text-gray-800 mt-6">Optimal Approach (Kadane's)</h3>
+            <p>The core idea is simple: as we iterate through the array, we keep a running `currentSum`. If `currentSum` ever becomes negative, we discard it and reset it to 0. We use a separate `maxSum` variable to store the highest sum we've seen so far.</p>
+            <div><span class="complexity-tag">Time: O(n)</span><span class="complexity-tag">Space: O(1)</span></div>
+            <pre><code class="language-java">int maxSubArraySum_kadane(int[] arr) {
+    int maxSum = Integer.MIN_VALUE;
+    int currentSum = 0;
+    for (int i = 0; i < arr.length; i++) {
+        currentSum += arr[i];
+        if (currentSum > maxSum) {
+            maxSum = currentSum;
+        }
+        // If the sum becomes negative, it's a bad start for a new subarray. Reset.
+        if (currentSum < 0) {
+            currentSum = 0;
+        }
+    }
+    return maxSum;
+}</code></pre>
+        </div>
+
+        <!-- Dutch National Flag Algorithm -->
+        <h2 class="text-3xl font-bold text-gray-800">2. Dutch National Flag Algorithm</h2>
+        <div class="example-box border-l-orange-500">
+            <h3 class="text-xl font-bold text-gray-800 mt-0">Problem: Sort an Array of 0s, 1s, and 2s</h3>
+            <p>Given an array containing only 0s, 1s, and 2s, sort it in-place in a single pass.</p>
+            <h3 class="text-xl font-bold text-gray-800 mt-6">Brute-force Approach</h3>
+            <p>A straightforward method is to count the number of 0s, 1s, and 2s in one pass. Then, in a second pass, overwrite the original array with the counted number of 0s, followed by 1s, and then 2s.</p>
+            <div><span class="complexity-tag">Time: O(n)</span><span class="complexity-tag">Space: O(1)</span></div>
+            <pre><code class="language-java">void sortColors_bruteForce(int[] nums) {
+    int zeros = 0, ones = 0, twos = 0;
+    for (int num : nums) {
+        if (num == 0) zeros++;
+        else if (num == 1) ones++;
+        else twos++;
+    }
+    for (int i = 0; i < nums.length; i++) {
+        if (i < zeros) nums[i] = 0;
+        else if (i < zeros + ones) nums[i] = 1;
+        else nums[i] = 2;
+    }
+}</code></pre>
+            <h3 class="text-xl font-bold text-gray-800 mt-6">Optimal Approach (Dutch Flag)</h3>
+            <p>This algorithm uses three pointers: `low`, `mid`, and `high` to partition the array in a single pass. Based on the value at `nums[mid]`, it swaps elements to their correct partition.</p>
+            <div><span class="complexity-tag">Time: O(n)</span><span class="complexity-tag">Space: O(1)</span></div>
+            <pre><code class="language-java">void swap(int[] arr, int i, int j) {
+    int temp = arr[i];
+    arr[i] = arr[j];
+    arr[j] = temp;
+}
+
+void sortColors_dutchFlag(int[] nums) {
+    int low = 0, mid = 0, high = nums.length - 1;
+    while (mid <= high) {
+        if (nums[mid] == 0) {
+            swap(nums, low++, mid++);
+        } else if (nums[mid] == 1) {
+            mid++;
+        } else { // nums[mid] == 2
+            swap(nums, mid, high--);
+        }
+    }
+}</code></pre>
+        </div>
+
+        <!-- Find Element Appearing Once -->
+        <h2 class="text-3xl font-bold text-gray-800">3. Find Element Appearing Once</h2>
+         <div class="example-box border-l-green-500">
+            <h3 class="text-xl font-bold text-gray-800 mt-0">Problem: Find the Unique Element</h3>
+            <p>In an array where every element appears twice except for one, find that single unique element.</p>
+            <h3 class="text-xl font-bold text-gray-800 mt-6">Brute-force Approach</h3>
+            <p>Using nested loops, we can compare every element with every other element. For each element, we count its occurrences. If the count is 1, we've found our unique number.</p>
+            <div><span class="complexity-tag">Time: O(n²)</span><span class="complexity-tag">Space: O(1)</span></div>
+            <pre><code class="language-java">int findUnique_bruteForce(int[] arr) {
+    for (int i = 0; i < arr.length; i++) {
+        int count = 0;
+        for (int j = 0; j < arr.length; j++) {
+            if (arr[j] == arr[i]) {
+                count++;
+            }
+        }
+        if (count == 1) {
+            return arr[i];
+        }
+    }
+    return -1; // Should not happen based on problem statement
+}</code></pre>
+            <h3 class="text-xl font-bold text-gray-800 mt-6">Optimal Approach (XOR)</h3>
+            <p>This problem has a beautifully elegant solution using the bitwise XOR (`^`) operator. Since `x ^ x = 0` and `x ^ 0 = x`, XORing all numbers in the array causes all paired elements to cancel each other out, leaving only the unique number.</p>
+            <div><span class="complexity-tag">Time: O(n)</span><span class="complexity-tag">Space: O(1)</span></div>
+            <pre><code class="language-java">int findUnique_xor(int[] arr) {
+    int result = 0;
+    for (int num : arr) {
+        result ^= num;
+    }
+    return result;
+}</code></pre>
+        </div>
+
+        <!-- Majority Element -->
+        <h2 class="text-3xl font-bold text-gray-800">4. Majority Element</h2>
+        <div class="example-box border-l-red-500">
+            <h3 class="text-xl font-bold text-gray-800 mt-0">Problem: Find the Majority Element</h3>
+            <p>Find the element that appears more than n/2 times in an array. You can assume the majority element always exists.</p>
+            <h3 class="text-xl font-bold text-gray-800 mt-6">Brute-force Approach</h3>
+            <p>The most direct way is to use two nested loops. The outer loop picks an element as a potential candidate, and the inner loop counts its frequency. If the count exceeds n/2, we have our answer.</p>
+            <div><span class="complexity-tag">Time: O(n²)</span><span class="complexity-tag">Space: O(1)</span></div>
+            <pre><code class="language-java">int majorityElement_bruteForce(int[] nums) {
+    for (int i = 0; i < nums.length; i++) {
+        int count = 0;
+        for (int j = 0; j < nums.length; j++) {
+            if (nums[j] == nums[i]) {
+                count++;
+            }
+        }
+        if (count > nums.length / 2) {
+            return nums[i];
+        }
+    }
+    return -1; // Should not happen
+}</code></pre>
+            <h3 class="text-xl font-bold text-gray-800 mt-6">Optimal Approach (Boyer-Moore Voting)</h3>
+            <p>This clever algorithm finds the majority element in linear time and constant space. It maintains a `candidate` and a `count`. When the count is 0, a new candidate is chosen. The count is incremented if the current element matches the candidate, and decremented otherwise. The key insight is that all non-majority elements will cancel each other out, leaving the majority element as the final candidate.</p>
+            <div><span class="complexity-tag">Time: O(n)</span><span class="complexity-tag">Space: O(1)</span></div>
+            <pre><code class="language-java">int majorityElement_boyerMoore(int[] nums) {
+    int count = 0;
+    Integer candidate = null;
+    for (int num : nums) {
+        if (count == 0) {
+            candidate = num;
+        }
+        count += (num == candidate) ? 1 : -1;
+    }
+    return candidate;
+}</code></pre>
+        </div>
+
+        <!-- Find Missing Number -->
+        <h2 class="text-3xl font-bold text-gray-800">5. Find Missing Number</h2>
+        <div class="example-box border-l-cyan-500">
+            <h3 class="text-xl font-bold text-gray-800 mt-0">Problem: Find the Missing Number in a Range</h3>
+            <p>Given an array containing `n` distinct numbers taken from the range `0, 1, 2, ..., n`, find the one that is missing from the array.</p>
+             <h3 class="text-xl font-bold text-gray-800 mt-6">Brute-force Approach</h3>
+            <p>A simple approach is to first sort the array. Then, we can iterate through the sorted array and check if the number at each index matches the index value. The first index `i` where `nums[i] != i` is our missing number.</p>
+            <div><span class="complexity-tag">Time: O(n log n)</span><span class="complexity-tag">Space: O(1)</span></div>
+            <pre><code class="language-java">int missingNumber_bruteForce(int[] nums) {
+    // Assumes Arrays.sort() is available
+    java.util.Arrays.sort(nums);
+    for (int i = 0; i < nums.length; i++) {
+        if (nums[i] != i) {
+            return i;
+        }
+    }
+    return nums.length; // Missing number is n
+}</code></pre>
+            <h3 class="text-xl font-bold text-gray-800 mt-6">Optimal Approach (Summation or XOR)</h3>
+            <p>There are two common O(n) solutions. The first calculates the expected sum of the series from 0 to n using the formula `n*(n+1)/2` and subtracts the actual sum of the array. The second, more robust method (avoids overflow) uses XOR. It XORs all numbers from 0 to n, then XORs all numbers in the array. The remaining value is the missing number.</p>
+            <div><span class="complexity-tag">Time: O(n)</span><span class="complexity-tag">Space: O(1)</span></div>
+            <pre><code class="language-java">int missingNumber_xor(int[] nums) {
+    int missing = nums.length;
+    for (int i = 0; i < nums.length; i++) {
+        missing ^= i ^ nums[i];
+    }
+    return missing;
+}</code></pre>
+        </div>
+        
+        <!-- Move Zeroes to End -->
+        <h2 class="text-3xl font-bold text-gray-800">6. Move All Zeroes to End</h2>
+        <div class="example-box border-l-purple-500">
+            <h3 class="text-xl font-bold text-gray-800 mt-0">Problem: Move Zeroes</h3>
+            <p>Given an array, move all the zeroes to the end of it while maintaining the relative order of the non-zero elements. This must be done in-place.</p>
+            <h3 class="text-xl font-bold text-gray-800 mt-6">Brute-force Approach</h3>
+            <p>A simple, but not in-place, solution is to use an auxiliary array. Iterate through the input array and copy all non-zero elements into the new array. Then, fill the remaining spots in the new array with zeroes. Finally, copy the auxiliary array back to the original.</p>
+            <div><span class="complexity-tag">Time: O(n)</span><span class="complexity-tag">Space: O(n)</span></div>
+            <pre><code class="language-java">void moveZeroes_bruteForce(int[] nums) {
+    int[] temp = new int[nums.length];
+    int insertPos = 0;
+    for (int num : nums) {
+        if (num != 0) {
+            temp[insertPos++] = num;
+        }
+    }
+    // Copy back from temp array
+    for (int i = 0; i < nums.length; i++) {
+        nums[i] = temp[i];
+    }
+}</code></pre>
+            <h3 class="text-xl font-bold text-gray-800 mt-6">Optimal Approach (Two Pointers)</h3>
+            <p>We can solve this in a single pass and in-place. We use a pointer (`insertPos`) to keep track of the position for the next non-zero element. We iterate through the array, and whenever we encounter a non-zero element, we place it at `nums[insertPos]` and increment `insertPos`. After this loop, all non-zero elements are at the front. We then iterate from `insertPos` to the end of the array, filling the remaining spots with zeroes.</p>
+            <div><span class="complexity-tag">Time: O(n)</span><span class="complexity-tag">Space: O(1)</span></div>
+            <pre><code class="language-java">void moveZeroes_optimal(int[] nums) {
+    int insertPos = 0;
+    for (int num : nums) {
+        if (num != 0) {
+            nums[insertPos++] = num;
+        }
+    }
+    while (insertPos < nums.length) {
+        nums[insertPos++] = 0;
+    }
+}</code></pre>
+        </div>
+    </div>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html>
