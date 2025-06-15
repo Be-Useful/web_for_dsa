@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lecture 7: Sorting Algorithms & NGE</title>
+    <!-- Tailwind CSS CDN for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Prism.js for code highlighting -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <style>
+        /* Custom CSS for 'Inter' font and base styles from existing site */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f3f4f6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column; 
+        }
+
+        .content-area {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 2rem;
+            box-sizing: border-box;
+        }
+
+        .presentation-card {
+            background-color: #ffffff;
+            border-radius: 1.5rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            padding: 2.5rem;
+            width: 90%;
+            max-width: 960px;
+            box-sizing: border-box;
+        }
+
+        .presentation-card h1, .presentation-card h2 {
+            color: #1f2937;
+            margin-bottom: 1.5rem;
+            font-weight: 800;
+        }
+        
+        .presentation-card h3 {
+             color: #1f2937;
+             font-weight: 700;
+             margin-top: 1.5rem;
+             margin-bottom: 1rem;
+        }
+
+        .presentation-card p, .presentation-card li {
+            color: #4b5563;
+            line-height: 1.7;
+            margin-bottom: 1rem;
+            font-size: 1.05rem;
+        }
+        
+        .presentation-card code:not(pre > code) {
+            background-color: #eef2ff;
+            color: #4338ca;
+            padding: 0.2rem 0.5rem;
+            border-radius: 0.375rem;
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: 600;
+        }
+        
+        .presentation-card pre {
+            border-radius: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .presentation-card .example-box {
+            background-color: #f9fafb;
+            border-left-width: 4px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            margin-bottom: 2.5rem;
+            border-radius: 0.5rem;
+        }
+        
+        .presentation-card .complexity-tag {
+            display: inline-block;
+            background-color: #eef2ff;
+            color: #4338ca;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Navigation Bar Styles to match site */
+        .navbar {
+            background-color: #4338ca;
+            padding: 1rem 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
+        }
+
+        .navbar a:hover {
+            background-color: #4f46e5;
+            transform: translateY(-2px);
+        }
+
+        .navbar a.active-nav {
+            background-color: #6d28d9;
+            font-weight: 700;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        @media (max-width: 768px) {
+            .presentation-card { padding: 1.5rem; width: 95%; }
+            .presentation-card h1 { font-size: 2.2rem; }
+            .presentation-card h2 { font-size: 1.8rem; }
+            .navbar { justify-content: flex-start; overflow-x: auto; }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar">
+    <a href="index.html">Intro to CP</a>
+    <a href="java_basics.html">Java Basics</a>
+    <a href="java_basic_2.html">Java Basics II</a>
+    <a href="Basic_practice_problems.html">Basic Practice Problems</a>
+    <a href="time_complexity.html">Time Complexity</a>
+    <a href="array_algo.html">Array Algorithms</a>
+    <a href="basic_sorting.html" class="active-nav">Basic Sorting</a>
+</nav>
+
+<!-- Main Content Area -->
+<main class="content-area">
+    <div class="presentation-card">
+        <div class="text-center mb-8">
+            <h1 class="text-4xl lg:text-5xl font-extrabold text-indigo-700 mb-4">Fundamental Sorting Algorithms</h1>
+            <p class="text-lg text-gray-600">Exploring comparison-based and non-comparison-based sorting techniques.</p>
+        </div>
+
+        <hr class="my-12 border-t-2 border-gray-200">
+        
+        <!-- Bubble Sort -->
+        <h2 class="text-3xl font-bold text-gray-800">1. Bubble Sort</h2>
+        <div class="example-box border-l-blue-500">
+            <h3 class="text-xl font-bold text-gray-800 mt-0">How it Works</h3>
+            <p>Bubble Sort is the simplest sorting algorithm. It repeatedly steps through the list, compares adjacent elements, and swaps them if they are in the wrong order. The pass through the list is repeated until the list is sorted. The largest element "bubbles up" to its correct position in each pass.</p>
+            <p><strong>Analogy:</strong> Imagine bubbles in a drink rising to the surface. In each pass, the largest unsorted element similarly "rises" to its final position.</p>
+            <div><span class="complexity-tag">Time: O(n²)</span><span class="complexity-tag">Space: O(1)</span></div>
+            <pre><code class="language-java">void bubbleSort(int[] arr) {
+    int n = arr.length;
+    boolean swapped;
+    for (int i = 0; i < n - 1; i++) {
+        swapped = false;
+        // Last i elements are already in place
+        for (int j = 0; j < n - 1 - i; j++) {
+            if (arr[j] > arr[j + 1]) {
+                // Swap arr[j] and arr[j+1]
+                int temp = arr[j];
+                arr[j] = arr[j + 1];
+                arr[j + 1] = temp;
+                swapped = true;
+            }
+        }
+        // If no two elements were swapped by inner loop, then break
+        if (!swapped) {
+            break;
+        }
+    }
+}</code></pre>
+        </div>
+
+        <!-- Selection Sort -->
+        <h2 class="text-3xl font-bold text-gray-800">2. Selection Sort</h2>
+        <div class="example-box border-l-orange-500">
+            <h3 class="text-xl font-bold text-gray-800 mt-0">How it Works</h3>
+            <p>This algorithm divides the array into two parts: a sorted subarray and an unsorted subarray. In each iteration, it finds the minimum element from the unsorted part and moves it to the end of the sorted part. It repeatedly "selects" the smallest remaining element and puts it in its place.</p>
+            <p><strong>Key Idea:</strong> The algorithm makes at most O(n) swaps, which can be useful if memory write operations are costly.</p>
+            <div><span class="complexity-tag">Time: O(n²)</span><span class="complexity-tag">Space: O(1)</span></div>
+            <pre><code class="language-java">void selectionSort(int[] arr) {
+    int n = arr.length;
+    // One by one move boundary of unsorted subarray
+    for (int i = 0; i < n - 1; i++) {
+        // Find the minimum element in unsorted array
+        int min_idx = i;
+        for (int j = i + 1; j < n; j++) {
+            if (arr[j] < arr[min_idx]) {
+                min_idx = j;
+            }
+        }
+        // Swap the found minimum element with the first element
+        int temp = arr[min_idx];
+        arr[min_idx] = arr[i];
+        arr[i] = temp;
+    }
+}</code></pre>
+        </div>
+
+        <!-- Insertion Sort -->
+        <h2 class="text-3xl font-bold text-gray-800">3. Insertion Sort</h2>
+        <div class="example-box border-l-green-500">
+            <h3 class="text-xl font-bold text-gray-800 mt-0">How it Works</h3>
+            <p>Insertion sort also builds the final sorted array one item at a time. It iterates through the input elements and, for each element, it finds the correct position in the already sorted part of the array and "inserts" it there. It's much more efficient than Bubble Sort and Selection Sort for small datasets.</p>
+             <p><strong>Analogy:</strong> It works the way you might sort a hand of playing cards. You pick up one card at a time and insert it into its correct position among the cards you're already holding.</p>
+            <div><span class="complexity-tag">Time: O(n²)</span><span class="complexity-tag">Best Case: O(n)</span><span class="complexity-tag">Space: O(1)</span></div>
+            <pre><code class="language-java">void insertionSort(int[] arr) {
+    int n = arr.length;
+    for (int i = 1; i < n; ++i) {
+        int key = arr[i];
+        int j = i - 1;
+
+        /* Move elements of arr[0..i-1], that are
+           greater than key, to one position ahead
+           of their current position */
+        while (j >= 0 && arr[j] > key) {
+            arr[j + 1] = arr[j];
+            j = j - 1;
+        }
+        arr[j + 1] = key;
+    }
+}</code></pre>
+        </div>
+        
+        <!-- Counting Sort -->
+        <h2 class="text-3xl font-bold text-gray-800">4. Counting Sort</h2>
+        <div class="example-box border-l-purple-500">
+            <h3 class="text-xl font-bold text-gray-800 mt-0">How it Works</h3>
+            <p>Counting sort is a non-comparison-based sorting algorithm. It operates by counting the number of objects that have each distinct key value. Then, it uses arithmetic on these counts to determine the positions of each key value in the output sequence. It's highly efficient but only works when the range of input values is not significantly larger than the number of items to be sorted.</p>
+            <p><strong>Requirement:</strong> It requires knowledge of the range of numbers in the array (e.g., all numbers are between 0 and 100).</p>
+            <div><span class="complexity-tag">Time: O(n + k)</span><span class="complexity-tag">Space: O(k)</span></div>
+            <p class="text-sm text-gray-500">*Where 'k' is the range of the input values.</p>
+            <pre><code class="language-java">void countingSort(int[] arr) {
+    if (arr.length == 0) return;
+
+    // Find the maximum element to determine the range
+    int max = arr[0];
+    for (int num : arr) {
+        if (num > max) {
+            max = num;
+        }
+    }
+    
+    // Create a count array to store count of individual elements
+    int[] count = new int[max + 1];
+    
+    // Store count of each character
+    for (int num : arr) {
+        count[num]++;
+    }
+    
+    // Modify the count array such that each element at each index 
+    // stores the sum of previous counts. 
+    for (int i = 1; i <= max; i++) {
+        count[i] += count[i - 1];
+    }
+    
+    // Build the output character array
+    int[] output = new int[arr.length];
+    for (int i = arr.length - 1; i >= 0; i--) {
+        output[count[arr[i]] - 1] = arr[i];
+        count[arr[i]]--;
+    }
+    
+    // Copy the output array to arr, so that arr now
+    // contains sorted characters
+    for (int i = 0; i < arr.length; i++) {
+        arr[i] = output[i];
+    }
+}</code></pre>
+        </div>
+
+        <!-- Next Greater Element (NGE) -->
+        <h2 class="text-3xl font-bold text-gray-800">5. Next Greater Element (NGE)</h2>
+        <div class="example-box border-l-cyan-500">
+            <h3 class="text-xl font-bold text-gray-800 mt-0">Problem: Find the Next Greater Element</h3>
+            <p>Given an array of integers, find the next greater element for each element in the array. The next greater element for an element x is the first greater element on the right side of x in the array. If no such element exists, output -1 for that element.</p>
+            <h3 class="text-xl font-bold text-gray-800 mt-6">Brute-force Approach</h3>
+            <p>The most straightforward way to solve this is by using two nested loops. The outer loop picks an element, and the inner loop iterates through the elements on its right side. The first element found that is greater than the element from the outer loop is the "Next Greater Element". If the inner loop finishes without finding a greater element, its NGE is -1.</p>
+            <div><span class="complexity-tag">Time: O(n²)</span><span class="complexity-tag">Space: O(n) or O(1)</span></div>
+            <p class="text-sm text-gray-500">*Space is O(n) if storing results in a new array, or O(1) if printing directly.</p>
+            <pre><code class="language-java">import java.util.Arrays;
+
+// Function to find and print NGE for all elements of arr
+int[] findNextGreaterElements(int[] arr) {
+    int n = arr.length;
+    int[] nge = new int[n];
+    for (int i = 0; i < n; i++) {
+        int nextGreater = -1;
+        for (int j = i + 1; j < n; j++) {
+            if (arr[j] > arr[i]) {
+                nextGreater = arr[j];
+                break; // Found the first greater element
+            }
+        }
+        nge[i] = nextGreater;
+    }
+    return nge;
+}
+
+// Example of how to run it:
+// int[] arr = {4, 5, 2, 25};
+// int[] result = findNextGreaterElements(arr);
+// System.out.println(Arrays.toString(result)); // Output: [5, 25, 25, -1]
+</code></pre>
+        </div>
+        
+        <hr class="my-12 border-t-2 border-gray-200">
+        
+        <!-- Java Array Length Explanation -->
+        <h2 class="text-3xl font-bold text-gray-800">6. How Array `.length` Works in Java</h2>
+        <div class="example-box border-l-red-500">
+            <h3 class="text-xl font-bold text-gray-800 mt-0">Is it a Method or a Variable?</h3>
+            <p>A common point of confusion for beginners is the difference between `array.length` and `String.length()`. They look similar but are fundamentally different.</p>
+            
+            <h3 class="text-xl font-bold text-gray-800 mt-6">`array.length` is a Final Instance Variable</h3>
+            <p>
+                In Java, an array is an object. When an array object is created, the Java Virtual Machine (JVM) allocates a contiguous block of memory for it. As part of this object's creation, a special, public, final instance variable named <code>length</code> is also created. This variable holds the number of elements the array can store.
+            </p>
+            <ul>
+                <li><strong>Final:</strong> The value of <code>length</code> is set when the array is created and cannot be changed afterwards. This makes sense, as the size of a Java array is fixed.</li>
+                <li><strong>Instance Variable:</strong> It belongs to a specific array object. Each array you create has its own <code>length</code> variable.</li>
+                <li><strong>Not a Method:</strong> You access it directly (<code>myArray.length</code>), not with parentheses like a method call (<code>myArray.length()</code>). There's no calculation involved when you access it; you are simply reading a stored value. This makes the operation extremely fast, effectively O(1).</li>
+            </ul>
+             <pre><code class="language-java">int[] numbers = new int[10]; // An array object for 10 integers is created.
+                                   // The JVM sets numbers.length to 10.
+
+System.out.println(numbers.length); // Prints 10. This is a direct field access.
+
+// You cannot do this:
+// numbers.length = 20; // Compile Error: cannot assign a value to final variable length</code></pre>
+            
+            <h3 class="text-xl font-bold text-gray-800 mt-6">Comparison with `String.length()`</h3>
+            <p>
+                In contrast, `String.length()` is a method. While a String is also backed by an array internally, the `String` class provides a method to get its length. This is a design choice by Java's creators to provide a consistent interface for various character sequences (like `StringBuilder`, `CharSequence`, etc.).
+            </p>
+        </div>
+
+    </div>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html>
