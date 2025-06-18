@@ -155,16 +155,17 @@
 </head>
 <body>
 
-<nav class="navbar">
-    <a href="index.html">Intro to CP</a>
-    <a href="java_basics.html">Java Basics</a>
-    <a href="java_basic_2.html">Java Basics II</a>
-    <a href="Basic_practice_problems.html">Basic Practice Problems</a>
-    <a href="time_complexity.html">Time Complexity</a>
-    <a href="array_algo.html">Array Algorithms</a>
-    <a href="basic_sorting.html">Basic Sorting</a>
-    <a href="greedy_algorithms.html" class="active-nav">Greedy Algorithms</a>
-</nav>
+    <nav class="navbar">
+        <a href="index.html">Intro to CP</a>
+        <a href="java_basics.html">Java Basics</a>
+        <a href="java_basic_2.html">Java Basics II</a>
+        <a href="Basic_practice_problems.html">Basic Practice Problems</a>
+        <a href="time_complexity.html">Time Complexity</a>
+        <a href="basic_sorting.html">Basic Sorting</a>
+        <a href="array_algo.html">Array Algorithms</a>
+        <a href="Greedy_with_sorting.html">Greedy with Sorting</a>
+        <a href="java_collections_subarrays.html">Java Collections</a>
+    </nav>
 
 <!-- Main Content Area -->
 <main class="content-area">
@@ -424,6 +425,42 @@ class FractionalKnapsack {
                 break;
             }
         }
+        return totalValue;
+    }
+
+    static double fractionalKnapsackUsingRatioPair(int capacity, int[] val, int[] wt) {
+        int n = val.length;
+        
+        // Create a list of Map.Entry&lt;Double, Integer&gt; (ratio, index);
+            List&lt;Map.Entry&lt;Double, Integer&gt;&gt; ratioList = new ArrayList&lt;&gt;();
+        for (int i = 0; i < n; i++) {
+            double ratio = (double) val[i] / wt[i];
+            ratioList.add(Map.entry(ratio, i));
+        }
+        
+        // Sort in descending order
+        // Double.compare(x, y) returns:
+        //  -1 if x < y
+        // 0 if x == y
+        // 1 if x > y
+
+        ratioList.sort((a, b) -> Double.compare(b.getKey(), a.getKey()));
+        
+        double totalValue = 0.0;
+        for (var entry : ratioList) {
+            int i = entry.getValue();
+            int currentVal = val[i];
+            int currentWt = wt[i];
+            
+            if (capacity >= currentWt) {
+                totalValue += currentVal;
+                capacity -= currentWt;
+            } else {
+                totalValue += currentVal * ((double) capacity / currentWt);
+                break;
+            }
+        }
+        
         return totalValue;
     }
 

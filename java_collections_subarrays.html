@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Java Collections, Subarrays and Subsequences</title>
+    <!-- Tailwind CSS CDN for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom CSS for 'Inter' font and base styles from your index.html */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f3f4f6; /* Light gray background */
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column; /* Stack header, main content, footer vertically */
+        }
+
+        .content-area {
+            flex-grow: 1; /* Allows content to take up available space */
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; /* Align content to top within its area */
+            padding: 2rem; /* Padding around the main content */
+            box-sizing: border-box;
+        }
+
+        .presentation-card {
+            background-color: #ffffff;
+            border-radius: 1.5rem; /* Rounded corners */
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); /* Subtle shadow */
+            padding: 2.5rem; /* Spacious padding */
+            width: 90%;
+            max-width: 960px; /* Max width for desktop content */
+            box-sizing: border-box;
+            overflow-y: auto; /* Allow scrolling if content overflows */
+        }
+
+        .presentation-card h1, .presentation-card h2 {
+            color: #1f2937; /* Darker gray for headings */
+            margin-bottom: 1.5rem;
+            font-weight: 800; /* Extra bold headings */
+        }
+        
+        .presentation-card h3 {
+             color: #1f2937;
+             font-weight: 700;
+             margin-top: 2rem;
+             margin-bottom: 1rem;
+        }
+
+        .presentation-card p, .presentation-card li {
+            color: #4b5563; /* Medium gray for text */
+            line-height: 1.7;
+            margin-bottom: 1rem;
+            font-size: 1.05rem;
+        }
+        
+        .presentation-card code {
+            background-color: #eef2ff;
+            color: #4338ca;
+            padding: 0.2rem 0.5rem;
+            border-radius: 0.375rem;
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: 600;
+        }
+
+        .presentation-card pre {
+            background-color: #f9fafb;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            border: 1px solid #e5e7eb;
+        }
+
+        .presentation-card pre code {
+            background-color: transparent;
+            padding: 0;
+            color: #1f2937;
+            font-weight: normal;
+        }
+
+        .presentation-card .example-box {
+            background-color: #f9fafb;
+            border-left: 4px solid #4f46e5;
+            padding: 1.5rem;
+            margin-top: 1rem;
+            margin-bottom: 2rem;
+            border-radius: 0.5rem;
+        }
+
+        .presentation-card ul {
+            list-style: disc; /* Disc bullet points */
+            margin-left: 1.5rem; /* Indent lists */
+            padding-left: 0;
+            margin-bottom: 1rem;
+        }
+
+        .presentation-card a {
+            color: #4f46e5; /* Indigo for links */
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s ease-in-out;
+        }
+
+        .presentation-card a:hover {
+            color: #3730a3; /* Darker indigo on hover */
+            text-decoration: underline;
+        }
+
+        /* Navigation Bar Styles */
+        .navbar {
+            background-color: #4338ca; /* Darker Indigo background for navbar */
+            padding: 1rem 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap; /* Allow items to wrap on smaller screens */
+            gap: 1rem; /* Space between nav items */
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem; /* Rounded corners for nav links */
+            font-weight: 600;
+            transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
+        }
+
+        .navbar a:hover {
+            background-color: #4f46e5; /* Lighter indigo on hover */
+            transform: translateY(-2px);
+        }
+
+        .navbar a.active-nav {
+            background-color: #6d28d9; /* Purple for active link */
+            font-weight: 700;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .presentation-card {
+                padding: 1.5rem;
+                width: 95%;
+            }
+            .presentation-card h1 { font-size: 2.2rem; margin-bottom: 1rem; }
+            .presentation-card h2 { font-size: 1.8rem; margin-bottom: 1rem; }
+            .presentation-card p, .presentation-card li { font-size: 0.95rem; }
+            .navbar {
+                padding: 0.75rem 1rem;
+                gap: 0.5rem;
+                justify-content: flex-start; /* Align nav items to start on small screens */
+                overflow-x: auto; /* Allow horizontal scrolling for nav if needed */
+            }
+            .navbar a { padding: 0.6rem 1rem; font-size: 0.9rem; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="index.html">Intro to CP</a>
+        <a href="java_basics.html">Java Basics</a>
+        <a href="java_basic_2.html">Java Basics II</a>
+        <a href="Basic_practice_problems.html">Basic Practice Problems</a>
+        <a href="time_complexity.html">Time Complexity</a>
+        <a href="basic_sorting.html">Basic Sorting</a>
+        <a href="array_algo.html">Array Algorithms</a>
+        <a href="Greedy_with_sorting.html">Greedy with Sorting</a>
+        <a href="java_collections_subarrays.html">Java Collections</a>
+    </nav>
+
+<!-- Main Content Area -->
+<main class="content-area">
+    <div class="presentation-card">
+        <!-- SLIDE 1: Title -->
+        <div class="text-center mb-8">
+            <h1 class="text-4xl lg:text-5xl font-extrabold text-indigo-700 mb-4">Java Collections, Subarrays and Subsequences</h1>
+            <p class="text-lg text-gray-600">ArrayList, HashSet, HashMap, Subarrays, Subsequences</p>
+        </div>
+
+        <hr class="my-8 border-t-2 border-gray-200">
+
+        <!-- SLIDE 2: Core Java Data Structures -->
+        <h2 class="text-3xl font-bold mb-6 text-gray-800">1. Core Java Data Structures</h2>
+        <p>In Java, the Collections Framework provides a powerful set of data structures. Think of them as specialized containers, each designed for a specific way of storing and accessing data. Choosing the right one is key to writing efficient code.</p>
+
+        <!-- List -->
+        <h3>List: The Ordered Collection</h3>
+        <p>A <code>List</code> is an ordered collection of elements that allows duplicates. You can access elements by their integer index (position).
+        <br><strong>Analogy:</strong> A list is like a numbered list of instructions. You know the order, and you can jump to step 3 directly.</p>
+        <div class="example-box">
+            <p><strong>Common Implementations:</strong> <code>ArrayList</code> and <code>LinkedList</code>.</p>
+            <p><strong>Import:</strong> <code>import java.util.List;</code></p>
+        </div>
+
+        <!-- ArrayList -->
+        <h3>ArrayList: The Dynamic Array</h3>
+        <p>An <code>ArrayList</code> implements the <code>List</code> interface using a dynamic array. It's great for fast access to elements by index.
+        <br><strong>When to use:</strong> Use it when you need to frequently access elements by their position (e.g., getting the 5th element). It's less efficient for adding/removing elements from the middle of the list.</p>
+        <div class="example-box">
+            <p><strong>Import:</strong> <code>import java.util.ArrayList;</code></p>
+            <pre><code class="language-java">// Initialization
+List&lt;String&gt; fruits = new ArrayList&lt;&gt;();
+
+// Common Methods
+fruits.add("Apple");       // Add element
+fruits.add("Banana");
+fruits.add(1, "Orange"); // Add at a specific index
+
+String fruit = fruits.get(0); // Get element at index 0 -> "Apple"
+fruits.set(0, "Pear");        // Update element at index 0
+fruits.remove(2);         // Remove element at index 2 -> "Banana"
+
+System.out.println(fruits); // Output: [Pear, Orange]
+System.out.println(fruits.size()); // Output: 2
+</code></pre>
+        </div>
+
+        <!-- LinkedList -->
+        <h3>LinkedList: The Chain</h3>
+        <p>A <code>LinkedList</code> implements the <code>List</code> interface using a chain of nodes. Each node holds an element and a reference to the next and previous nodes.
+        <br><strong>When to use:</strong> Use it when you need to frequently add or remove elements from the beginning, middle, or end of the list. It's slower for random access by index compared to an ArrayList.</p>
+        <div class="example-box">
+            <p><strong>Import:</strong> <code>import java.util.LinkedList;</code></p>
+            <pre><code class="language-java">// Initialization
+List&lt;String&gt; vegetables = new LinkedList&lt;&gt;();
+
+// Common Methods
+vegetables.add("Carrot");    // Add to the end
+vegetables.add("Broccoli");
+vegetables.addFirst("Celery"); // Add to the front
+
+String veggie = vegetables.get(1); // Get element (slower than ArrayList)
+vegetables.removeLast();         // Remove from the end
+
+System.out.println(vegetables); // Output: [Celery, Carrot]
+</code></pre>
+        </div>
+
+        <!-- Map -->
+        <h3>Map: The Dictionary</h3>
+        <p>A <code>Map</code> is a collection of key-value pairs. Each key is unique and maps to a specific value.
+        <br><strong>Analogy:</strong> A map is like a dictionary. You look up a unique word (the key) to find its definition (the value).</p>
+        <div class="example-box">
+             <p><strong>Common Implementations:</strong> <code>HashMap</code> and <code>TreeMap</code>.</p>
+            <p><strong>Import:</strong> <code>import java.util.Map;</code></p>
+        </div>
+
+        <!-- HashMap -->
+        <h3>HashMap: The Fast Dictionary</h3>
+        <p>A <code>HashMap</code> implements the <code>Map</code> interface using a hash table. It provides very fast lookups, additions, and deletions. The order of elements is not guaranteed.
+        <br><strong>When to use:</strong> This is your go-to Map for most situations. Use it when you need to quickly look up a value based on a key and don't care about the order.</p>
+        <div class="example-box">
+            <p><strong>Import:</strong> <code>import java.util.HashMap;</code></p>
+            <pre><code class="language-java">// Initialization
+Map&lt;String, Integer&gt; scores = new HashMap&lt;&gt;();
+
+// Common Methods
+scores.put("Alice", 95);   // Add a key-value pair
+scores.put("Bob", 88);
+scores.put("Alice", 98); // Updates the value for the key "Alice"
+
+int alicesScore = scores.get("Alice"); // Get value by key -> 98
+boolean hasBob = scores.containsKey("Bob"); // Check if key exists -> true
+scores.remove("Bob"); // Remove a pair by key
+
+System.out.println(scores); // Output: {Alice=98}
+</code></pre>
+        </div>
+        
+        <!-- Set -->
+        <h3>Set: The Unique Collection</h3>
+        <p>A <code>Set</code> is a collection that contains no duplicate elements. It's useful for storing a group of unique items.
+        <br><strong>Analogy:</strong> A set is like a bag of unique marbles. You can add marbles, but if you add a marble that's already in the bag, it doesn't change anything.</p>
+         <div class="example-box">
+             <p><strong>Common Implementations:</strong> <code>HashSet</code>.</p>
+            <p><strong>Import:</strong> <code>import java.util.Set;</code></p>
+        </div>
+
+        <!-- HashSet -->
+        <h3>HashSet: The Fast Unique Collection</h3>
+        <p>A <code>HashSet</code> implements the <code>Set</code> interface using a hash table. It offers very fast addition, removal, and checking for containment. Like a HashMap, it does not maintain any order.
+        <br><strong>When to use:</strong> Use it when you need to store unique elements and quickly check if an element is present or not.</p>
+        <div class="example-box">
+            <p><strong>Import:</strong> <code>import java.util.HashSet;</code></p>
+            <pre><code class="language-java">// Initialization
+Set&lt;Integer&gt; uniqueNumbers = new HashSet&lt;&gt;();
+
+// Common Methods
+uniqueNumbers.add(5);
+uniqueNumbers.add(10);
+uniqueNumbers.add(5); // This is ignored, as 5 is already in the set
+
+boolean hasTen = uniqueNumbers.contains(10); // Check for presence -> true
+uniqueNumbers.remove(10); // Remove an element
+
+System.out.println(uniqueNumbers); // Output: [5] (order not guaranteed)
+</code></pre>
+        </div>
+        
+        <!-- Pair -->
+        <h3>Pair: Storing Two Things Together</h3>
+        <p>Java doesn't have a built-in `Pair` class in its core library, but you can easily use alternatives. A Pair is a simple container for two objects. It's useful when you need a method to return two values.
+        <br><strong>When to use:</strong> When you want to group two related pieces of data together, for example, coordinates (x, y) or an item and its count.</p>
+        <div class="example-box">
+            <p><strong>Import:</strong> <code>import javafx.util.Pair;</code> (from JavaFX) or <code>import java.util.AbstractMap.SimpleEntry;</code></p>
+            <pre><code class="language-java">// Using AbstractMap.SimpleEntry
+import java.util.AbstractMap.SimpleEntry;
+import java.util.Map;
+
+// Initialization
+Map.Entry&lt;String, Integer&gt; student = new SimpleEntry&lt;&gt;("David", 12);
+
+// Accessing elements
+String name = student.getKey();
+Integer age = student.getValue();
+
+System.out.println(name + " is " + age + " years old."); // Output: David is 12 years old.
+</code></pre>
+        </div>
+
+        <hr class="my-8 border-t-2 border-gray-200">
+
+        <!-- SLIDE 3: Subarrays vs Subsequences -->
+        <h2 class="text-3xl font-bold mb-6 text-gray-800">2. Subarrays vs. Subsequences</h2>
+        <p>This is a fundamental concept in algorithms. While they sound similar, they have a key difference.</p>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div>
+                <h3 class="text-xl font-bold">Subarray</h3>
+                <p>A subarray is a <strong>contiguous (adjacent)</strong> part of an array. You can get a subarray by taking a block of consecutive elements from the original array.</p>
+                <p>For the array <code>[1, 2, 3]</code>, the subarrays are:</p>
+                <div class="example-box">
+                    <p><code>[1]</code>, <code>[2]</code>, <code>[3]</code></p>
+                    <p><code>[1, 2]</code>, <code>[2, 3]</code></p>
+                    <p><code>[1, 2, 3]</code></p>
+                    <p>And the empty subarray: <code>[]</code></p>
+                </div>
+                <p>The number of non-empty subarrays in an array of size <code>n</code> is <code>n * (n + 1) / 2</code>. For <code>n=3</code>, this is <code>3 * 4 / 2 = 6</code>.</p>
+            </div>
+            <div>
+                <h3 class="text-xl font-bold">Subsequence</h3>
+                <p>A subsequence is created by deleting <strong>zero or more</strong> elements from an array, while maintaining the relative order of the remaining elements.</p>
+                 <p>For the array <code>[1, 2, 3]</code>, the subsequences are:</p>
+                <div class="example-box">
+                    <p><code>[1]</code>, <code>[2]</code>, <code>[3]</code></p>
+                    <p><code>[1, 2]</code>, <code>[1, 3]</code>, <code>[2, 3]</code></p>
+                    <p><code>[1, 2, 3]</code></p>
+                    <p>And the empty subsequence: <code>[]</code></p>
+                </div>
+                <p>The number of subsequences in an array of size <code>n</code> is <code>2^n</code>. For <code>n=3</code>, this is <code>2^3 = 8</code>.</p>
+            </div>
+        </div>
+        <div class="mt-4">
+            <h3 class="text-xl font-bold">Key Difference Visualized</h3>
+            <p>Think of it this way: <code>[1, 3]</code> is a <strong>subsequence</strong> of <code>[1, 2, 3]</code> because we can get it by deleting <code>2</code>. However, it is <strong>not a subarray</strong> because <code>1</code> and <code>3</code> are not next to each other in the original array.</p>
+        </div>
+
+
+        <hr class="my-8 border-t-2 border-gray-200">
+
+        <!-- SLIDE 4: Brute-force Code to Generate Subarrays -->
+        <h2 class="text-3xl font-bold mb-6 text-gray-800">3. Brute-Force Code to Generate All Subarrays</h2>
+        <p>Here is a simple, beginner-friendly Java program that generates every possible subarray from a given array. We use nested loops to define the start and end points of each subarray.</p>
+        
+        <div class="example-box">
+            <h3 class="text-xl font-bold mb-4">Java Code</h3>
+            <pre><code class="language-java">
+import java.util.ArrayList;
+import java.util.List;
+
+public class SubarrayGenerator {
+
+    public static void printAllSubarrays(int[] arr) {
+        // Get the length of the array
+        int n = arr.length;
+
+        // 1. The first loop selects the starting point of the subarray.
+        // It goes from the first element (index 0) to the last.
+        for (int start = 0; start < n; start++) {
+
+            // 2. The second loop selects the ending point of the subarray.
+            // It starts from the 'start' point and goes to the end of the array.
+            for (int end = start; end < n; end++) {
+
+                // We've now defined a subarray from index 'start' to 'end'.
+                // Let's create a list to hold its elements.
+                List<Integer> subarray = new ArrayList<>();
+
+                // 3. The third loop iterates from the start to the end point
+                // and adds each element to our subarray list.
+                for (int i = start; i <= end; i++) {
+                    subarray.add(arr[i]);
+                }
+
+                // Print the generated subarray to the console.
+                System.out.println(subarray);
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        int[] originalArray = {1, 2, 3};
+        System.out.println("Generating all subarrays for: [1, 2, 3]");
+        System.out.println("------------------------------------");
+        printAllSubarrays(originalArray);
+    }
+}
+            </code></pre>
+        </div>
+        
+        <div class="example-box">
+            <h3 class="text-xl font-bold mb-4">Sample Console Output</h3>
+            <pre><code>
+Generating all subarrays for: [1, 2, 3]
+------------------------------------
+[1]
+[1, 2]
+[1, 2, 3]
+[2]
+[2, 3]
+[3]
+            </code></pre>
+        </div>
+
+    </div>
+</main>
+</body>
+</html>
