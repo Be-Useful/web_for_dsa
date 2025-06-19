@@ -77,11 +77,40 @@
             border: 1px solid #e5e7eb;
         }
 
+        /* Code highlighting styles */
+        .presentation-card pre {
+            background-color: #1e1e1e;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+        
         .presentation-card pre code {
-            background-color: transparent;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            line-height: 1.5;
+            color: #d4d4d4;
+            background: none;
             padding: 0;
-            color: #1f2937;
-            font-weight: normal;
+            border: none;
+        }
+        
+        /* Syntax highlighting classes */
+        .keyword { color: #569cd6; }
+        .class-name { color: #4ec9b0; }
+        .method { color: #dcdcaa; }
+        .string { color: #ce9178; }
+        .number { color: #b5cea8; }
+        .comment { color: #6a9955; }
+        
+        .presentation-card code:not(pre code) {
+            background-color: #f0f0f0;
+            color: #d63384;
+            padding: 0.2em 0.4em;
+            border-radius: 0.2em;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
         }
 
         .presentation-card .example-box {
@@ -163,8 +192,7 @@
     </style>
 </head>
 <body>
-    <nav class="navbar">
-        <a href="index.html">Intro to CP</a>
+    <nav class="navbar"><a href="index.html">Intro to CP</a>
         <a href="java_basics.html">Java Basics</a>
         <a href="java_basic_2.html">Java Basics II</a>
         <a href="Basic_practice_problems.html">Basic Practice Problems</a>
@@ -173,6 +201,7 @@
         <a href="array_algo.html">Array Algorithms</a>
         <a href="Greedy_with_sorting.html">Greedy with Sorting</a>
         <a href="java_collections_subarrays.html">Java Collections</a>
+        <a href="sliding_window_two_pointer.html">Sliding Window</a>
     </nav>
 
 <!-- Main Content Area -->
@@ -205,8 +234,8 @@
         <br><strong>When to use:</strong> Use it when you need to frequently access elements by their position (e.g., getting the 5th element). It's less efficient for adding/removing elements from the middle of the list.</p>
         <div class="example-box">
             <p><strong>Import:</strong> <code>import java.util.ArrayList;</code></p>
-            <pre><code class="language-java">// Initialization
-List&lt;String&gt; fruits = new ArrayList&lt;&gt;();
+            <pre><code class="language-java" style="background-color: #1e1e1e; color: #d4d4d4;">// Initialization
+<span class="class-name">List</span>&lt;<span class="class-name">String</span>&gt; fruits = <span class="keyword">new</span> <span class="class-name">ArrayList</span>&lt;&gt;();
 
 // Common Methods
 fruits.add("Apple");       // Add element
@@ -228,7 +257,7 @@ System.out.println(fruits.size()); // Output: 2
         <br><strong>When to use:</strong> Use it when you need to frequently add or remove elements from the beginning, middle, or end of the list. It's slower for random access by index compared to an ArrayList.</p>
         <div class="example-box">
             <p><strong>Import:</strong> <code>import java.util.LinkedList;</code></p>
-            <pre><code class="language-java">// Initialization
+            <pre><code class="language-java" style="background-color: #1e1e1e; color: #d4d4d4;">// Initialization
 List&lt;String&gt; vegetables = new LinkedList&lt;&gt;();
 
 // Common Methods
@@ -258,8 +287,8 @@ System.out.println(vegetables); // Output: [Celery, Carrot]
         <br><strong>When to use:</strong> This is your go-to Map for most situations. Use it when you need to quickly look up a value based on a key and don't care about the order.</p>
         <div class="example-box">
             <p><strong>Import:</strong> <code>import java.util.HashMap;</code></p>
-            <pre><code class="language-java">// Initialization
-Map&lt;String, Integer&gt; scores = new HashMap&lt;&gt;();
+            <pre><code class="language-java" style="background-color: #1e1e1e; color: #d4d4d4;">// Initialization
+<span class="class-name">Map</span>&lt;<span class="class-name">String</span>, <span class="class-name">Integer</span>&gt; scores = <span class="keyword">new</span> <span class="class-name">HashMap</span>&lt;&gt;();
 
 // Common Methods
 scores.put("Alice", 95);   // Add a key-value pair
@@ -289,9 +318,8 @@ System.out.println(scores); // Output: {Alice=98}
         <br><strong>When to use:</strong> Use it when you need to store unique elements and quickly check if an element is present or not.</p>
         <div class="example-box">
             <p><strong>Import:</strong> <code>import java.util.HashSet;</code></p>
-            <pre><code class="language-java">// Initialization
-Set&lt;Integer&gt; uniqueNumbers = new HashSet&lt;&gt;();
-
+            <pre><code class="language-java" style="background-color: #1e1e1e; color: #d4d4d4;">// Initialization
+<span class="class-name">Set</span>&lt;<span class="class-name">Integer</span>&gt; uniqueNumbers = <span class="keyword">new</span> <span class="class-name">HashSet</span>&lt;&gt;();
 // Common Methods
 uniqueNumbers.add(5);
 uniqueNumbers.add(10);
@@ -310,12 +338,12 @@ System.out.println(uniqueNumbers); // Output: [5] (order not guaranteed)
         <br><strong>When to use:</strong> When you want to group two related pieces of data together, for example, coordinates (x, y) or an item and its count.</p>
         <div class="example-box">
             <p><strong>Import:</strong> <code>import javafx.util.Pair;</code> (from JavaFX) or <code>import java.util.AbstractMap.SimpleEntry;</code></p>
-            <pre><code class="language-java">// Using AbstractMap.SimpleEntry
+            <pre><code class="language-java" style="background-color: #1e1e1e; color: #d4d4d4;">// Using AbstractMap.SimpleEntry
 import java.util.AbstractMap.SimpleEntry;
 import java.util.Map;
 
 // Initialization
-Map.Entry&lt;String, Integer&gt; student = new SimpleEntry&lt;&gt;("David", 12);
+<span class="class-name">Map</span>.<span class="class-name">Entry</span>&lt;<span class="class-name">String</span>, <span class="class-name">Integer</span>&gt; student = <span class="keyword">new</span> <span class="class-name">SimpleEntry</span>&lt;&gt;(<span class="string">"David"</span>, <span class="number">12</span>);
 
 // Accessing elements
 String name = student.getKey();
@@ -371,44 +399,43 @@ System.out.println(name + " is " + age + " years old."); // Output: David is 12 
         
         <div class="example-box">
             <h3 class="text-xl font-bold mb-4">Java Code</h3>
-            <pre><code class="language-java">
-import java.util.ArrayList;
-import java.util.List;
+            <pre><code class="language-java"><span class="keyword">import</span> java.util.<span class="class-name">ArrayList</span>;
+<span class="keyword">import</span> java.util.<span class="class-name">List</span>;
 
-public class SubarrayGenerator {
+<span class="keyword">public class</span> <span class="class-name">SubarrayGenerator</span> {
 
-    public static void printAllSubarrays(int[] arr) {
-        // Get the length of the array
-        int n = arr.length;
+    <span class="keyword">public static void</span> <span class="method">printAllSubarrays</span>(<span class="keyword">int</span>[] arr) {
+        <span class="comment">// Get the length of the array</span>
+        <span class="keyword">int</span> n = arr.length;
 
-        // 1. The first loop selects the starting point of the subarray.
-        // It goes from the first element (index 0) to the last.
-        for (int start = 0; start < n; start++) {
+        <span class="comment">// 1. The first loop selects the starting point of the subarray.</span>
+        <span class="comment">// It goes from the first element (index 0) to the last.</span>
+        <span class="keyword">for</span> (<span class="keyword">int</span> start = <span class="number">0</span>; start < n; start++) {
 
-            // 2. The second loop selects the ending point of the subarray.
-            // It starts from the 'start' point and goes to the end of the array.
-            for (int end = start; end < n; end++) {
+            <span class="comment">// 2. The second loop selects the ending point of the subarray.</span>
+            <span class="comment">// It starts from the 'start' point and goes to the end of the array.</span>
+            <span class="keyword">for</span> (<span class="keyword">int</span> end = start; end < n; end++) {
 
-                // We've now defined a subarray from index 'start' to 'end'.
-                // Let's create a list to hold its elements.
-                List<Integer> subarray = new ArrayList<>();
+                <span class="comment">// We've now defined a subarray from index 'start' to 'end'.</span>
+                <span class="comment">// Let's create a list to hold its elements.</span>
+                <span class="class-name">List</span>&lt;<span class="class-name">Integer</span>&gt; subarray = <span class="keyword">new</span> <span class="class-name">ArrayList</span>&lt;&gt;();
 
-                // 3. The third loop iterates from the start to the end point
-                // and adds each element to our subarray list.
-                for (int i = start; i <= end; i++) {
+                <span class="comment">// 3. The third loop iterates from the start to the end point</span>
+                <span class="comment">// and adds each element to our subarray list.</span>
+                <span class="keyword">for</span> (<span class="keyword">int</span> i = start; i <= end; i++) {
                     subarray.add(arr[i]);
                 }
 
-                // Print the generated subarray to the console.
-                System.out.println(subarray);
+                <span class="comment">// Print the generated subarray to the console.</span>
+                <span class="class-name">System</span>.out.println(subarray);
             }
         }
     }
-
-    public static void main(String[] args) {
-        int[] originalArray = {1, 2, 3};
-        System.out.println("Generating all subarrays for: [1, 2, 3]");
-        System.out.println("------------------------------------");
+    
+    <span class="keyword">public static void</span> <span class="method">main</span>(<span class="class-name">String</span>[] args) {
+        <span class="keyword">int</span>[] originalArray = {<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>};
+        <span class="class-name">System</span>.out.println(<span class="string">"Generating all subarrays for: [1, 2, 3]"</span>);
+        <span class="class-name">System</span>.out.println(<span class="string">"------------------------------------"</span>);
         printAllSubarrays(originalArray);
     }
 }
@@ -417,7 +444,7 @@ public class SubarrayGenerator {
         
         <div class="example-box">
             <h3 class="text-xl font-bold mb-4">Sample Console Output</h3>
-            <pre><code>
+            <pre><code style="background-color: #1e1e1e; color: #d4d4d4;">
 Generating all subarrays for: [1, 2, 3]
 ------------------------------------
 [1]
@@ -429,6 +456,79 @@ Generating all subarrays for: [1, 2, 3]
             </code></pre>
         </div>
 
+        <hr class="my-8 border-t-2 border-gray-200">
+
+        <!-- SLIDE 5: Optimized Subarray Generation -->
+        <h2 class="text-3xl font-bold mb-6 text-gray-800">4. Optimized Subarray Generation</h2>
+        <p>Here's a more optimized approach to generate all subarrays using a single loop with prefix sums. This method is more efficient and easier to understand.</p>
+        
+        <div class="example-box">
+            <h3 class="text-xl font-bold mb-4">Optimized Java Code</h3>
+            <pre><code class="language-java" style="background-color: #1e1e1e; color: #d4d4d4;">
+import java.util.ArrayList;
+import java.util.List;
+
+<span class="keyword">public class</span> <span class="class-name">OptimizedSubarrayGenerator</span> {
+    
+    <span class="keyword">public static</span> <span class="class-name">List</span>&lt;<span class="class-name">List</span>&lt;<span class="class-name">Integer</span>&gt;&gt; <span class="method">generateSubarrays</span>(<span class="keyword">int</span>[] nums) {
+        <span class="class-name">List</span>&lt;<span class="class-name">List</span>&lt;<span class="class-name">Integer</span>&gt;&gt; result = <span class="keyword">new</span> <span class="class-name">ArrayList</span>&lt;&gt;();
+        <span class="comment">// Generate all possible subarrays</span>
+        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i < nums.length; i++) {
+            <span class="class-name">List</span>&lt;<span class="class-name">Integer</span>&gt; current = <span class="keyword">new</span> <span class="class-name">ArrayList</span>&lt;&gt;();
+            <span class="keyword">for</span> (<span class="keyword">int</span> j = i; j < nums.length; j++) {
+                current.add(nums[j]);
+                result.add(<span class="keyword">new</span> <span class="class-name">ArrayList</span>&lt;&gt;(current));
+            }
+        }
+        <span class="keyword">return</span> result;
+    }
+    
+    <span class="keyword">public static void</span> <span class="method">printSubarrays</span>(<span class="class-name">List</span>&lt;<span class="class-name">List</span>&lt;<span class="class-name">Integer</span>&gt;&gt; subarrays) {
+        <span class="keyword">for</span> (<span class="class-name">List</span>&lt;<span class="class-name">Integer</span>&gt; subarray : subarrays) {
+            <span class="class-name">System</span>.out.println(subarray);
+        }
+    }
+    
+    <span class="keyword">public static void</span> <span class="method">main</span>(<span class="class-name">String</span>[] args) {
+        <span class="keyword">int</span>[] arr = {<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>};
+        <span class="class-name">System</span>.out.println(<span class="string">"Optimized subarray generation for: [1, 2, 3]"</span>);
+        <span class="class-name">System</span>.out.println(<span class="string">"-------------------------------------------"</span>);
+        <span class="class-name">List</span>&lt;<span class="class-name">List</span>&lt;<span class="class-name">Integer</span>&gt;&gt; allSubarrays = generateSubarrays(arr);
+        printSubarrays(allSubarrays);
+    }
+}
+            </code></pre>
+        </div>
+        
+        <div class="example-box">
+            <h3 class="text-xl font-bold mb-4">Sample Output</h3>
+            <pre><code style="background-color: #1e1e1e; color: #d4d4d4;">
+Optimized subarray generation for: [1, 2, 3]
+-------------------------------------------
+[1]
+[1, 2]
+[1, 2, 3]
+[2]
+[2, 3]
+[3]
+            </code></pre>
+        </div>
+        
+        <div class="mt-4 bg-blue-50 p-4 rounded-lg">
+            <h3 class="text-xl font-bold text-blue-800 mb-2">Optimization Explanation</h3>
+            <p class="text-blue-700">
+                This optimized approach reduces the number of loops from three to two, making it more efficient.
+                Instead of using three nested loops, we use two loops where the outer loop picks the starting point
+                and the inner loop picks the ending point. We maintain a current list that grows with each iteration
+                of the inner loop, and we add a copy of this list to our result at each step.
+            </p>
+            <p class="text-blue-700 mt-2">
+                <strong>Time Complexity:</strong> O(n²) - We have two nested loops where the inner loop runs n times for each iteration of the outer loop.
+            </p>
+            <p class="text-blue-700">
+                <strong>Space Complexity:</strong> O(n²) - In the worst case, we need to store all possible subarrays.
+            </p>
+        </div>
     </div>
 </main>
 </body>

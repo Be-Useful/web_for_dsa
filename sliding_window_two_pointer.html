@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sliding Window & Two Pointer Technique</title>
+    <!-- Tailwind CSS CDN for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom CSS for 'Inter' font and base styles */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f3f4f6; /* Light gray background */
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .content-area {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 2rem;
+            box-sizing: border-box;
+        }
+
+        .presentation-card {
+            background-color: #ffffff;
+            border-radius: 1.5rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            padding: 2.5rem;
+            width: 90%;
+            max-width: 960px;
+            box-sizing: border-box;
+            overflow-y: auto;
+        }
+
+        .presentation-card h1, .presentation-card h2 {
+            color: #1f2937;
+            margin-bottom: 1.5rem;
+            font-weight: 800;
+        }
+        
+        .presentation-card h3 {
+             color: #1f2937;
+             font-weight: 700;
+             margin-top: 2rem;
+             margin-bottom: 1rem;
+        }
+
+        .presentation-card p, .presentation-card li {
+            color: #4b5563;
+            line-height: 1.7;
+            margin-bottom: 1rem;
+            font-size: 1.05rem;
+        }
+        
+        /* Updated code styles */
+        .presentation-card code {
+            background-color: #e5e7eb;
+            color: #1f2937;
+            padding: 0.2rem 0.5rem;
+            border-radius: 0.375rem;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+            font-weight: 500;
+            font-size: 0.9em;
+        }
+
+        .presentation-card pre {
+            background-color: #1f2937; /* Dark background for code blocks */
+            color: #f9fafb;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            overflow-x: auto;
+            border: 1px solid #374151;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        .presentation-card pre code {
+            background-color: transparent;
+            padding: 0;
+            color: #d1d5db; /* Light gray for code text */
+            font-weight: normal;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+        
+        .presentation-card pre .comment {
+            color: #6b7280; /* Lighter gray for comments */
+            font-style: italic;
+        }
+        
+        .presentation-card .keyword {
+            color: #c4b5fd; /* Light purple for keywords */
+        }
+        
+        .presentation-card .class-name {
+            color: #a7f3d0; /* Light green for class/type names */
+        }
+        
+        .presentation-card .method {
+            color: #fde047; /* Yellow for method names */
+        }
+        
+        .presentation-card .string {
+            color: #fdba74; /* Orange for strings */
+        }
+
+
+        .presentation-card .dry-run-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+        .presentation-card .dry-run-table th,
+        .presentation-card .dry-run-table td {
+            border: 1px solid #e5e7eb;
+            padding: 0.75rem;
+            text-align: left;
+            font-size: 0.95rem;
+        }
+        .presentation-card .dry-run-table th {
+            background-color: #f3f4f6;
+            font-weight: 600;
+        }
+        .presentation-card .dry-run-table code {
+            font-size: 0.9rem;
+        }
+
+        .presentation-card ul {
+            list-style: disc;
+            margin-left: 1.5rem;
+            padding-left: 0;
+            margin-bottom: 1rem;
+        }
+
+        .presentation-card a {
+            color: #4f46e5;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s ease-in-out;
+        }
+
+        .presentation-card a:hover {
+            color: #3730a3;
+            text-decoration: underline;
+        }
+
+        .navbar {
+            background-color: #4338ca;
+            padding: 1rem 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
+        }
+
+        .navbar a:hover {
+            background-color: #4f46e5;
+            transform: translateY(-2px);
+        }
+
+        .navbar a.active-nav {
+            background-color: #6d28d9;
+            font-weight: 700;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        @media (max-width: 768px) {
+            .presentation-card {
+                padding: 1.5rem;
+                width: 95%;
+            }
+            .presentation-card h1 { font-size: 2.2rem; margin-bottom: 1rem; }
+            .presentation-card h2 { font-size: 1.8rem; margin-bottom: 1rem; }
+            .presentation-card p, .presentation-card li { font-size: 0.95rem; }
+            .navbar {
+                padding: 0.75rem 1rem;
+                gap: 0.5rem;
+                justify-content: flex-start;
+                overflow-x: auto;
+            }
+            .navbar a { padding: 0.6rem 1rem; font-size: 0.9rem; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar"><a href="index.html">Intro to CP</a>
+        <a href="java_basics.html">Java Basics</a>
+        <a href="java_basic_2.html">Java Basics II</a>
+        <a href="Basic_practice_problems.html">Basic Practice Problems</a>
+        <a href="time_complexity.html">Time Complexity</a>
+        <a href="basic_sorting.html">Basic Sorting</a>
+        <a href="array_algo.html">Array Algorithms</a>
+        <a href="Greedy_with_sorting.html">Greedy with Sorting</a>
+        <a href="java_collections_subarrays.html">Java Collections</a>
+        <a href="sliding_window_two_pointer.html">Sliding Window</a>
+    </nav>
+
+<main class="content-area">
+    <div class="presentation-card">
+        <div class="text-center mb-8">
+            <h1 class="text-4xl lg:text-5xl font-extrabold text-indigo-700 mb-4">Sliding Window & Two Pointers</h1>
+            <p class="text-lg text-gray-600">Efficient techniques for array and string problems.</p>
+        </div>
+
+        <hr class="my-8 border-t-2 border-gray-200">
+
+        <h2 class="text-3xl font-bold mb-6 text-gray-800">1. The Sliding Window Technique</h2>
+        <p>The Sliding Window technique is used for problems that involve finding a subarray or substring that satisfies a certain condition. Instead of re-calculating from scratch for every possible subarray, we cleverly slide a "window" over the data, adding an element at one end and removing an element at the other.</p>
+        <p><strong>Analogy:</strong> Imagine you're looking out a train window at a long line of trees. You can only see a fixed number of trees at a time (that's your "window"). As the train moves, your view slides: a new tree enters your view on one side, and an old one leaves on the other. This is much more efficient than stopping the train to count every single possible group of trees.</p>
+
+        <h3>Example 1: Maximum Sum Subarray of Fixed Size k</h3>
+        <p><strong>Problem:</strong> Given an array of integers and a number `k`, find the maximum sum of a subarray of size `k`.</p>
+        <div class="example-box">
+            <h3 class="text-xl font-bold mb-4">Java Code</h3>
+            <pre><code class="language-java">
+<span class="keyword">public class</span> <span class="class-name">MaxSumSubarray</span> {
+    <span class="keyword">public static int</span> <span class="method">findMaxSumSubarray</span>(<span class="keyword">int</span>[] arr, <span class="keyword">int</span> k) {
+        <span class="keyword">if</span> (arr.length < k) {
+            <span class="keyword">return</span> -1; <span class="comment">// Or throw an exception</span>
+        }
+
+        <span class="keyword">int</span> maxSum = 0;
+        <span class="keyword">int</span> windowSum = 0;
+        <span class="keyword">int</span> windowStart = 0;
+
+        <span class="keyword">for</span> (<span class="keyword">int</span> windowEnd = 0; windowEnd < arr.length; windowEnd++) {
+            <span class="comment">// Add the next element to the window</span>
+            windowSum += arr[windowEnd];
+
+            <span class="comment">// Slide the window if it has reached size k</span>
+            <span class="keyword">if</span> (windowEnd >= k - 1) {
+                <span class="comment">// Update the maximum sum found so far</span>
+                maxSum = <span class="class-name">Math</span>.<span class="method">max</span>(maxSum, windowSum);
+                
+                <span class="comment">// Subtract the element leaving the window</span>
+                windowSum -= arr[windowStart];
+                
+                <span class="comment">// Slide the window forward</span>
+                windowStart++;
+            }
+        }
+        <span class="keyword">return</span> maxSum;
+    }
+
+    <span class="keyword">public static void</span> <span class="method">main</span>(<span class="class-name">String</span>[] args) {
+        <span class="keyword">int</span>[] arr = {2, 1, 5, 1, 3, 2};
+        <span class="keyword">int</span> k = 3;
+        <span class="class-name">System</span>.out.println(<span class="string">"Maximum sum: "</span> + <span class="method">findMaxSumSubarray</span>(arr, k)); <span class="comment">// Output: 9</span>
+    }
+}
+            </code></pre>
+        </div>
+        
+        <div class="example-box">
+            <h3 class="text-xl font-bold mb-4">Dry Run: `arr = [2, 1, 5, 1, 3, 2]`, `k = 3`</h3>
+             <table class="dry-run-table">
+                <thead>
+                    <tr>
+                        <th>windowEnd</th>
+                        <th>Current Element</th>
+                        <th>windowSum</th>
+                        <th>Condition (end >= k-1)</th>
+                        <th>maxSum</th>
+                        <th>windowStart</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>0</td>
+                        <td>2</td>
+                        <td>2</td>
+                        <td>false (0 < 2)</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>Add `arr[0]` to `windowSum`.</td>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>1</td>
+                        <td>3</td>
+                        <td>false (1 < 2)</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>Add `arr[1]` to `windowSum`.</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>5</td>
+                        <td>8</td>
+                        <td>true (2 == 2)</td>
+                        <td>8</td>
+                        <td>0</td>
+                        <td>Window is full. <code>maxSum = max(0, 8) = 8</code>. Subtract <code>arr[0]</code> (2), so <code>windowSum = 6</code>. Increment <code>windowStart</code> to 1.</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>1</td>
+                        <td>7</td>
+                        <td>true (3 > 2)</td>
+                        <td>8</td>
+                        <td>1</td>
+                        <td>Window slides. <code>maxSum = max(8, 7) = 8</code>. Subtract <code>arr[1]</code> (1), so <code>windowSum = 6</code>. Increment <code>windowStart</code> to 2.</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>3</td>
+                        <td>9</td>
+                        <td>true (4 > 2)</td>
+                        <td>9</td>
+                        <td>2</td>
+                        <td>Window slides. <code>maxSum = max(8, 9) = 9</code>. Subtract <code>arr[2]</code> (5), so <code>windowSum = 4</code>. Increment <code>windowStart</code> to 3.</td>
+                    </tr>
+                     <tr>
+                        <td>5</td>
+                        <td>2</td>
+                        <td>6</td>
+                        <td>true (5 > 2)</td>
+                        <td>9</td>
+                        <td>3</td>
+                        <td>Window slides. <code>maxSum = max(9, 6) = 9</code>. Subtract <code>arr[3]</code> (1), so <code>windowSum = 5</code>. Increment <code>windowStart</code> to 4.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3>Example 2 (Variable Size Window): Longest Subarray with Sum `k`</h3>
+        <p><strong>Problem:</strong> Given an array of positive integers and a target sum `k`, find the length of the longest subarray whose elements sum up to `k`.</p>
+        <div class="example-box">
+            <h3 class="text-xl font-bold mb-4">Java Code</h3>
+            <pre><code class="language-java">
+<span class="keyword">public class</span> <span class="class-name">LongestSubarrayWithSumK</span> {
+    <span class="keyword">public static int</span> <span class="method">findLength</span>(<span class="keyword">int</span>[] arr, <span class="keyword">int</span> k) {
+        <span class="keyword">int</span> windowStart = 0;
+        <span class="keyword">int</span> windowSum = 0;
+        <span class="keyword">int</span> maxLength = 0;
+
+        <span class="keyword">for</span> (<span class="keyword">int</span> windowEnd = 0; windowEnd < arr.length; windowEnd++) {
+            windowSum += arr[windowEnd]; <span class="comment">// Expand the window</span>
+
+            <span class="comment">// While windowSum is greater than k, shrink the window from the left</span>
+            <span class="keyword">while</span> (windowSum > k) {
+                windowSum -= arr[windowStart];
+                windowStart++;
+            }
+
+            <span class="comment">// If we found a subarray with sum k, update our max length</span>
+            <span class="keyword">if</span> (windowSum == k) {
+                maxLength = <span class="class-name">Math</span>.<span class="method">max</span>(maxLength, windowEnd - windowStart + 1);
+            }
+        }
+        <span class="keyword">return</span> maxLength;
+    }
+
+    <span class="keyword">public static void</span> <span class="method">main</span>(<span class="class-name">String</span>[] args) {
+        <span class="keyword">int</span>[] arr = {4, 1, 1, 1, 2, 3, 5};
+        <span class="keyword">int</span> k = 5;
+        <span class="class-name">System</span>.out.println(<span class="string">"Max length: "</span> + <span class="method">findLength</span>(arr, k)); <span class="comment">// Output: 4 ([1, 1, 1, 2])</span>
+    }
+}
+            </code></pre>
+        </div>
+        
+        <div class="example-box">
+            <h3 class="text-xl font-bold mb-4">Dry Run: `arr = [4, 1, 1, 1, 2, 3, 5]`, `k = 5`</h3>
+             <table class="dry-run-table">
+                <thead>
+                    <tr>
+                        <th>windowEnd</th>
+                        <th>windowSum</th>
+                        <th>Condition (sum > k)</th>
+                        <th>Condition (sum == k)</th>
+                        <th>maxLength</th>
+                        <th>windowStart</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>0</td>
+                        <td>4</td>
+                        <td>false</td>
+                        <td>false</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>Add `arr[0]`.</td>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>5</td>
+                        <td>false</td>
+                        <td>true</td>
+                        <td>2</td>
+                        <td>0</td>
+                        <td>Add `arr[1]`. Sum is 5. `maxLength = max(0, 2) = 2`. Window: `[4,1]`.</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>6</td>
+                        <td>true</td>
+                        <td>false</td>
+                        <td>2</td>
+                        <td>0</td>
+                        <td>Add `arr[2]`. Sum=6. Shrink: `sum -= arr[0]`, sum=2. `start`=1.</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>3</td>
+                        <td>false</td>
+                        <td>false</td>
+                        <td>2</td>
+                        <td>1</td>
+                        <td>Add `arr[3]`. Sum=3.</td>
+                    </tr>
+                     <tr>
+                        <td>4</td>
+                        <td>5</td>
+                        <td>false</td>
+                        <td>true</td>
+                        <td>4</td>
+                        <td>1</td>
+                        <td>Add `arr[4]`. Sum=5. `maxLength = max(2, 4) = 4`. Window: `[1,1,1,2]`.</td>
+                    </tr>
+                     <tr>
+                        <td>5</td>
+                        <td>8</td>
+                        <td>true</td>
+                        <td>false</td>
+                        <td>4</td>
+                        <td>1</td>
+                        <td>Add `arr[5]`. Sum=8. Shrink until sum <= 5. Final sum=5, `start`=4.</td>
+                    </tr>
+                     <tr>
+                        <td>-</td>
+                        <td>5</td>
+                        <td>false</td>
+                         <td>true</td>
+                        <td>4</td>
+                        <td>4</td>
+                        <td>Loop continues. Final check on sum=5, `maxLength=max(4, 5-4+1)=4`. Window `[2,3]`.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <hr class="my-8 border-t-2 border-gray-200">
+
+        <h2 class="text-3xl font-bold mb-6 text-gray-800">2. The Two Pointer Technique</h2>
+        <p>The Two Pointer technique is related to the Sliding Window, but it's more general. It involves using two pointers to iterate through a data structure, typically an array. The pointers can move in different ways:</p>
+        <ul>
+            <li><strong>Opposite Ends:</strong> One pointer starts at the beginning, and the other starts at the end. They move towards each other. This is common for problems on sorted arrays.</li>
+            <li><strong>Same Direction (Fast & Slow):</strong> Both pointers start at the beginning but one moves faster than the other. This is useful for detecting cycles or finding specific elements.</li>
+        </ul>
+
+        <h3>Example 1: Find a Pair with Target Sum in a Sorted Array</h3>
+        <p><strong>Problem:</strong> Given a sorted array of integers and a target sum `x`, find if there exists a pair of elements in the array that sum up to `x`.</p>
+        <div class="example-box">
+             <h3 class="text-xl font-bold mb-4">Java Code</h3>
+            <pre><code class="language-java">
+<span class="keyword">public class</span> <span class="class-name">PairWithTargetSum</span> {
+    <span class="keyword">public static boolean</span> <span class="method">hasPair</span>(<span class="keyword">int</span>[] arr, <span class="keyword">int</span> target) {
+        <span class="keyword">int</span> left = 0;
+        <span class="keyword">int</span> right = arr.length - 1;
+
+        <span class="keyword">while</span> (left < right) {
+            <span class="keyword">int</span> currentSum = arr[left] + arr[right];
+
+            <span class="keyword">if</span> (currentSum == target) {
+                <span class="keyword">return true</span>; <span class="comment">// Found the pair</span>
+            } <span class="keyword">else if</span> (currentSum < target) {
+                left++; <span class="comment">// We need a larger sum, so move left pointer</span>
+            } <span class="keyword">else</span> {
+                right--; <span class="comment">// We need a smaller sum, so move right pointer</span>
+            }
+        }
+        <span class="keyword">return false</span>; <span class="comment">// No such pair found</span>
+    }
+
+    <span class="keyword">public static void</span> <span class="method">main</span>(<span class="class-name">String</span>[] args) {
+        <span class="keyword">int</span>[] arr = {1, 2, 4, 6, 8, 9};
+        <span class="keyword">int</span> target = 10;
+        <span class="class-name">System</span>.out.println(<span class="string">"Has pair with sum 10? "</span> + <span class="method">hasPair</span>(arr, target)); <span class="comment">// true (2+8)</span>
+    }
+}
+            </code></pre>
+        </div>
+        
+         <div class="example-box">
+            <h3 class="text-xl font-bold mb-4">Dry Run: `arr = [1, 2, 4, 6, 8, 9]`, `target = 10`</h3>
+             <table class="dry-run-table">
+                <thead>
+                    <tr>
+                        <th>`left` Pointer</th>
+                        <th>`right` Pointer</th>
+                        <th>`currentSum`</th>
+                        <th>Condition</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>0 (val=1)</td>
+                        <td>5 (val=9)</td>
+                        <td>10</td>
+                        <td>`sum == target`</td>
+                        <td>Pair found! `1 + 9 = 10`. Return `true`.</td>
+                    </tr>
+                    <tr>
+                        <td colspan="5" class="font-bold text-center py-2">Let's try a different target: `target = 13`</td>
+                    </tr>
+                    <tr>
+                        <td>0 (val=1)</td>
+                        <td>5 (val=9)</td>
+                        <td>10</td>
+                        <td>`sum < target`</td>
+                        <td>Increment `left` to 1.</td>
+                    </tr>
+                     <tr>
+                        <td>1 (val=2)</td>
+                        <td>5 (val=9)</td>
+                        <td>11</td>
+                        <td>`sum < target`</td>
+                        <td>Increment `left` to 2.</td>
+                    </tr>
+                     <tr>
+                        <td>2 (val=4)</td>
+                        <td>5 (val=9)</td>
+                        <td>13</td>
+                        <td>`sum == target`</td>
+                        <td>Pair found! `4 + 9 = 13`. Return `true`.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3>Example 2: Remove Duplicates from a Sorted Array</h3>
+        <p><strong>Problem:</strong> Given a sorted array, remove the duplicates in-place such that each unique element appears only once. Return the new length of the array.</p>
+        <div class="example-box">
+             <h3 class="text-xl font-bold mb-4">Java Code</h3>
+            <pre><code class="language-java">
+<span class="keyword">public class</span> <span class="class-name">RemoveDuplicates</span> {
+    <span class="keyword">public static int</span> <span class="method">remove</span>(<span class="keyword">int</span>[] arr) {
+        <span class="keyword">if</span> (arr.length == 0) {
+            <span class="keyword">return</span> 0;
+        }
+        <span class="comment">// 'nextNonDuplicate' is the slow pointer</span>
+        <span class="keyword">int</span> nextNonDuplicate = 1; 
+
+        <span class="comment">// 'i' is the fast pointer</span>
+        <span class="keyword">for</span> (<span class="keyword">int</span> i = 1; i < arr.length; i++) {
+            <span class="comment">// If we find a new unique element</span>
+            <span class="keyword">if</span> (arr[nextNonDuplicate - 1] != arr[i]) {
+                <span class="comment">// Place it at the next available unique position</span>
+                arr[nextNonDuplicate] = arr[i];
+                nextNonDuplicate++;
+            }
+        }
+        <span class="keyword">return</span> nextNonDuplicate;
+    }
+    <span class="keyword">public static void</span> <span class="method">main</span>(<span class="class-name">String</span>[] args) {
+        <span class="keyword">int</span>[] arr = {2, 3, 3, 3, 6, 9, 9};
+        <span class="class-name">System</span>.out.println(<span class="string">"New length: "</span> + <span class="method">remove</span>(arr)); <span class="comment">// 4 ([2,3,6,9,...])</span>
+    }
+}
+            </code></pre>
+        </div>
+    </div>
+</main>
+</body>
+</html>
