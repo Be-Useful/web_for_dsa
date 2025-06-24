@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prefix Sum Technique</title>
+    <!-- Tailwind CSS CDN for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom CSS for 'Inter' font and base styles */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f3f4f6; /* Light gray background */
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .content-area {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 2rem;
+            box-sizing: border-box;
+        }
+
+        .presentation-card {
+            background-color: #ffffff;
+            border-radius: 1.5rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            padding: 2.5rem;
+            width: 90%;
+            max-width: 960px;
+            box-sizing: border-box;
+            overflow-y: auto;
+        }
+
+        .presentation-card h1, .presentation-card h2 {
+            color: #1e3a8a; /* Darker Blue */
+            margin-bottom: 1.5rem;
+            font-weight: 800;
+            border-left: 5px solid #3b82f6; /* Blue accent */
+            padding-left: 1rem;
+        }
+        
+        .presentation-card h3 {
+             color: #1d4ed8; /* Indigo */
+             font-weight: 700;
+             margin-top: 2rem;
+             margin-bottom: 1rem;
+        }
+        
+        .presentation-card h4 {
+             color: #1e40af;
+             font-weight: 700;
+             margin-top: 1.5rem;
+             margin-bottom: 0.5rem;
+             font-size: 1.1rem;
+        }
+
+        .presentation-card p, .presentation-card li {
+            color: #374151; /* Darker Gray */
+            line-height: 1.7;
+            margin-bottom: 1rem;
+            font-size: 1.05rem;
+        }
+
+        .example-container {
+            background-color: #f0f9ff; /* Light Blue */
+            border: 1px solid #dbeafe; /* Blue border */
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-top: 2rem;
+            margin-bottom: 2.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+        }
+        
+        .presentation-card code:not(pre > code) {
+            background-color: #dbeafe;
+            color: #1e3a8a;
+            padding: 0.2rem 0.5rem;
+            border-radius: 0.375rem;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+
+        .presentation-card pre {
+            background-color: #1e293b; /* Darker slate */
+            color: #f8fafc;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            overflow-x: auto;
+            border: 1px solid #334155;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            margin-top: 1rem;
+        }
+
+        .presentation-card pre code {
+            background-color: transparent;
+            padding: 0;
+            color: #e2e8f0;
+            font-weight: normal;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+        
+        .presentation-card pre .comment { color: #94a3b8; font-style: italic; }
+        .presentation-card pre .keyword { color: #93c5fd; }
+        .presentation-card pre .class-name { color: #6ee7b7; }
+        .presentation-card pre .method { color: #facc15; }
+        .presentation-card pre .string { color: #fca5a5; }
+
+        .presentation-card .dry-run-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .presentation-card .dry-run-table th,
+        .presentation-card .dry-run-table td {
+            border: 1px solid #d1d5db;
+            padding: 0.75rem;
+            text-align: left;
+            font-size: 0.95rem;
+        }
+        .presentation-card .dry-run-table th { background-color: #eef2ff; font-weight: 600; color: #1e3a8a; }
+        .presentation-card .dry-run-table tr:nth-child(even) { background-color: #f0f9ff; }
+        .presentation-card .dry-run-table code { font-size: 0.9rem; }
+
+        .presentation-card ul, .presentation-card ol { margin-left: 1.5rem; padding-left: 0.5rem; margin-bottom: 1rem; }
+        .presentation-card a { color: #2563eb; text-decoration: none; font-weight: 600; transition: color 0.2s ease-in-out; }
+        .presentation-card a:hover { color: #1d4ed8; text-decoration: underline; }
+
+        .navbar {
+            background-color: #1e40af; /* Deeper blue */
+            padding: 1rem 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .navbar a { color: white; text-decoration: none; padding: 0.75rem 1.5rem; border-radius: 0.75rem; font-weight: 600; transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out; }
+        .navbar a:hover { background-color: #2563eb; transform: translateY(-2px); }
+        .navbar a.active-nav { background-color: #60a5fa; font-weight: 700; box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2); }
+        
+        .code-toggle-button { background-color: #2563eb; color: white; padding: 0.5rem 1rem; border-radius: 0.5rem; font-weight: 600; cursor: pointer; transition: background-color 0.2s; display: inline-block; margin-top: 1rem; }
+        .code-toggle-button:hover { background-color: #1d4ed8; }
+        .hidden-code { display: none; }
+        
+        .array-vis { display: flex; gap: 4px; margin-top: 1rem; margin-bottom: 1rem; flex-wrap: wrap; }
+        .array-cell { border: 1px solid #60a5fa; padding: 0.5rem; min-width: 40px; text-align: center; border-radius: 0.375rem; font-family: monospace; background-color: #dbeafe; color: #1e3a8a; font-weight: bold; }
+        .index-label { text-align: center; font-size: 0.8rem; color: #6b7280; }
+
+        @media (max-width: 768px) {
+            .presentation-card { padding: 1.5rem; width: 95%; }
+            .presentation-card h1 { font-size: 2.2rem; }
+            .presentation-card h2 { font-size: 1.8rem; }
+            .example-container { padding: 1.5rem; }
+            .navbar { justify-content: flex-start; overflow-x: auto; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <!-- Navigation links will be inserted here by update_nav.js -->
+    </nav>
+    
+    <!-- Include the navigation update script -->
+    <script src="update_nav.js"></script>
+
+<main class="content-area">
+    <div class="presentation-card">
+        <div class="text-center mb-8">
+            <h1 class="text-4xl lg:text-5xl font-extrabold text-blue-800 mb-4" style="border: none; padding-left: 0;">Prefix Sum & Suffix Techniques</h1>
+            <p class="text-lg text-gray-600">A powerful technique for rapid sum, product, and other calculations in ranges.</p>
+        </div>
+
+        <hr class="my-8 border-t-2 border-gray-200">
+
+        <h2 class="text-3xl font-bold mb-2">1. The Prefix Sum Technique</h2>
+        <p>A <strong>prefix sum array</strong> is a pre-computed array where each element `prefix[i]` stores the sum of all elements from the start of the original array up to index `i`. It's incredibly useful for answering range sum queries quickly.</p>
+        
+        <div class="example-container">
+            <h3>Creating a Prefix Sum Array</h3>
+            <p><strong>Formula:</strong></p>
+            <ul>
+                <li>`prefix[0] = arr[0]`</li>
+                <li>`prefix[i] = prefix[i-1] + arr[i]` for `i > 0`</li>
+            </ul>
+            
+            <h4>Visualization</h4>
+            <p>Original Array `arr`:</p>
+            <div class="array-vis">
+                <div class="array-cell bg-white border-blue-300">2</div><div class="array-cell bg-white border-blue-300">8</div><div class="array-cell bg-white border-blue-300">3</div><div class="array-cell bg-white border-blue-300">9</div><div class="array-cell bg-white border-blue-300">4</div><div class="array-cell bg-white border-blue-300">5</div>
+            </div>
+            <p>Prefix Sum Array `prefix`:</p>
+            <div class="array-vis">
+                <div class="array-cell">2</div>
+                <div class="array-cell">10</div>
+                <div class="array-cell">13</div>
+                <div class="array-cell">22</div>
+                <div class="array-cell">26</div>
+                <div class="array-cell">31</div>
+            </div>
+
+            <button class="code-toggle-button">Show Code</button>
+            <pre class="hidden-code"><code class="language-java">
+<span class="keyword">public class</span> <span class="class-name">PrefixSumCreator</span> {
+    <span class="keyword">public static int</span>[] <span class="method">createPrefixSum</span>(<span class="keyword">int</span>[] arr) {
+        <span class="keyword">if</span> (arr == null || arr.length == 0) {
+            <span class="keyword">return new int</span>[0];
+        }
+        <span class="keyword">int</span> n = arr.length;
+        <span class="keyword">int</span>[] prefix = <span class="keyword">new int</span>[n];
+        prefix[0] = arr[0];
+        <span class="keyword">for</span> (<span class="keyword">int</span> i = 1; i < n; i++) {
+            prefix[i] = prefix[i - 1] + arr[i];
+        }
+        <span class="keyword">return</span> prefix;
+    }
+}
+            </code></pre>
+            <button class="code-toggle-button">Show Dry Run</button>
+            <div class="hidden-code">
+                 <h4 class="mt-6">Dry Run: `arr = [2, 8, 3, 9, 4, 5]`</h4>
+                 <table class="dry-run-table">
+                    <thead>
+                        <tr><th>i</th><th>arr[i]</th><th>Calculation</th><th>prefix Array State</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>0</td><td>2</td><td>`prefix[0] = arr[0]`</td><td>`[2, 0, 0, 0, 0, 0]`</td></tr>
+                        <tr><td>1</td><td>8</td><td>`prefix[1] = prefix[0] + arr[1] = 2 + 8`</td><td>`[2, 10, 0, 0, 0, 0]`</td></tr>
+                        <tr><td>2</td><td>3</td><td>`prefix[2] = prefix[1] + arr[2] = 10 + 3`</td><td>`[2, 10, 13, 0, 0, 0]`</td></tr>
+                        <tr><td>3</td><td>9</td><td>`prefix[3] = prefix[2] + arr[3] = 13 + 9`</td><td>`[2, 10, 13, 22, 0, 0]`</td></tr>
+                        <tr><td>4</td><td>4</td><td>`prefix[4] = prefix[3] + arr[4] = 22 + 4`</td><td>`[2, 10, 13, 22, 26, 0]`</td></tr>
+                        <tr><td>5</td><td>5</td><td>`prefix[5] = prefix[4] + arr[5] = 26 + 5`</td><td>`[2, 10, 13, 22, 26, 31]`</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <hr class="my-8 border-t-2 border-gray-200">
+        
+        <h2 class="text-3xl font-bold mb-2">2. Applications & Interview Problems</h2>
+
+        <div class="example-container">
+            <h3>Problem 1: Range Sum Query</h3>
+            <p><strong>Problem:</strong> Given an array `arr`, handle multiple queries where each query asks for the sum of elements from index `L` to `R` (inclusive).</p>
+            <h4>Optimization with Prefix Sum</h4>
+            <p><strong>Formula:</strong> `sum(L, R) = prefix[R] - prefix[L-1]`. This gives an O(1) query time after an initial O(N) setup.</p>
+            
+            <button class="code-toggle-button">Show Code</button>
+            <pre class="hidden-code"><code class="language-java">
+<span class="keyword">public class</span> <span class="class-name">RangeSumQuery</span> {
+    <span class="keyword">private int</span>[] prefix;
+    <span class="keyword">public</span> <span class="method">RangeSumQuery</span>(<span class="keyword">int</span>[] arr) { 
+        <span class="keyword">if</span> (arr == null || arr.length == 0) <span class="keyword">return</span>;
+        prefix = <span class="keyword">new int</span>[arr.length];
+        prefix[0] = arr[0];
+        <span class="keyword">for</span>(<span class="keyword">int</span> i = 1; i < arr.length; i++) {
+            prefix[i] = prefix[i-1] + arr[i];
+        }
+    }
+    <span class="keyword">public int</span> <span class="method">getSum</span>(<span class="keyword">int</span> L, <span class="keyword">int</span> R) {
+        <span class="keyword">if</span> (L == 0) {
+            <span class="keyword">return</span> prefix[R];
+        }
+        <span class="keyword">return</span> prefix[R] - prefix[L - 1];
+    }
+}
+            </code></pre>
+        </div>
+
+        <div class="example-container">
+            <h3>Problem 2: Subarray with Zero Sum</h3>
+            <p><strong>Problem:</strong> Given an array of integers, find if there is a subarray with a sum equal to 0.</p>
+            <h4>Approach with Prefix Sum & HashMap</h4>
+            <p>If a prefix sum `X` appears at two different indices `i` and `j`, the sum of the elements between them must be 0. We use a HashSet to track sums we've already seen.</p>
+            
+            <button class="code-toggle-button">Show Code</button>
+            <pre class="hidden-code"><code class="language-java">
+<span class="keyword">import</span> java.util.HashSet;
+<span class="keyword">import</span> java.util.Set;
+<span class="keyword">public class</span> <span class="class-name">ZeroSumSubarray</span> {
+    <span class="keyword">public static boolean</span> <span class="method">hasZeroSumSubarray</span>(<span class="keyword">int</span>[] arr) {
+        Set&lt;Long&gt; sums = <span class="keyword">new</span> HashSet&lt;&gt;();
+        <span class="keyword">long</span> currentSum = 0;
+        sums.add(0L); 
+        <span class="keyword">for</span> (<span class="keyword">int</span> val : arr) {
+            currentSum += val;
+            <span class="keyword">if</span> (sums.contains(currentSum)) {
+                <span class="keyword">return true</span>;
+            }
+            sums.add(currentSum);
+        }
+        <span class="keyword">return false</span>;
+    }
+}
+            </code></pre>
+            <button class="code-toggle-button">Show Dry Run</button>
+            <div class="hidden-code">
+                 <h4 class="mt-6">Dry Run: `arr = [4, 2, -3, 1, 6]`</h4>
+                 <table class="dry-run-table">
+                    <thead><tr><th>Index</th><th>`arr[i]`</th><th>`currentSum`</th><th>`sums` Set</th><th>Action</th></tr></thead>
+                    <tbody>
+                        <tr><td>-</td><td>-</td><td>0</td><td>`{0}`</td><td>Initial state.</td></tr>
+                        <tr><td>0</td><td>4</td><td>4</td><td>`{0, 4}`</td><td>Add `4`.</td></tr>
+                        <tr><td>1</td><td>2</td><td>6</td><td>`{0, 4, 6}`</td><td>Add `6`.</td></tr>
+                        <tr><td>2</td><td>-3</td><td>3</td><td>`{0, 4, 6, 3}`</td><td>Add `3`.</td></tr>
+                        <tr><td>3</td><td>1</td><td>4</td><td>`{0, 4, 6, 3}`</td><td>Set contains `4`. <strong>Return `true`</strong>.</td></tr>
+                    </tbody>
+                </table>
+                 <p class="mt-4">The subarray `[2, -3, 1]` sums to 0. This was detected because the prefix sum `4` (from index 0) repeated after processing index 3.</p>
+            </div>
+        </div>
+
+        <div class="example-container">
+            <h3>Problem 3: Find Pivot Index</h3>
+            <p><strong>Problem:</strong> Given an array of integers `nums`, find the "pivot index." This is the index where the sum of all numbers to the left of the index is equal to the sum of all numbers to the right of the index. If no such index exists, return -1.</p>
+            <h4>Approach using a Running Prefix Sum</h4>
+            <p>Instead of creating two separate prefix and suffix sum arrays, we can do this in one pass. First, calculate the `totalSum` of the entire array. Then, iterate through the array keeping track of a `leftSum`. For each index `i`, the `rightSum` is simply `totalSum - leftSum - nums[i]`. If `leftSum` equals `rightSum`, we've found our pivot.</p>
+            
+            <button class="code-toggle-button">Show Code</button>
+            <pre class="hidden-code"><code class="language-java">
+<span class="keyword">public class</span> <span class="class-name">PivotIndexFinder</span> {
+    <span class="keyword">public int</span> <span class="method">pivotIndex</span>(<span class="keyword">int</span>[] nums) {
+        <span class="keyword">int</span> totalSum = 0;
+        <span class="keyword">for</span> (<span class="keyword">int</span> num : nums) {
+            totalSum += num;
+        }
+
+        <span class="keyword">int</span> leftSum = 0;
+        <span class="keyword">for</span> (<span class="keyword">int</span> i = 0; i < nums.length; i++) {
+            <span class="keyword">int</span> rightSum = totalSum - leftSum - nums[i];
+            <span class="keyword">if</span> (leftSum == rightSum) {
+                <span class="keyword">return</span> i; <span class="comment">// Found the pivot index</span>
+            }
+            leftSum += nums[i];
+        }
+
+        <span class="keyword">return</span> -1; <span class="comment">// No pivot index found</span>
+    }
+}
+            </code></pre>
+            <button class="code-toggle-button">Show Dry Run</button>
+            <div class="hidden-code">
+                 <h4 class="mt-6">Dry Run: `nums = [1, 7, 3, 6, 5, 6]`</h4>
+                 <p>First, `totalSum` = 1 + 7 + 3 + 6 + 5 + 6 = 28.</p>
+                 <table class="dry-run-table">
+                    <thead><tr><th>Index `i`</th><th>`nums[i]`</th><th>`leftSum` (start of loop)</th><th>`rightSum` Calculation</th><th>Is `leftSum == rightSum`?</th></tr></thead>
+                    <tbody>
+                        <tr><td>0</td><td>1</td><td>0</td><td>`28 - 0 - 1 = 27`</td><td>No (0 != 27)</td></tr>
+                        <tr><td>1</td><td>7</td><td>1</td><td>`28 - 1 - 7 = 20`</td><td>No (1 != 20)</td></tr>
+                        <tr><td>2</td><td>3</td><td>8</td><td>`28 - 8 - 3 = 17`</td><td>No (8 != 17)</td></tr>
+                        <tr><td>3</td><td>6</td><td>11</td><td>`28 - 11 - 6 = 11`</td><td><strong>Yes (11 == 11). Return 3.</strong></td></tr>
+                    </tbody>
+                </table>
+                 <p class="mt-4">The loop stops and returns index `3` because the sum of elements to the left (1 + 7 + 3 = 11) equals the sum of elements to the right (5 + 6 = 11).</p>
+            </div>
+        </div>
+
+        <hr class="my-8 border-t-2 border-gray-200">
+
+        <h2 class="text-3xl font-bold mb-2">3. Suffix & Combined Techniques</h2>
+        <p>A <strong>suffix sum array</strong> is the mirror image of a prefix sum array. Each element `suffix[i]` stores the sum of all elements from index `i` to the end of the original array. This concept can be extended to products, maximums, or other calculations, and is powerful when combined with prefix calculations.</p>
+
+        <div class="example-container">
+            <h3>Creating a Suffix Sum Array</h3>
+             <p><strong>Formula:</strong></p>
+            <ul>
+                <li>`suffix[n-1] = arr[n-1]`</li>
+                <li>`suffix[i] = suffix[i+1] + arr[i]` for `i < n-1`</li>
+            </ul>
+
+            <button class="code-toggle-button">Show Code</button>
+            <pre class="hidden-code"><code class="language-java">
+<span class="keyword">public class</span> <span class="class-name">SuffixSumCreator</span> {
+    <span class="keyword">public static int</span>[] <span class="method">createSuffixSum</span>(<span class="keyword">int</span>[] arr) {
+        <span class="keyword">int</span> n = arr.length;
+        <span class="keyword">int</span>[] suffix = <span class="keyword">new int</span>[n];
+        suffix[n - 1] = arr[n - 1];
+        <span class="keyword">for</span> (<span class="keyword">int</span> i = n - 2; i >= 0; i--) {
+            suffix[i] = suffix[i + 1] + arr[i];
+        }
+        <span class="keyword">return</span> suffix;
+    }
+}
+            </code></pre>
+        </div>
+
+        <div class="example-container">
+            <h3>Interview Problem: Product of Array Except Self</h3>
+            <p><strong>Problem:</strong> Given an integer array `nums`, return an array `answer` such that `answer[i]` is equal to the product of all the elements of `nums` except `nums[i]`. You must solve this in O(N) time and without using the division operator.</p>
+            
+            <h4>Approach using Prefix and Suffix Products</h4>
+            <p>This is a classic problem that beautifully demonstrates the power of combining prefix and suffix computations. For any index `i`, the desired product is `(product of all elements to the left) * (product of all elements to the right)`.</p>
+            <ol>
+                <li>Create a `prefixProduct` array (we can use the `answer` array for this to save space). `answer[i]` will store the product of all elements before `i`.</li>
+                <li>Calculate a `suffixProduct` on the fly. Iterate from the end of the array, multiply the current `answer[i]` by the `suffixProduct`, and then update the `suffixProduct`.</li>
+            </ol>
+            
+            <button class="code-toggle-button">Show Code</button>
+            <pre class="hidden-code"><code class="language-java">
+<span class="keyword">public class</span> <span class="class-name">ProductExceptSelf</span> {
+    <span class="keyword">public int</span>[] <span class="method">productExceptSelf</span>(<span class="keyword">int</span>[] nums) {
+        <span class="keyword">int</span> n = nums.length;
+        <span class="keyword">int</span>[] answer = <span class="keyword">new int</span>[n];
+
+        <span class="comment">// Step 1: Calculate prefix products and store in the answer array</span>
+        answer[0] = 1;
+        <span class="keyword">for</span> (<span class="keyword">int</span> i = 1; i < n; i++) {
+            answer[i] = answer[i - 1] * nums[i - 1];
+        }
+
+        <span class="comment">// Step 2: Calculate suffix products and multiply with the prefix products</span>
+        <span class="keyword">int</span> suffixProduct = 1;
+        <span class="keyword">for</span> (<span class="keyword">int</span> i = n - 1; i >= 0; i--) {
+            answer[i] = answer[i] * suffixProduct;
+            suffixProduct *= nums[i];
+        }
+
+        <span class="keyword">return</span> answer;
+    }
+}
+            </code></pre>
+            <button class="code-toggle-button">Show Dry Run</button>
+            <div class="hidden-code">
+                 <h4 class="mt-6">Dry Run: `nums = [1, 2, 3, 4]`</h4>
+                 <table class="dry-run-table">
+                    <thead><tr><th>Stage</th><th>`i`</th><th>Calculation</th><th>`answer` array state</th><th>`suffixProduct`</th></tr></thead>
+                    <tbody>
+                        <tr><td rowspan="4">Prefix Pass</td><td>0</td><td>`answer[0] = 1`</td><td>`[1, _, _, _]`</td><td>-</td></tr>
+                        <tr><td>1</td><td>`answer[1] = answer[0] * nums[0] = 1*1`</td><td>`[1, 1, _, _]`</td><td>-</td></tr>
+                        <tr><td>2</td><td>`answer[2] = answer[1] * nums[1] = 1*2`</td><td>`[1, 1, 2, _]`</td><td>-</td></tr>
+                        <tr><td>3</td><td>`answer[3] = answer[2] * nums[2] = 2*3`</td><td>`[1, 1, 2, 6]`</td><td>-</td></tr>
+                        <tr><td colspan="5" style="text-align:center; background-color:#eef2ff;">--- Suffix Pass Begins ---</td></tr>
+                        <tr><td rowspan="4">Suffix Pass</td><td>3</td><td>`answer[3] = answer[3] * 1 = 6` <br> `suffixProduct *= nums[3] = 1*4`</td><td>`[1, 1, 2, 6]`</td><td>4</td></tr>
+                        <tr><td>2</td><td>`answer[2] = answer[2] * 4 = 8` <br> `suffixProduct *= nums[2] = 4*3`</td><td>`[1, 1, 8, 6]`</td><td>12</td></tr>
+                        <tr><td>1</td><td>`answer[1] = answer[1] * 12 = 12` <br> `suffixProduct *= nums[1] = 12*2`</td><td>`[1, 12, 8, 6]`</td><td>24</td></tr>
+                        <tr><td>0</td><td>`answer[0] = answer[0] * 24 = 24` <br> `suffixProduct *= nums[0] = 24*1`</td><td>`[24, 12, 8, 6]`</td><td>24</td></tr>
+                    </tbody>
+                </table>
+                 <p class="mt-4">Final Answer: <strong>[24, 12, 8, 6]</strong>.</p>
+            </div>
+        </div>
+
+        <div class="example-container">
+            <h3>Interview Problem: Trapping Rain Water</h3>
+            <p><strong>Problem:</strong> Given `n` non-negative integers representing an elevation map where the width of each bar is 1, compute how much water it can trap after raining.</p>
+            
+            <h4>Approach using Prefix and Suffix Maximums</h4>
+            <p>The amount of water trapped above any single bar depends on the height of the walls to its left and right. Specifically, the water level will be the `minimum` of the tallest bar to the left and the tallest bar to the right. The water trapped is this level minus the current bar's height.</p>
+            <ol>
+                <li>Create a `leftMax` array (prefix max): `leftMax[i]` stores the maximum height of a bar from index 0 to `i`.</li>
+                <li>Create a `rightMax` array (suffix max): `rightMax[i]` stores the maximum height of a bar from index `i` to `n-1`.</li>
+                <li>Iterate through the map. For each bar `i`, the trapped water is `min(leftMax[i], rightMax[i]) - height[i]`. Sum this up for all bars.</li>
+            </ol>
+            
+            <button class="code-toggle-button">Show Code</button>
+            <pre class="hidden-code"><code class="language-java">
+<span class="keyword">public class</span> <span class="class-name">TrappingRainWater</span> {
+    <span class="keyword">public int</span> <span class="method">trap</span>(<span class="keyword">int</span>[] height) {
+        <span class="keyword">if</span> (height == null || height.length == 0) <span class="keyword">return</span> 0;
+        <span class="keyword">int</span> n = height.length;
+        
+        <span class="keyword">int</span>[] leftMax = <span class="keyword">new int</span>[n];
+        leftMax[0] = height[0];
+        <span class="keyword">for</span> (<span class="keyword">int</span> i = 1; i < n; i++) {
+            leftMax[i] = Math.max(leftMax[i - 1], height[i]);
+        }
+
+        <span class="keyword">int</span>[] rightMax = <span class="keyword">new int</span>[n];
+        rightMax[n - 1] = height[n - 1];
+        <span class="keyword">for</span> (<span class="keyword">int</span> i = n - 2; i >= 0; i--) {
+            rightMax[i] = Math.max(rightMax[i + 1], height[i]);
+        }
+
+        <span class="keyword">int</span> totalWater = 0;
+        <span class="keyword">for</span> (<span class="keyword">int</span> i = 0; i < n; i++) {
+            <span class="keyword">int</span> waterLevel = Math.min(leftMax[i], rightMax[i]);
+            totalWater += waterLevel - height[i];
+        }
+
+        <span class="keyword">return</span> totalWater;
+    }
+}
+            </code></pre>
+             <button class="code-toggle-button">Show Dry Run</button>
+            <div class="hidden-code">
+                 <h4 class="mt-6">Dry Run: `height = [0, 1, 0, 2, 1, 0]`</h4>
+                 <table class="dry-run-table">
+                    <thead><tr><th>Index `i`</th><th>`height[i]`</th><th>`leftMax[i]`</th><th>`rightMax[i]`</th><th>`min(L, R)`</th><th>Water (`min - h[i]`)</th></tr></thead>
+                    <tbody>
+                        <tr><td>0</td><td>0</td><td>0</td><td>2</td><td>0</td><td>0 - 0 = 0</td></tr>
+                        <tr><td>1</td><td>1</td><td>1</td><td>2</td><td>1</td><td>1 - 1 = 0</td></tr>
+                        <tr><td>2</td><td>0</td><td>1</td><td>2</td><td>1</td><td>1 - 0 = 1</td></tr>
+                        <tr><td>3</td><td>2</td><td>2</td><td>2</td><td>2</td><td>2 - 2 = 0</td></tr>
+                        <tr><td>4</td><td>1</td><td>2</td><td>1</td><td>1</td><td>1 - 1 = 0</td></tr>
+                        <tr><td>5</td><td>0</td><td>2</td><td>0</td><td>0</td><td>0 - 0 = 0</td></tr>
+                        <tr><td colspan="5" style="text-align:right; font-weight:bold;">Total Water:</td><td><strong>1</strong></td></tr>
+                    </tbody>
+                </table>
+                 <p class="mt-4">The only water trapped is 1 unit at index 2. The total water trapped is 1.</p>
+            </div>
+        </div>
+
+    </div>
+</main>
+
+<script>
+    // JavaScript to handle the "Show/Hide Code" functionality
+    document.addEventListener('DOMContentLoaded', () => {
+        const buttons = document.querySelectorAll('.code-toggle-button');
+        buttons.forEach(button => {
+            button.addEventListener('click', () => {
+                // This targets the very next element sibling, which is the <pre> or <div> block
+                const contentBlock = button.nextElementSibling;
+                const isHidden = contentBlock.classList.contains('hidden-code');
+                
+                if (isHidden) {
+                    contentBlock.classList.remove('hidden-code');
+                    button.textContent = button.textContent.replace('Show', 'Hide');
+                } else {
+                    contentBlock.classList.add('hidden-code');
+                    button.textContent = button.textContent.replace('Hide', 'Show');
+                }
+            });
+        });
+    });
+</script>
+
+</body>
+</html>
