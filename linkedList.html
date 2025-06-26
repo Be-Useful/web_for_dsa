@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lecture 8: Introduction to LinkedList</title>
+    <!-- Tailwind CSS CDN for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Prism.js for code highlighting -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <style>
+        /* Custom CSS for 'Inter' font and base styles from existing site */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f3f4f6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column; 
+        }
+
+        .content-area {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 2rem;
+            box-sizing: border-box;
+        }
+
+        .presentation-card {
+            background-color: #ffffff;
+            border-radius: 1.5rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            padding: 2.5rem;
+            width: 90%;
+            max-width: 960px;
+            box-sizing: border-box;
+        }
+
+        .presentation-card h1, .presentation-card h2 {
+            color: #1f2937;
+            margin-bottom: 1.5rem;
+            font-weight: 800;
+        }
+        
+        .presentation-card h3 {
+             color: #1f2937;
+             font-weight: 700;
+             margin-top: 1.5rem;
+             margin-bottom: 1rem;
+        }
+
+        .presentation-card p, .presentation-card li, .presentation-card td, .presentation-card th {
+            color: #4b5563;
+            line-height: 1.7;
+            margin-bottom: 1rem;
+            font-size: 1.05rem;
+        }
+        
+        .presentation-card code:not(pre > code) {
+            background-color: #eef2ff;
+            color: #4338ca;
+            padding: 0.2rem 0.5rem;
+            border-radius: 0.375rem;
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: 600;
+        }
+        
+        .presentation-card pre {
+            border-radius: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .presentation-card .example-box {
+            background-color: #f9fafb;
+            border-left-width: 4px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            margin-bottom: 2.5rem;
+            border-radius: 0.5rem;
+        }
+        
+        .presentation-card .info-tag {
+            display: inline-block;
+            background-color: #dbeafe;
+            color: #1e40af;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .presentation-card table {
+            width: 100%;
+            margin-top: 1.5rem;
+            border-collapse: collapse;
+        }
+        
+        .presentation-card th, .presentation-card td {
+            border: 1px solid #e5e7eb;
+            padding: 0.75rem;
+            text-align: left;
+        }
+        
+        .presentation-card th {
+            background-color: #f9fafb;
+            font-weight: 600;
+        }
+
+        /* Navigation Bar Styles to match site */
+        .navbar {
+            background-color: #4338ca;
+            padding: 1rem 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
+        }
+
+        .navbar a:hover {
+            background-color: #4f46e5;
+            transform: translateY(-2px);
+        }
+
+        .navbar a.active-nav {
+            background-color: #6d28d9;
+            font-weight: 700;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        @media (max-width: 768px) {
+            .presentation-card { padding: 1.5rem; width: 95%; }
+            .presentation-card h1 { font-size: 2.2rem; }
+            .presentation-card h2 { font-size: 1.8rem; }
+            .navbar { justify-content: flex-start; overflow-x: auto; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <!-- Navigation links will be inserted here by update_nav.js -->
+    </nav>
+    
+    <!-- Include the navigation update script -->
+    <script src="update_nav.js"></script>
+
+<!-- Main Content Area -->
+<main class="content-area">
+    <div class="presentation-card">
+        <div class="text-center mb-8">
+            <h1 class="text-4xl lg:text-5xl font-extrabold text-indigo-700 mb-4">Introduction to LinkedList</h1>
+            <p class="text-lg text-gray-600">Understanding the fundamentals of the LinkedList data structure in Java.</p>
+        </div>
+
+        <hr class="my-12 border-t-2 border-gray-200">
+        
+        <!-- Definition -->
+        <h2 class="text-3xl font-bold text-gray-800">1. What is a LinkedList?</h2>
+        <div class="example-box border-l-blue-500">
+            <h3 class="text-xl font-bold text-gray-800 mt-0">Core Concept</h3>
+            <p>A <code>LinkedList</code> is a linear data structure where elements are not stored in contiguous memory locations. Instead, each element (called a "node") contains two parts:</p>
+            <ul>
+                <li><strong>Data:</strong> The actual value stored in the node.</li>
+                <li><strong>Next Pointer:</strong> A reference (or pointer) to the next node in the sequence.</li>
+            </ul>
+            <p>The first node is called the <code>head</code>, and the last node's "next" pointer points to <code>null</code>, indicating the end of the list. This chain-like structure allows for efficient insertions and deletions.</p>
+        </div>
+
+        <!-- Declaration and Usage -->
+        <h2 class="text-3xl font-bold text-gray-800">2. Declaration and Common Operations</h2>
+        <div class="example-box border-l-green-500">
+            <h3 class="text-xl font-bold text-gray-800 mt-0">Syntax in Java</h3>
+            <p>In Java, <code>LinkedList</code> is part of the Collections Framework and implements the <code>List</code> and <code>Deque</code> interfaces. You can easily create and manipulate a LinkedList object.</p>
+            <pre><code class="language-java">import java.util.LinkedList;
+import java.util.List;
+
+// Declaration and Initialization
+List&lt;String&gt; animals = new LinkedList&lt;&gt;();
+
+// Adding elements
+animals.add("Dog");      // Adds to the end
+animals.add("Cat");
+animals.add("Horse");
+System.out.println("Initial LinkedList: " + animals); // Output: [Dog, Cat, Horse]
+
+// Adding an element at a specific position
+animals.add(1, "Cow"); // Inserts "Cow" at index 1
+System.out.println("After adding at index 1: " + animals); // Output: [Dog, Cow, Cat, Horse]
+
+// Removing an element
+animals.remove("Cat");
+System.out.println("After removing 'Cat': " + animals); // Output: [Dog, Cow, Horse]
+
+// Getting the size
+System.out.println("Size of the list: " + animals.size()); // Output: 3
+</code></pre>
+        </div>
+
+        <!-- When to Use -->
+        <h2 class="text-3xl font-bold text-gray-800">3. When to Use a LinkedList</h2>
+        <div class="example-box border-l-purple-500">
+             <p>A <code>LinkedList</code> shines in specific scenarios, particularly when you have a high number of insertions or deletions.</p>
+            <ul>
+                <li><strong>Frequent Insertions/Deletions:</strong> Adding or removing elements from the middle of a LinkedList is very fast (O(1) once you are at the position) because you only need to update a couple of pointers. An ArrayList would require shifting all subsequent elements, which is slow (O(n)).</li>
+                <li><strong>Implementing Stacks and Queues:</strong> Since Java's <code>LinkedList</code> also implements the <code>Deque</code> (Double-Ended Queue) interface, it's perfect for creating stack (LIFO) or queue (FIFO) structures with methods like <code>addFirst()</code>, <code>addLast()</code>, <code>removeFirst()</code>, and <code>removeLast()</code>.</li>
+                <li><strong>Dynamic Size:</strong> When you don't know the size of the list beforehand and expect it to grow and shrink often.</li>
+            </ul>
+        </div>
+
+
+        <!-- LinkedList vs. ArrayList -->
+        <h2 class="text-3xl font-bold text-gray-800">4. LinkedList vs. ArrayList</h2>
+        <div class="example-box border-l-orange-500">
+            <h3 class="text-xl font-bold text-gray-800 mt-0">Key Differences</h3>
+            <p>Choosing between <code>LinkedList</code> and <code>ArrayList</code> depends on your primary use case.</p>
+            
+            <h3 class="text-lg font-bold text-gray-800 mt-4">ArrayList</h3>
+            <div><span class="info-tag">Structure: Dynamic Array</span> <span class="info-tag">Access: Fast (O(1))</span> <span class="info-tag">Insertion/Deletion: Slow (O(n))</span></div>
+            <p>Uses a contiguous block of memory. Accessing an element by its index is very fast. However, adding or removing an element requires shifting other elements, which can be inefficient.</p>
+
+            <h3 class="text-lg font-bold text-gray-800 mt-4">LinkedList</h3>
+            <div><span class="info-tag">Structure: Nodes with Pointers</span> <span class="info-tag">Access: Slow (O(n))</span> <span class="info-tag">Insertion/Deletion: Fast (O(1))</span></div>
+            <p>Stores elements in nodes scattered across memory. Accessing a specific element requires traversing the list from the beginning (or end), which is slow. Its strength lies in fast additions and removals.</p>
+        </div>
+
+        <!-- Interview Problem 1: Length -->
+        <h2 class="text-3xl font-bold text-gray-800">5. Problem: Find the Length of a LinkedList</h2>
+        <div class="example-box border-l-cyan-500">
+            <h3 class="text-xl font-bold text-gray-800 mt-0">Problem Statement</h3>
+            <p>Given the head of a singly linked list, write a function to find its length.</p>
+            <h3 class="text-xl font-bold text-gray-800 mt-6">Solution Explained</h3>
+            <p>To find the length, you can simply traverse the list from the head node to the end. Start a counter at 0, and for each node you visit, increment the counter. The loop stops when you reach a <code>null</code> node.</p>
+            <pre><code class="language-java">// We'll use this simple Node definition for the problems
+class ListNode {
+    int val;
+    ListNode next;
+    ListNode(int val) { this.val = val; }
+}
+
+public class Solution {
+    public int getLength(ListNode head) {
+        int count = 0;
+        ListNode current = head;
+        while (current != null) {
+            count++;
+            current = current.next;
+        }
+        return count;
+    }
+}</code></pre>
+        </div>
+
+        <!-- Interview Problem 2: Middle -->
+        <h2 class="text-3xl font-bold text-gray-800">6. Problem: Find the Middle of the LinkedList</h2>
+        <div class="example-box border-l-teal-500">
+            <h3 class="text-xl font-bold text-gray-800 mt-0">Complete Runnable Example</h3>
+            <p>The "Tortoise and Hare" approach is an efficient way to solve this. Use a "slow" pointer that moves one step and a "fast" pointer that moves two steps. When the fast pointer reaches the end, the slow pointer is at the middle. Here is a full, runnable example.</p>
+            <pre><code class="language-java">class FindMiddleOfList {
+
+    Node head; // Head of the list
+
+    // Node class
+    static class Node {
+        int data;
+        Node next;
+        Node(int d) {
+            data = d;
+            next = null;
+        }
+    }
+
+    // Function to find the middle of the list
+    Node findMiddle() {
+        Node slow_ptr = head;
+        Node fast_ptr = head;
+
+        if (head != null) {
+            while (fast_ptr != null && fast_ptr.next != null) {
+                fast_ptr = fast_ptr.next.next;
+                slow_ptr = slow_ptr.next;
+            }
+        }
+        return slow_ptr;
+    }
+
+    // Function to add a new node at the end
+    public void push(int new_data) {
+        Node new_node = new Node(new_data);
+        if (head == null) {
+            head = new_node;
+            return;
+        }
+        Node last = head;
+        while (last.next != null) {
+            last = last.next;
+        }
+        last.next = new_node;
+    }
+
+    // Function to print the list
+    public void printList() {
+        Node tnode = head;
+        while (tnode != null) {
+            System.out.print(tnode.data + " -> ");
+            tnode = tnode.next;
+        }
+        System.out.println("NULL");
+    }
+
+    public static void main(String[] args) {
+        FindMiddleOfList llist = new FindMiddleOfList();
+        for (int i = 5; i > 0; --i) {
+            llist.push(i);
+        }
+        System.out.println("Created list is:");
+        llist.printList();
+        
+        Node middleNode = llist.findMiddle();
+        if (middleNode != null) {
+            System.out.println("The middle element is [" + middleNode.data + "]");
+        }
+    }
+}
+</code></pre>
+        </div>
+
+
+        <!-- Interview Problem 3: Reverse -->
+        <h2 class="text-3xl font-bold text-gray-800">7. Problem: Reverse a LinkedList</h2>
+        <div class="example-box border-l-red-500">
+            <h3 class="text-xl font-bold text-gray-800 mt-0">Complete Runnable Example</h3>
+            <p>Here is a full, runnable Java class that defines a LinkedList, adds elements, prints it, reverses it, and prints the result. You can copy and run this code directly.</p>
+            <pre><code class="language-java">class LinkedListReversal {
+
+    static Node head;
+
+    static class Node {
+        int data;
+        Node next;
+        Node(int d) {
+            data = d;
+            next = null;
+        }
+    }
+
+    // Function to reverse the linked list
+    Node reverse(Node node) {
+        Node prev = null;
+        Node current = node;
+        Node next = null;
+        while (current != null) {
+            next = current.next;
+            current.next = prev;
+            prev = current;
+            current = next;
+        }
+        node = prev;
+        return node;
+    }
+
+    // Function to print the linked list
+    void printList(Node node) {
+        while (node != null) {
+            System.out.print(node.data + " -> ");
+            node = node.next;
+        }
+        System.out.println("NULL");
+    }
+
+    public static void main(String[] args) {
+        LinkedListReversal list = new LinkedListReversal();
+        list.head = new Node(1);
+        list.head.next = new Node(2);
+        list.head.next.next = new Node(3);
+        list.head.next.next.next = new Node(4);
+
+        System.out.println("Original list:");
+        list.printList(head);
+        
+        head = list.reverse(head);
+        
+        System.out.println("Reversed list:");
+        list.printList(head);
+    }
+}
+</code></pre>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6">Dry Run: Reversing 1 -> 2 -> 3</h3>
+            <p>Let's trace the `reverse` method with the list <code>1 -> 2 -> 3 -> NULL</code>.</p>
+            <p>Initial state: <code>prev = null</code>, <code>current = Node(1)</code></p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Iteration</th>
+                        <th><code>current</code></th>
+                        <th><code>next</code></th>
+                        <th><code>current.next</code> becomes...</th>
+                        <th><code>prev</code> becomes...</th>
+                        <th>List State</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Start</td>
+                        <td>Node(1)</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td><code>null</code></td>
+                        <td>1 -> 2 -> 3</td>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>Node(1)</td>
+                        <td>Node(2)</td>
+                        <td><code>null</code> (points to prev)</td>
+                        <td>Node(1)</td>
+                        <td><code>null</code> &lt;- 1   2 -> 3</td>
+                    </tr>
+                     <tr>
+                        <td>2</td>
+                        <td>Node(2)</td>
+                        <td>Node(3)</td>
+                        <td>Node(1) (points to prev)</td>
+                        <td>Node(2)</td>
+                        <td><code>null</code> &lt;- 1 &lt;- 2   3</td>
+                    </tr>
+                     <tr>
+                        <td>3</td>
+                        <td>Node(3)</td>
+                        <td><code>null</code></td>
+                        <td>Node(2) (points to prev)</td>
+                        <td>Node(3)</td>
+                        <td><code>null</code> &lt;- 1 &lt;- 2 &lt;- 3</td>
+                    </tr>
+                    <tr>
+                        <td>End</td>
+                        <td><code>null</code></td>
+                        <td>-</td>
+                        <td colspan="3">Loop terminates. New head is <code>prev</code> (Node 3).</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html>

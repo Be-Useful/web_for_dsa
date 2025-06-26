@@ -10,7 +10,8 @@ function updateNavigation() {
         { href: 'Greedy_with_sorting.html', text: 'Greedy with Sorting' },
         { href: 'java_collections_subarrays.html', text: 'Java Collections' },
         { href: 'sliding_window_two_pointer.html', text: 'Sliding Window' },
-        { href: 'prefix_sum.html', text: 'Prefix Sum' }
+        { href: 'prefix_sum.html', text: 'Prefix Sum' },
+        { href: 'linkedList.html', text: 'Linked List' }
     ];
 
     const nav = document.querySelector('nav.navbar');
