@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LinkedList: Slow & Fast Pointer Problems</title>
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Prism.js for code highlighting -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <!-- Custom Font and Styles -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .content-card {
+            background-color: #ffffff;
+            border-radius: 1.5rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            padding: 2.5rem;
+            margin-top: 2rem;
+        }
+        .problem-box {
+            background-color: #f9fafb;
+            border-left-width: 4px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            border-radius: 0.5rem;
+        }
+        .toggle-button {
+            background-color: #4f46e5;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            display: inline-block;
+            margin-right: 0.5rem;
+            margin-top: 1rem;
+        }
+        .toggle-button:hover {
+            background-color: #4338ca;
+        }
+        .hidden-content {
+            display: none;
+            margin-top: 1rem;
+            padding: 1rem;
+            background-color: #f8f9fa;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+        }
+        table {
+            width: 100%;
+            margin-top: 1rem;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #e5e7eb;
+            padding: 0.75rem;
+            text-align: left;
+        }
+        th {
+            background-color: #f9fafb;
+            font-weight: 600;
+        }
+        code:not(pre > code) {
+            background-color: #eef2ff;
+            color: #4338ca;
+            padding: 0.2rem 0.5rem;
+            border-radius: 0.375rem;
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: 600;
+        }
+        /* Navigation Bar Styles from index.html */
+        .navbar {
+            background-color: #4338ca;
+            padding: 1rem 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
+        }
+
+        .navbar a:hover {
+            background-color: #4f46e5;
+            transform: translateY(-2px);
+        }
+
+        .navbar a.active-nav {
+            background-color: #6d28d9;
+            font-weight: 700;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+         .content-area {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 2rem;
+            box-sizing: border-box;
+        }
+         @media (max-width: 768px) {
+            .content-card { padding: 1.5rem; }
+            .navbar { justify-content: flex-start; overflow-x: auto; }
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    
+    <nav class="navbar">
+        <!-- Navigation links will be inserted here by update_nav.js -->
+    </nav>
+    
+    <!-- Include the navigation update script -->
+    <script src="update_nav.js"></script>
+    
+    <!-- This script is expected to exist in your project to populate the navbar -->
+    <script src="update_nav.js"></script>
+
+    <main class="content-area">
+        <div class="max-w-4xl mx-auto">
+            
+            <!-- Header -->
+            <div class="text-center mb-8 mt-8">
+                <h1 class="text-4xl lg:text-5xl font-extrabold text-indigo-700 mb-4">LinkedList Problem Solving</h1>
+                <p class="text-lg text-gray-600">A guide to solving classic LinkedList problems using the Slow & Fast Pointer technique.</p>
+            </div>
+
+            <!-- Types of LinkedList -->
+            <div class="content-card">
+                <h2 class="text-3xl font-bold text-gray-800 mb-4">Types of Linked Lists</h2>
+                
+                <!-- Singly Linked List -->
+                <div class="mb-6">
+                    <h3 class="text-xl font-bold text-gray-800">1. Singly Linked List</h3>
+                    <p class="text-gray-600 mt-2">The simplest type. Each node contains data and a pointer to the next node in the sequence. Traversal is only possible in one direction (forward).</p>
+                    <pre><code class="language-java">
+class Node {
+    int data;
+    Node next;
+
+    Node(int data) {
+        this.data = data;
+        this.next = null;
+    }
+}
+                    </code></pre>
+                </div>
+
+                <!-- Doubly Linked List -->
+                <div class="mb-6">
+                    <h3 class="text-xl font-bold text-gray-800">2. Doubly Linked List</h3>
+                    <p class="text-gray-600 mt-2">Each node contains data, a pointer to the next node, and a pointer to the previous node. This allows for traversal in both forward and backward directions.</p>
+                     <pre><code class="language-java">
+class Node {
+    int data;
+    Node next;
+    Node prev;
+
+    Node(int data) {
+        this.data = data;
+        this.next = null;
+        this.prev = null;
+    }
+}
+                    </code></pre>
+                </div>
+
+                <!-- Circular Linked List -->
+                <div>
+                    <h3 class="text-xl font-bold text-gray-800">3. Circular Linked List</h3>
+                    <p class="text-gray-600 mt-2">A variation where the last node's `next` pointer points back to the first node (the head) instead of `null`, forming a circle. It can be singly or doubly circular.</p>
+                    <p class="text-gray-600 mt-2">The code below shows how you might create a simple circular linked list where the last node points back to the head.</p>
+                    <pre><code class="language-java">
+public class CircularLinkedList {
+    public Node createCircularList() {
+        // Create nodes
+        Node head = new Node(1);
+        Node second = new Node(2);
+        Node third = new Node(3);
+        Node fourth = new Node(4);
+
+        // Link them up
+        head.next = second;
+        second.next = third;
+        third.next = fourth;
+        
+        // Make it circular: the last node points back to the head
+        fourth.next = head; 
+
+        return head;
+    }
+}
+                    </code></pre>
+                </div>
+            </div>
+
+            <!-- Slow & Fast Pointer Problems -->
+            <div class="content-card">
+                <h2 class="text-3xl font-bold text-gray-800 mb-4">Slow & Fast Pointer Problems</h2>
+
+                <!-- Problem 1: Detect a Loop -->
+                <div class="problem-box border-l-cyan-500">
+                    <h3 class="text-2xl font-bold text-gray-800">1. Detect a Loop in a Linked List</h3>
+                    <p class="mt-2 text-gray-600"><strong>Algorithm:</strong> Use two pointers, `slow` and `fast`. Move `slow` by one step and `fast` by two steps. If the linked list has a loop, the `fast` pointer will eventually meet the `slow` pointer. If `fast` reaches `null` or `fast.next` is `null`, there is no loop.</p>
+                    <div class="toggle-button" onclick="toggleVisibility('code1')">Show Code</div>
+                    <div class="toggle-button" onclick="toggleVisibility('dryrun1')">Show Dry Run</div>
+                    <div id="code1" class="hidden-content">
+                        <pre><code class="language-java">
+class Solution {
+    public boolean hasCycle(ListNode head) {
+        if (head == null) {
+            return false;
+        }
+        ListNode slow = head;
+        ListNode fast = head;
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+            if (slow == fast) {
+                return true; // Loop detected
+            }
+        }
+        return false; // No loop
+    }
+}
+                        </code></pre>
+                    </div>
+                    <div id="dryrun1" class="hidden-content">
+                        <p><strong>Example:</strong> 1 -> 2 -> 3 -> 4 -> 5 -> (points back to 3)</p>
+                        <table>
+                            <thead><tr><th>Step</th><th>Slow Pointer</th><th>Fast Pointer</th><th>Comment</th></tr></thead>
+                            <tbody>
+                                <tr><td>Start</td><td>1</td><td>1</td><td>Both start at the head.</td></tr>
+                                <tr><td>1</td><td>2</td><td>3</td><td>Slow moves 1, Fast moves 2.</td></tr>
+                                <tr><td>2</td><td>3</td><td>5</td><td>Slow moves 1, Fast moves 2.</td></tr>
+                                <tr><td>3</td><td>4</td><td>4</td><td>Slow is at 4, Fast moves from 5 to 3, then to 4. They meet.</td></tr>
+                                <tr><td colspan="4">Since `slow` and `fast` have met, a loop is detected.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Problem 2: Find Start of Loop -->
+                <div class="problem-box border-l-teal-500 mt-6">
+                    <h3 class="text-2xl font-bold text-gray-800">2. Find the Starting Point of a Cycle</h3>
+                    <p class="mt-2 text-gray-600"><strong>Algorithm:</strong> First, detect the loop using the slow and fast pointer method as above. Once they meet, keep one pointer (`slow`) at the meeting point and move the other pointer (`fast`) to the head of the list. Now, move both pointers one step at a time. The point where they meet again is the starting node of the loop.</p>
+                     <div class="toggle-button" onclick="toggleVisibility('code2')">Show Code</div>
+                    <div class="toggle-button" onclick="toggleVisibility('dryrun2')">Show Dry Run</div>
+                    <div id="code2" class="hidden-content">
+                        <pre><code class="language-java">
+public class Solution {
+    public ListNode detectCycle(ListNode head) {
+        if (head == null || head.next == null) {
+            return null;
+        }
+        ListNode slow = head;
+        ListNode fast = head;
+        boolean hasCycle = false;
+        
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+            if (slow == fast) {
+                hasCycle = true;
+                break;
+            }
+        }
+        
+        if (hasCycle) {
+            fast = head; // Reset one pointer to the head
+            while (slow != fast) {
+                slow = slow.next;
+                fast = fast.next;
+            }
+            return slow; // The meeting point is the start of the cycle
+        }
+        
+        return null;
+    }
+}
+                        </code></pre>
+                    </div>
+                    <div id="dryrun2" class="hidden-content">
+                        <p><strong>Example:</strong> 1 -> 2 -> 3 -> 4 -> 5 -> (points back to 3). Loop starts at node 3.</p>
+                        <p><strong>Part 1: Detect Loop</strong> - We know from the previous problem they meet at node 4.</p>
+                        <p><strong>Part 2: Find Start</strong></p>
+                        <table>
+                            <thead><tr><th>Step</th><th>Slow Pointer (starts at meeting point)</th><th>Fast Pointer (starts at head)</th><th>Comment</th></tr></thead>
+                            <tbody>
+                                <tr><td>Start</td><td>4</td><td>1</td><td>Reset fast to head.</td></tr>
+                                <tr><td>1</td><td>5</td><td>2</td><td>Move both by 1.</td></tr>
+                                <tr><td>2</td><td>3</td><td>3</td><td>Move both by 1. They meet at 3.</td></tr>
+                                 <tr><td colspan="4">The meeting point, node 3, is the start of the cycle.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Problem 3: Intersection of Y-Shaped Lists -->
+                <div class="problem-box border-l-purple-500 mt-6">
+                    <h3 class="text-2xl font-bold text-gray-800">3. Find Intersection Point of Two Lists (Y-Shape)</h3>
+                    <p class="mt-2 text-gray-600"><strong>Algorithm:</strong> This doesn't use the traditional slow/fast pointer speed difference but a similar "two pointer" traversal idea. Use two pointers, `ptrA` for list A and `ptrB` for list B. Traverse both lists. When `ptrA` reaches the end of list A, redirect it to the head of list B. Similarly, when `ptrB` reaches the end of list B, redirect it to the head of list A. If the lists intersect, the two pointers will meet at the intersection node. If they don't intersect, they will both become `null` at the same time.</p>
+                    <div class="toggle-button" onclick="toggleVisibility('code3')">Show Code</div>
+                    <div class="toggle-button" onclick="toggleVisibility('dryrun3')">Show Dry Run</div>
+                    <div id="code3" class="hidden-content">
+                        <pre><code class="language-java">
+public class Solution {
+    public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+        if (headA == null || headB == null) return null;
+
+        ListNode ptrA = headA;
+        ListNode ptrB = headB;
+
+        while (ptrA != ptrB) {
+            // If ptrA reaches the end of its list, move it to the head of B
+            ptrA = (ptrA == null) ? headB : ptrA.next;
+            
+            // If ptrB reaches the end of its list, move it to the head of A
+            ptrB = (ptrB == null) ? headA : ptrB.next;
+        }
+        // They will either meet at the intersection or at null (if no intersection)
+        return ptrA;
+    }
+}
+                        </code></pre>
+                    </div>
+                    <div id="dryrun3" class="hidden-content">
+                       <p><strong>Example:</strong><br>List A: 4 -> 1 -> 8 -> 4 -> 5<br>List B: 5 -> 6 -> 1 -> 8 -> 4 -> 5<br>They intersect at node with value 1.</p>
+                       <table>
+                           <thead><tr><th>Step</th><th>ptrA Position</th><th>ptrB Position</th></tr></thead>
+                           <tbody>
+                               <tr><td>Start</td><td>A:4</td><td>B:5</td></tr>
+                               <tr><td>1</td><td>A:1</td><td>B:6</td></tr>
+                               <tr><td>2</td><td>A:8</td><td>B:1</td></tr>
+                               <tr><td>3</td><td>A:4</td><td>A:8 (ptrB reached end of B, moves to head of A)</td></tr>
+                               <tr><td>4</td><td>A:5</td><td>A:4</td></tr>
+                               <tr><td>5</td><td>B:5 (ptrA reached end of A, moves to head of B)</td><td>A:5</td></tr>
+                               <tr><td>6</td><td>B:6</td><td>B:6 (ptrA is at B:6, ptrB is at A:5->next which is B:6)</td></tr>
+                               <tr><td>7</td><td>B:1</td><td>B:1</td></tr>
+                               <tr><td colspan="3">The pointers meet at the node with value 1. This is the intersection.</td></tr>
+                           </tbody>
+                       </table>
+                    </div>
+                </div>
+
+                <!-- Problem 4: Add Two Numbers -->
+                <div class="problem-box border-l-red-500 mt-6">
+                    <h3 class="text-2xl font-bold text-gray-800">4. Add Two Numbers in a Linked List</h3>
+                    <p class="mt-2 text-gray-600"><strong>Algorithm:</strong> This problem is a classic list traversal problem, not typically a slow/fast pointer one, but essential for linked list practice. You are given two non-empty linked lists representing two non-negative integers. The digits are stored in reverse order. Traverse both lists simultaneously, adding the corresponding digits along with a `carry` from the previous step. Create a new linked list to store the result.</p>
+                    <div class="toggle-button" onclick="toggleVisibility('code4')">Show Code</div>
+                    <div class="toggle-button" onclick="toggleVisibility('dryrun4')">Show Dry Run</div>
+                     <div id="code4" class="hidden-content">
+                        <pre><code class="language-java">
+public class Solution {
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        ListNode dummyHead = new ListNode(0);
+        ListNode current = dummyHead;
+        int carry = 0;
+
+        while (l1 != null || l2 != null || carry != 0) {
+            int val1 = (l1 != null) ? l1.val : 0;
+            int val2 = (l2 != null) ? l2.val : 0;
+            
+            int sum = val1 + val2 + carry;
+            carry = sum / 10;
+            int digit = sum % 10;
+            
+            current.next = new ListNode(digit);
+            current = current.next;
+            
+            if (l1 != null) l1 = l1.next;
+            if (l2 != null) l2 = l2.next;
+        }
+        
+        return dummyHead.next;
+    }
+}
+                        </code></pre>
+                    </div>
+                     <div id="dryrun4" class="hidden-content">
+                        <p><strong>Example:</strong> l1 = 2 -> 4 -> 3 (342), l2 = 5 -> 6 -> 4 (465). Result should be 7 -> 0 -> 8 (807).</p>
+                        <table>
+                           <thead><tr><th>Step</th><th>l1 Node</th><th>l2 Node</th><th>Carry In</th><th>Sum</th><th>Digit</th><th>Carry Out</th><th>Result List</th></tr></thead>
+                           <tbody>
+                               <tr><td>1</td><td>2</td><td>5</td><td>0</td><td>2+5+0 = 7</td><td>7</td><td>0</td><td>7</td></tr>
+                               <tr><td>2</td><td>4</td><td>6</td><td>0</td><td>4+6+0 = 10</td><td>0</td><td>1</td><td>7 -> 0</td></tr>
+                               <tr><td>3</td><td>3</td><td>4</td><td>1</td><td>3+4+1 = 8</td><td>8</td><td>0</td><td>7 -> 0 -> 8</td></tr>
+                               <tr><td colspan="8">Final result: 7 -> 0 -> 8</td></tr>
+                           </tbody>
+                       </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- JavaScript for Toggling -->
+    <script>
+        function toggleVisibility(id) {
+            const element = document.getElementById(id);
+            if (element.style.display === 'none' || element.style.display === '') {
+                element.style.display = 'block';
+            } else {
+                element.style.display = 'none';
+            }
+        }
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html>
