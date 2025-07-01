@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Binary Search Technique</title>
+    <!-- Tailwind CSS CDN for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom CSS for 'Inter' font and base styles from existing file */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f3f4f6; /* Light gray background */
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .content-area {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 2rem;
+            box-sizing: border-box;
+        }
+
+        .presentation-card {
+            background-color: #ffffff;
+            border-radius: 1.5rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            padding: 2.5rem;
+            width: 90%;
+            max-width: 960px;
+            box-sizing: border-box;
+            overflow-y: auto;
+        }
+
+        .presentation-card h1, .presentation-card h2 {
+            color: #1f2937;
+            margin-bottom: 1.5rem;
+            font-weight: 800;
+        }
+        
+        .presentation-card h3 {
+             color: #1f2937;
+             font-weight: 700;
+             margin-top: 2rem;
+             margin-bottom: 1rem;
+        }
+        
+        .presentation-card h4 {
+             color: #374151;
+             font-weight: 700;
+             margin-top: 1.5rem;
+             margin-bottom: 0.5rem;
+             font-size: 1.1rem;
+        }
+
+        .presentation-card p, .presentation-card li {
+            color: #4b5563;
+            line-height: 1.7;
+            margin-bottom: 1rem;
+            font-size: 1.05rem;
+        }
+
+        .example-container {
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-top: 2rem;
+            margin-bottom: 2.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+        }
+        
+        .presentation-card code:not(pre > code) {
+            background-color: #e5e7eb;
+            color: #1f2937;
+            padding: 0.2rem 0.5rem;
+            border-radius: 0.375rem;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+            font-weight: 500;
+            font-size: 0.9em;
+        }
+
+        .presentation-card pre {
+            background-color: #1f2937;
+            color: #f9fafb;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            overflow-x: auto;
+            border: 1px solid #374151;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            margin-top: 1rem;
+        }
+
+        .presentation-card pre code {
+            background-color: transparent;
+            padding: 0;
+            color: #d1d5db;
+            font-weight: normal;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+        
+        .presentation-card pre .comment { color: #6b7280; font-style: italic; }
+        .presentation-card pre .keyword { color: #c4b5fd; }
+        .presentation-card pre .class-name { color: #a7f3d0; }
+        .presentation-card pre .method { color: #fde047; }
+        .presentation-card pre .string { color: #fdba74; }
+
+        .presentation-card .dry-run-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1.5rem;
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+            border-radius: 0.75rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .presentation-card .dry-run-table th,
+        .presentation-card .dry-run-table td {
+            border: 1px solid #e5e7eb;
+            padding: 0.75rem;
+            text-align: center;
+            font-size: 0.95rem;
+        }
+        .presentation-card .dry-run-table th { background-color: #f3f4f6; font-weight: 600; }
+        .presentation-card .dry-run-table code { font-size: 0.9rem; }
+        
+        .low-ptr { background-color: #bae6fd; } /* Light Sky Blue */
+        .mid-ptr { background-color: #fecaca; } /* Light Red */
+        .high-ptr { background-color: #bbf7d0; } /* Light Green */
+        .search-space { background-color: #e0e7ff; } /* Light Indigo */
+        .target-cell { background-color: #dcfce7; } /* Light Green for target */
+
+
+        .presentation-card ul, .presentation-card ol { margin-left: 1.5rem; padding-left: 0.5rem; margin-bottom: 1rem; }
+        .presentation-card a { color: #4f46e5; text-decoration: none; font-weight: 600; transition: color 0.2s ease-in-out; }
+        .presentation-card a:hover { color: #3730a3; text-decoration: underline; }
+
+        .navbar {
+            background-color: #4338ca;
+            padding: 1rem 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .navbar a { color: white; text-decoration: none; padding: 0.75rem 1.5rem; border-radius: 0.75rem; font-weight: 600; transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out; }
+        .navbar a:hover { background-color: #4f46e5; transform: translateY(-2px); }
+        .navbar a.active-nav { background-color: #6d28d9; font-weight: 700; box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2); }
+        
+        .code-toggle-button { background-color: #4f46e5; color: white; padding: 0.5rem 1rem; border-radius: 0.5rem; font-weight: 600; cursor: pointer; transition: background-color 0.2s; display: inline-block; margin-top: 1rem; }
+        .code-toggle-button:hover { background-color: #4338ca; }
+        .hidden-code { display: none; }
+
+        @media (max-width: 768px) {
+            .presentation-card { padding: 1.5rem; width: 95%; }
+            .presentation-card h1 { font-size: 2.2rem; }
+            .presentation-card h2 { font-size: 1.8rem; }
+            .example-container { padding: 1.5rem; }
+            .navbar { justify-content: flex-start; overflow-x: auto; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <!-- Navigation links will be inserted here by update_nav.js -->
+    </nav>
+    
+    <!-- Include the navigation update script -->
+    <script src="update_nav.js"></script>
+
+<main class="content-area">
+    <div class="presentation-card">
+        <div class="text-center mb-8">
+            <h1 class="text-4xl lg:text-5xl font-extrabold text-indigo-700 mb-4">Binary Search</h1>
+            <p class="text-lg text-gray-600">The "divide and conquer" powerhouse for searching.</p>
+        </div>
+
+        <hr class="my-8 border-t-2 border-gray-200">
+
+        <h2 class="text-3xl font-bold mb-2 text-gray-800">1. What is Binary Search?</h2>
+        <p>Binary Search is a highly efficient searching algorithm that works on <strong>sorted</strong> arrays. Its core idea is to repeatedly divide the search interval in half. If the value of the search key is less than the item in the middle of the interval, it narrows the interval to the lower half. Otherwise, it narrows it to the upper half. This process continues until the value is found or the interval is empty.</p>
+        
+        <div class="example-container">
+            <h3>Visualization</h3>
+            <p>Let's find the `target = 23` in `[4, 8, 10, 15, 18, 21, 23, 29, 34]`. We use three pointers: `low`, `mid`, and `high`.</p>
+            
+            <h4 class="mt-6">Iteration 1: `low=0`, `high=8`, `mid=4`</h4>
+            <table class="dry-run-table">
+                <tbody><tr><td>4</td><td>8</td><td>10</td><td>15</td><td class="mid-ptr">18</td><td>21</td><td>23</td><td>29</td><td>34</td></tr></tbody>
+            </table>
+            <p>`arr[mid]` (18) < `target` (23). We discard the left half. New `low = mid + 1 = 5`.</p>
+
+            <h4 class="mt-6">Iteration 2: `low=5`, `high=8`, `mid=6`</h4>
+            <table class="dry-run-table">
+                <tbody><tr><td>4</td><td>8</td><td>10</td><td>15</td><td>18</td><td class="search-space low-ptr">21</td><td class="search-space mid-ptr">23</td><td class="search-space">29</td><td class="search-space high-ptr">34</td></tr></tbody>
+            </table>
+            <p>`arr[mid]` (23) == `target` (23). Element found at index 6! The search ends.</p>
+        </div>
+
+        <h2 class="text-3xl font-bold mb-2 text-gray-800">2. Time Complexity Analysis</h2>
+        <p>Binary Search has a time complexity of <strong>O(log n)</strong>. Why? Because with each step, we eliminate half of the remaining elements. If we have `n` elements, after the first comparison, we are left with `n/2`. After the second, `n/4`, and so on. We can express this as `n / 2^k = 1`, where `k` is the number of steps. Solving for `k`, we get `k = log₂(n)`. This logarithmic complexity makes it incredibly fast for large datasets compared to a Linear Search (O(n)).</p>
+
+        <h2 class="text-3xl font-bold mb-2 text-gray-800">3. Binary Search Templates in Java</h2>
+        <p>A solid, bug-free template is crucial. Here's a standard one.</p>
+        <div class="example-container">
+            <h3>Standard Binary Search Template</h3>
+             <button class="code-toggle-button">Show Code</button>
+            <pre class="hidden-code"><code class="language-java">
+<span class="keyword">public class</span> <span class="class-name">BinarySearch</span> {
+    <span class="keyword">public int</span> <span class="method">search</span>(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> target) {
+        <span class="keyword">int</span> low = 0;
+        <span class="keyword">int</span> high = nums.length - 1;
+
+        <span class="keyword">while</span> (low <= high) {
+            <span class="keyword">int</span> mid = low + (high - low) / 2;
+            <span class="keyword">if</span> (nums[mid] == target) {
+                <span class="keyword">return</span> mid;
+            } <span class="keyword">else if</span> (nums[mid] < target) {
+                low = mid + 1;
+            } <span class="keyword">else</span> {
+                high = mid - 1;
+            }
+        }
+        <span class="keyword">return</span> -1;
+    }
+}
+            </code></pre>
+            <h4>Common Bugs & Loop Variants</h4>
+            <ul>
+                <li><strong>Integer Overflow:</strong> Calculating `mid = (low + high) / 2` can cause an overflow. The safe way is `mid = low + (high - low) / 2`.</li>
+                <li><strong>Loop Condition:</strong> The condition `while (low <= high)` is crucial. It ensures the loop runs until the search space is exhausted. If you use `low < high`, the loop might exit early and miss the target.</li>
+            </ul>
+        </div>
+        
+        <h2 class="text-3xl font-bold mb-2 text-gray-800">4. Using Java's Inbuilt Libraries</h2>
+        <div class="example-container">
+            <h3>`Arrays.binarySearch()` and `Collections.binarySearch()`</h3>
+            <p>They return the index if found, or `(-(insertion point) - 1)` if not found.</p>
+             <button class="code-toggle-button">Show Code</button>
+            <pre class="hidden-code"><code class="language-java">
+<span class="keyword">import</span> java.util.Arrays;
+<span class="keyword">import</span> java.util.Collections;
+<span class="keyword">import</span> java.util.List;
+
+<span class="keyword">public class</span> <span class="class-name">InbuiltBinarySearch</span> {
+    <span class="keyword">public static void</span> <span class="method">main</span>(String[] args) {
+        <span class="keyword">int</span>[] arr = {10, 20, 30, 40, 50};
+        <span class="keyword">int</span> indexFound = Arrays.binarySearch(arr, 30); <span class="comment">// returns 2</span>
+        <span class="keyword">int</span> indexNotFound = Arrays.binarySearch(arr, 35); <span class="comment">// returns -4 (-(3)-1)</span>
+    }
+}
+            </code></pre>
+        </div>
+
+        <h2 class="text-3xl font-bold mb-2 text-gray-800">5. Lower Bound and Upper Bound</h2>
+        <p>Sometimes you need to find not just <strong>an</strong> element, but the <strong>first</strong> or <strong>last</strong> occurrence of an element in an array with duplicates. This is where lower and upper bounds come in.</p>
+        <ul>
+            <li><strong>Lower Bound:</strong> Finds the index of the first element that is greater than or equal to the target.</li>
+            <li><strong>Upper Bound:</strong> Finds the index of the first element that is strictly greater than the target.</li>
+        </ul>
+        <div class="example-container">
+            <h3>Implementation of Lower and Upper Bound</h3>
+             <button class="code-toggle-button">Show Code</button>
+             <pre class="hidden-code"><code class="language-java">
+<span class="keyword">public class</span> <span class="class-name">Bounds</span> {
+    <span class="keyword">public static int</span> <span class="method">lowerBound</span>(<span class="keyword">int</span>[] arr, <span class="keyword">int</span> target) {
+        <span class="keyword">int</span> low = 0, high = arr.length - 1;
+        <span class="keyword">int</span> ans = arr.length;
+        <span class="keyword">while</span> (low <= high) {
+            <span class="keyword">int</span> mid = low + (high - low) / 2;
+            <span class="keyword">if</span> (arr[mid] >= target) {
+                ans = mid;
+                high = mid - 1; <span class="comment">// Try to find a smaller index</span>
+            } <span class="keyword">else</span> {
+                low = mid + 1;
+            }
+        }
+        <span class="keyword">return</span> ans;
+    }
+
+    <span class="keyword">public static int</span> <span class="method">upperBound</span>(<span class="keyword">int</span>[] arr, <span class="keyword">int</span> target) {
+        <span class="keyword">int</span> low = 0, high = arr.length - 1;
+        <span class="keyword">int</span> ans = arr.length;
+        <span class="keyword">while</span> (low <= high) {
+            <span class="keyword">int</span> mid = low + (high - low) / 2;
+            <span class="keyword">if</span> (arr[mid] > target) {
+                ans = mid;
+                high = mid - 1; <span class="comment">// Try to find a smaller index</span>
+            } <span class="keyword">else</span> {
+                low = mid + 1;
+            }
+        }
+        <span class="keyword">return</span> ans;
+    }
+}
+             </code></pre>
+             <button class="code-toggle-button">Show Dry Run</button>
+             <div class="hidden-code">
+                <h4 class="mt-6">Dry Run: `lowerBound` for `target = 5` in `[2, 3, 5, 5, 5, 8, 9]`</h4>
+                 <table class="dry-run-table">
+                    <thead><tr><th>low</th><th>high</th><th>mid</th><th>`arr[mid]`</th><th>`ans`</th><th>Action</th></tr></thead>
+                    <tbody>
+                        <tr><td>0</td><td>6</td><td>3</td><td>5</td><td>3</td><td>`arr[mid] >= 5`, so `ans=3`, `high=2`</td></tr>
+                        <tr><td>0</td><td>2</td><td>1</td><td>3</td><td>3</td><td>`arr[mid] < 5`, so `low=2`</td></tr>
+                        <tr><td>2</td><td>2</td><td>2</td><td>5</td><td>2</td><td>`arr[mid] >= 5`, so `ans=2`, `high=1`</td></tr>
+                        <tr><td>2</td><td>1</td><td colspan="4">`low > high`, loop terminates. Return `ans=2`.</td></tr>
+                    </tbody>
+                </table>
+                <h4 class="mt-6">Dry Run: `upperBound` for `target = 5` in `[2, 3, 5, 5, 5, 8, 9]`</h4>
+                 <table class="dry-run-table">
+                    <thead><tr><th>low</th><th>high</th><th>mid</th><th>`arr[mid]`</th><th>`ans`</th><th>Action</th></tr></thead>
+                    <tbody>
+                        <tr><td>0</td><td>6</td><td>3</td><td>5</td><td>7</td><td>`arr[mid] <= 5`, so `low=4`</td></tr>
+                        <tr><td>4</td><td>6</td><td>5</td><td>8</td><td>5</td><td>`arr[mid] > 5`, so `ans=5`, `high=4`</td></tr>
+                        <tr><td>4</td><td>4</td><td>4</td><td>5</td><td>5</td><td>`arr[mid] <= 5`, so `low=5`</td></tr>
+                        <tr><td>5</td><td>4</td><td colspan="4">`low > high`, loop terminates. Return `ans=5`.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <h2 class="text-3xl font-bold mb-2 text-gray-800">6. Classic Interview Problems</h2>
+        <hr class="my-8 border-t-2 border-gray-200">
+        <div class="example-container">
+            <h3>Problem 1: Find Peak Element</h3>
+            <p><strong>Problem:</strong> A peak element is an element that is strictly greater than its neighbors. Given `nums`, find a peak element and return its index.</p>
+             <button class="code-toggle-button">Show Code</button>
+             <pre class="hidden-code"><code class="language-java">
+<span class="keyword">public class</span> <span class="class-name">FindPeakElement</span> {
+    <span class="keyword">public int</span> <span class="method">findPeak</span>(<span class="keyword">int</span>[] nums) {
+        <span class="keyword">int</span> low = 0;
+        <span class="keyword">int</span> high = nums.length - 1;
+
+        <span class="keyword">while</span> (low <= high) {
+            <span class="keyword">int</span> mid = low + (high - low) / 2;
+
+            <span class="comment">// Compare mid with its right neighbor</span>
+            <span class="keyword">if</span> (mid < nums.length - 1 && nums[mid] < nums[mid + 1]) {
+                <span class="comment">// If mid is smaller, a peak must be on the right (uphill)</span>
+                low = mid + 1;
+            } 
+            <span class="comment">// Compare mid with its left neighbor</span>
+            <span class="keyword">else if</span> (mid > 0 && nums[mid] < nums[mid - 1]) {
+                <span class="comment">// If mid is smaller, a peak must be on the left (uphill)</span>
+                high = mid - 1;
+            } 
+            <span class="comment">// If neither, mid is a peak (top of a hill)</span>
+            <span class="keyword">else</span> {
+                <span class="keyword">return</span> mid;
+            }
+        }
+        <span class="keyword">return</span> -1; <span class="comment">// Should not be reached given problem constraints</span>
+    }
+}
+             </code></pre>
+            <button class="code-toggle-button">Show Dry Run</button>
+            <div class="hidden-code">
+                <h4 class="mt-6">Dry Run: `nums = [1, 2, 1, 3, 5, 6, 4]`</h4>
+                <table class="dry-run-table">
+                    <thead><tr><th>low</th><th>high</th><th>mid</th><th>Condition Check</th><th>Action</th></tr></thead>
+                    <tbody>
+                        <tr><td>0</td><td>6</td><td>3</td><td>`nums[3] < nums[4]` (3 < 5) is true.</td><td>Peak is to the right. `low = 4`.</td></tr>
+                        <tr><td>4</td><td>6</td><td>5</td><td>`nums[5] < nums[6]` (6 < 4) is false. `nums[5] < nums[4]` (6 < 5) is false.</td><td>`else` block. `mid` (5) is a peak. Return 5.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="example-container">
+            <h3>Problem 2: Search in Rotated Sorted Array</h3>
+            <p><strong>Problem:</strong> An array sorted in ascending order is rotated. Given a `target`, return its index or -1.</p>
+            <button class="code-toggle-button">Show Code</button>
+            <pre class="hidden-code"><code class="language-java">
+<span class="keyword">public class</span> <span class="class-name">SearchInRotatedArray</span> {
+    <span class="keyword">public int</span> <span class="method">search</span>(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> target) {
+        <span class="keyword">int</span> low = 0, high = nums.length - 1;
+        <span class="keyword">while</span> (low <= high) {
+            <span class="keyword">int</span> mid = low + (high - low) / 2;
+            <span class="keyword">if</span> (nums[mid] == target) <span class="keyword">return</span> mid;
+
+            <span class="keyword">if</span> (nums[low] <= nums[mid]) { <span class="comment">// Left half is sorted</span>
+                <span class="keyword">if</span> (target >= nums[low] && target < nums[mid]) {
+                    high = mid - 1;
+                } <span class="keyword">else</span> {
+                    low = mid + 1;
+                }
+            } <span class="keyword">else</span> { <span class="comment">// Right half is sorted</span>
+                <span class="keyword">if</span> (target > nums[mid] && target <= nums[high]) {
+                    low = mid + 1;
+                } <span class="keyword">else</span> {
+                    high = mid - 1;
+                }
+            }
+        }
+        <span class="keyword">return</span> -1;
+    }
+}
+            </code></pre>
+            <button class="code-toggle-button">Show Dry Run</button>
+            <div class="hidden-code">
+                <h4 class="mt-6">Dry Run: `nums = [4, 5, 6, 7, 0, 1, 2]`, `target = 0`</h4>
+                <table class="dry-run-table">
+                    <thead><tr><th>low</th><th>high</th><th>mid</th><th>Condition</th><th>Action</th></tr></thead>
+                    <tbody>
+                        <tr><td>0</td><td>6</td><td>3</td><td>`nums[low] <= nums[mid]` (4<=7) is true. Left is sorted. `target` not in [4,7).</td><td>Search right: `low = 4`</td></tr>
+                        <tr><td>4</td><td>6</td><td>5</td><td>`nums[low] <= nums[mid]` (0<=1) is true. Left is sorted. `target` is in [0,1).</td><td>Search left: `high = 4`</td></tr>
+                        <tr><td>4</td><td>4</td><td>4</td><td>`nums[mid] == target` (0==0) is true.</td><td>Return `mid=4`.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <h2 class="text-3xl font-bold mb-2 text-gray-800">7. Binary Search on Answer / Implicit Binary Search</h2>
+        <hr class="my-8 border-t-2 border-gray-200">
+        <p>A powerful variation of binary search is applying it to a problem's potential answer space, rather than an explicit array. If you can determine that the answer lies within a range `[low, high]` and you have a way to check if a potential answer `mid` is "valid" (too high or too low), you can use binary search to find the optimal answer.</p>
+        
+        <div class="example-container">
+            <h3>Problem 3: Find Square Root of a Number</h3>
+            <p><strong>Problem:</strong> Given a non-negative integer `x`, compute and return the square root of `x`. Since the return type is an integer, the decimal part is truncated.</p>
+            <h4>Approach</h4>
+            <p>The square root of `x` must lie in the range `[0, x]`. We can binary search for the answer in this range. For any potential answer `mid`, we check if `mid * mid` is greater than `x`. If it is, our guess is too high, and we search in the lower half. If it's not, `mid` could be our answer, so we store it and try to find an even better (larger) answer in the upper half.</p>
+            <button class="code-toggle-button">Show Code</button>
+            <pre class="hidden-code"><code class="language-java">
+<span class="keyword">public class</span> <span class="class-name">SquareRoot</span> {
+    <span class="keyword">public int</span> <span class="method">mySqrt</span>(<span class="keyword">int</span> x) {
+        <span class="keyword">if</span> (x == 0) <span class="keyword">return</span> 0;
+        <span class="keyword">long</span> low = 1, high = x; <span class="comment">// Use long to avoid overflow for mid*mid</span>
+        <span class="keyword">int</span> ans = 0;
+        <span class="keyword">while</span> (low <= high) {
+            <span class="keyword">long</span> mid = low + (high - low) / 2;
+            <span class="keyword">if</span> (mid * mid <= x) {
+                ans = (<span class="keyword">int</span>) mid; <span class="comment">// This could be the answer</span>
+                low = mid + 1; <span class="comment">// Try for a larger root</span>
+            } <span class="keyword">else</span> {
+                high = mid - 1; <span class="comment">// Root is smaller</span>
+            }
+        }
+        <span class="keyword">return</span> ans;
+    }
+}
+            </code></pre>
+            <button class="code-toggle-button">Show Dry Run</button>
+            <div class="hidden-code">
+                <h4 class="mt-6">Dry Run: `x = 28`</h4>
+                <table class="dry-run-table">
+                    <thead><tr><th>low</th><th>high</th><th>mid</th><th>`mid*mid` vs `x`</th><th>`ans`</th><th>Action</th></tr></thead>
+                    <tbody>
+                        <tr><td>1</td><td>28</td><td>14</td><td>196 > 28</td><td>0</td><td>Too high. `high = 13`</td></tr>
+                        <tr><td>1</td><td>13</td><td>7</td><td>49 > 28</td><td>0</td><td>Too high. `high = 6`</td></tr>
+                        <tr><td>1</td><td>6</td><td>3</td><td>9 <= 28</td><td>3</td><td>Possible answer. `low = 4`</td></tr>
+                        <tr><td>4</td><td>6</td><td>5</td><td>25 <= 28</td><td>5</td><td>Possible answer. `low = 6`</td></tr>
+                        <tr><td>6</td><td>6</td><td>6</td><td>36 > 28</td><td>5</td><td>Too high. `high = 5`</td></tr>
+                        <tr><td>6</td><td>5</td><td colspan="4">`low > high`, loop terminates. Return `ans=5`.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="example-container">
+            <h3>Problem 4: Find Nth Root of a Number</h3>
+            <p><strong>Problem:</strong> Given two positive integers `n` and `m`, find the `n`-th root of `m`. For example, the 3rd root of 27 is 3.</p>
+            <h4>Approach</h4>
+            <p>This is a generalization of the square root problem. The `n`-th root of `m` must lie in the range `[1, m]`. We can binary search for the answer in this range. For a potential answer `mid`, we need a function to check if `mid^n` is greater than, less than, or equal to `m`. We can then adjust our search space `[low, high]` accordingly.</p>
+            <button class="code-toggle-button">Show Code</button>
+            <pre class="hidden-code"><code class="language-java">
+<span class="keyword">public class</span> <span class="class-name">NthRoot</span> {
+    <span class="comment">// Helper function to check if mid^n > m</span>
+    <span class="comment">// Returns 1 if mid^n > m, 0 if mid^n == m, -1 if mid^n < m</span>
+    <span class="keyword">private static int</span> <span class="method">check</span>(<span class="keyword">long</span> mid, <span class="keyword">int</span> n, <span class="keyword">int</span> m) {
+        <span class="keyword">long</span> ans = 1;
+        <span class="keyword">for</span> (<span class="keyword">int</span> i = 1; i <= n; i++) {
+            ans *= mid;
+            <span class="keyword">if</span> (ans > m) <span class="keyword">return</span> 1; <span class="comment">// Overflow or greater than m</span>
+        }
+        <span class="keyword">if</span> (ans == m) <span class="keyword">return</span> 0;
+        <span class="keyword">return</span> -1;
+    }
+
+    <span class="keyword">public static int</span> <span class="method">findNthRoot</span>(<span class="keyword">int</span> n, <span class="keyword">int</span> m) {
+        <span class="keyword">long</span> low = 1, high = m;
+        <span class="keyword">while</span> (low <= high) {
+            <span class="keyword">long</span> mid = low + (high - low) / 2;
+            <span class="keyword">int</span> checkVal = check(mid, n, m);
+            <span class="keyword">if</span> (checkVal == 0) {
+                <span class="keyword">return</span> (<span class="keyword">int</span>) mid; <span class="comment">// Perfect root found</span>
+            } <span class="keyword">else if</span> (checkVal == 1) {
+                high = mid - 1; <span class="comment">// mid is too high</span>
+            } <span class="keyword">else</span> {
+                low = mid + 1; <span class="comment">// mid is too low</span>
+            }
+        }
+        <span class="keyword">return</span> -1; <span class="comment">// If integer root doesn't exist</span>
+    }
+}
+            </code></pre>
+             <button class="code-toggle-button">Show Dry Run</button>
+            <div class="hidden-code">
+                <h4 class="mt-6">Dry Run: `n = 3`, `m = 65`</h4>
+                <table class="dry-run-table">
+                    <thead><tr><th>low</th><th>high</th><th>mid</th><th>`check(mid, 3, 65)`</th><th>Action</th></tr></thead>
+                    <tbody>
+                        <tr><td>1</td><td>65</td><td>33</td><td>`33^3 > 65` -> 1</td><td>Too high. `high = 32`</td></tr>
+                        <tr><td>1</td><td>32</td><td>16</td><td>`16^3 > 65` -> 1</td><td>Too high. `high = 15`</td></tr>
+                        <tr><td>1</td><td>15</td><td>8</td><td>`8^3 > 65` -> 1</td><td>Too high. `high = 7`</td></tr>
+                        <tr><td>1</td><td>7</td><td>4</td><td>`4^3 = 64 < 65` -> -1</td><td>Too low. `low = 5`</td></tr>
+                        <tr><td>5</td><td>7</td><td>6</td><td>`6^3 > 65` -> 1</td><td>Too high. `high = 5`</td></tr>
+                        <tr><td>5</td><td>5</td><td>5</td><td>`5^3 > 65` -> 1</td><td>Too high. `high = 4`</td></tr>
+                        <tr><td>5</td><td>4</td><td colspan="3">`low > high`, loop terminates. Return -1 (no integer root). The closest is 4.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</main>
+
+<script>
+    // JavaScript to handle the "Show/Hide Code" functionality
+    document.addEventListener('DOMContentLoaded', () => {
+        const buttons = document.querySelectorAll('.code-toggle-button');
+        buttons.forEach(button => {
+            button.addEventListener('click', () => {
+                const contentBlock = button.nextElementSibling;
+                const isHidden = contentBlock.classList.contains('hidden-code');
+                
+                if (isHidden) {
+                    contentBlock.classList.remove('hidden-code');
+                    button.textContent = button.textContent.replace('Show', 'Hide');
+                } else {
+                    contentBlock.classList.add('hidden-code');
+                    button.textContent = button.textContent.replace('Hide', 'Show');
+                }
+            });
+        });
+    });
+</script>
+
+</body>
+</html>

@@ -12,7 +12,8 @@ function updateNavigation() {
         { href: 'sliding_window_two_pointer.html', text: 'Sliding Window' },
         { href: 'prefix_sum.html', text: 'Prefix Sum' },
         { href: 'linkedList.html', text: 'Linked List' },
-        { href: 'LinkedList_problems.html', text: 'Linked List Problems' }
+        { href: 'LinkedList_problems.html', text: 'Linked List Problems' },
+        { href: 'binary_search.html', text: 'Binary Search' }
     ];
 
     const nav = document.querySelector('nav.navbar');
