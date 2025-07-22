@@ -522,6 +522,66 @@
             </div>
         </div>
 
+        <div class="example-container">
+            <h3>Problem 5: Aggressive Cows</h3>
+            <p><strong>Problem:</strong> You are given an array of `N` integers representing the positions of `N` stalls. You have `k` aggressive cows that you must place in these stalls. To prevent the cows from fighting, you need to assign them to stalls in a way that the minimum distance between any two of them is as large as possible. What is this largest minimum distance?</p>
+            <h4>Approach</h4>
+            <p>This is a classic "Binary Search on Answer" problem. The answer (the minimum distance) can range from `1` to `(max_stall_position - min_stall_position)`. We can binary search on this range of possible distances. For a given distance `d` (our `mid`), we need a helper function `canPlace(d)` that checks if it's possible to place all `k` cows such that the minimum distance between any two is at least `d`.
+            <br><br>If `canPlace(d)` is true, it means `d` is a possible minimum distance, so we try for an even larger distance by setting `low = d + 1`. If it's false, `d` is too large, and we must try a smaller distance by setting `high = d - 1`.</p>
+            <button class="code-toggle-button">Show Code</button>
+            <pre class="hidden-code"><code class="language-java">
+<span class="keyword">import</span> java.util.Arrays;
+
+<span class="keyword">public class</span> <span class="class-name">AggressiveCows</span> {
+    <span class="comment">// Helper function to check if we can place k cows with at least 'dist' distance apart</span>
+    <span class="keyword">public static boolean</span> <span class="method">canPlace</span>(<span class="keyword">int</span>[] stalls, <span class="keyword">int</span> dist, <span class="keyword">int</span> k) {
+        <span class="keyword">int</span> cowsPlaced = 1;
+        <span class="keyword">int</span> lastPos = stalls[0];
+        <span class="keyword">for</span> (<span class="keyword">int</span> i = 1; i < stalls.length; i++) {
+            <span class="keyword">if</span> (stalls[i] - lastPos >= dist) {
+                cowsPlaced++;
+                lastPos = stalls[i];
+            }
+        }
+        <span class="keyword">return</span> cowsPlaced >= k;
+    }
+
+    <span class="keyword">public static int</span> <span class="method">solve</span>(<span class="keyword">int</span>[] stalls, <span class="keyword">int</span> k) {
+        Arrays.sort(stalls); <span class="comment">// Crucial first step</span>
+        <span class="keyword">int</span> n = stalls.length;
+        <span class="keyword">int</span> low = 1;
+        <span class="keyword">int</span> high = stalls[n - 1] - stalls[0];
+        <span class="keyword">int</span> ans = 0;
+
+        <span class="keyword">while</span> (low <= high) {
+            <span class="keyword">int</span> mid = low + (high - low) / 2;
+            <span class="keyword">if</span> (canPlace(stalls, mid, k)) {
+                ans = mid; <span class="comment">// This distance is possible, try for a larger one</span>
+                low = mid + 1;
+            } <span class="keyword">else</span> {
+                high = mid - 1; <span class="comment">// This distance is not possible, try a smaller one</span>
+            }
+        }
+        <span class="keyword">return</span> ans;
+    }
+}
+            </code></pre>
+             <button class="code-toggle-button">Show Dry Run</button>
+            <div class="hidden-code">
+                <h4 class="mt-6">Dry Run: `stalls = [1, 2, 4, 8, 9]`, `k = 3`</h4>
+                <p>Sorted stalls: `[1, 2, 4, 8, 9]`. Search space for distance: `low=1`, `high=9-1=8`.</p>
+                <table class="dry-run-table">
+                    <thead><tr><th>low</th><th>high</th><th>mid (dist)</th><th>`canPlace(mid)`</th><th>`ans`</th><th>Action</th></tr></thead>
+                    <tbody>
+                        <tr><td>1</td><td>8</td><td>4</td><td>Place at 1, 8. Only 2 cows. `canPlace(4)` is false.</td><td>0</td><td>Distance too large. `high = 3`</td></tr>
+                        <tr><td>1</td><td>3</td><td>2</td><td>Place at 1, 4, 8. 3 cows. `canPlace(2)` is true.</td><td>2</td><td>Possible. Try larger. `low = 3`</td></tr>
+                        <tr><td>3</td><td>3</td><td>3</td><td>Place at 1, 4, 8. 3 cows. `canPlace(3)` is true.</td><td>3</td><td>Possible. Try larger. `low = 4`</td></tr>
+                        <tr><td>4</td><td>3</td><td colspan="4">`low > high`, loop terminates. Return `ans=3`.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
     </div>
 </main>
 
