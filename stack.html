@@ -363,13 +363,70 @@ class RPN {
     }
 }</code></pre>
         </div>
+        
+        <!-- Monotonic Stack Introduction -->
+        <h2 class="text-3xl font-bold text-gray-800">7. Introduction to Monotonic Stacks</h2>
+        <div class="example-box border-l-pink-500">
+            <h3 class="text-xl font-bold text-gray-800 mt-0">A Powerful Stack Variant</h3>
+            <p>A <strong>monotonic stack</strong> is a special type of stack where the elements are always in a sorted order, either non-increasing or non-decreasing. This property makes them extremely useful for problems where we need to find the "next" or "previous" element that has a certain property (e.g., is greater than, or less than, the current element).</p>
+            <ul>
+                <li>A <strong>monotonically increasing</strong> stack keeps elements in ascending order from bottom to top. When pushing a new element, we pop all elements from the top that are greater than or equal to the new element to maintain the property.</li>
+                <li>A <strong>monotonically decreasing</strong> stack keeps elements in descending order. When pushing a new element, we pop all elements from the top that are smaller than or equal to the new element.</li>
+            </ul>
+             <p>This pattern allows us to process each element in an array and efficiently find its nearest neighbors that satisfy a condition, often achieving an O(n) time complexity for the overall algorithm.</p>
+             <h3 class="text-xl font-bold text-gray-800 mt-4">Example: Finding Previous Less Element</h3>
+             <p>Here's a concrete example of a monotonically increasing stack used to find the previous element that is strictly smaller than the current one.</p>
+             <button class="interactive-button" onclick="toggleCode('monotonic-increasing-code')">Show Code</button>
+             <pre id="monotonic-increasing-code" style="display:none;"><code class="language-java">import java.util.Stack;
+import java.util.Arrays;
+
+class PreviousLessElement {
+    public int[] findPLE(int[] arr) {
+        int n = arr.length;
+        int[] ple = new int[n];
+        // Stack will store elements in increasing order
+        Stack&lt;Integer&gt; stack = new Stack&lt;&gt;();
+
+        // Iterate from left to right
+        for (int i = 0; i < n; i++) {
+            // While stack is not empty and top is greater than or equal to current element
+            while (!stack.isEmpty() && stack.peek() >= arr[i]) {
+                stack.pop();
+            }
+
+            // If stack is empty, no smaller element on the left
+            if (stack.isEmpty()) {
+                ple[i] = -1;
+            } else {
+                // Top of the stack is the previous less element
+                ple[i] = stack.peek();
+            }
+
+            // Push current element to the stack
+            stack.push(arr[i]);
+        }
+        return ple;
+    }
+}
+
+// Example:
+// int[] arr = {4, 2, 5, 1, 3};
+// PreviousLessElement pleFinder = new PreviousLessElement();
+// int[] result = pleFinder.findPLE(arr);
+// System.out.println(Arrays.toString(result)); // Output: [-1, -1, 2, -1, 1]
+</code></pre>
+            <button class="interactive-button" onclick="dryRunMonotonicIncreasing()">Dry Run</button>
+            <div id="monotonic-increasing-dry-run" class="dry-run-output" style="display:none;"></div>
+        </div>
+
 
         <!-- Next Greater Element (NGE) with Stack -->
-        <h2 class="text-3xl font-bold text-gray-800">7. Finding Next Greater Element (Efficiently)</h2>
+        <h2 class="text-3xl font-bold text-gray-800">8. Problem: Next Greater Element (Efficiently)</h2>
         <div class="example-box border-l-teal-500">
-            <h3 class="text-xl font-bold text-gray-800 mt-0">An O(n) Solution using a Stack</h3>
-            <p>We can solve the "Next Greater Element" problem much more efficiently than the brute-force O(n²) approach by using a stack. This approach processes the array from right to left.</p>
-            <p><strong>Approach:</strong> Iterate through the array from the last element to the first. For each element, while the stack is not empty and the element at the top of the stack is less than or equal to the current element, pop from the stack. If the stack becomes empty, the NGE is -1. Otherwise, the NGE is the element at the top of the stack. Finally, push the current element onto the stack.</p>
+            <h3 class="text-xl font-bold text-gray-800 mt-0">An O(n) Solution using a Monotonic Stack</h3>
+            <p>This problem is a classic application of a monotonic stack. The goal is to find the first element on the right side of an array element that is greater than it.
+            </p>
+            <p><strong>Approach:</strong> We will use a <strong>monotonically decreasing stack</strong>. We iterate through the array from right to left. For each element, we pop elements from the stack that are less than or equal to the current element. This ensures that when we stop, the stack's top is the first element to the right that is greater. If the stack is empty after popping, it means no such element exists.</p>
              <div><span class="complexity-tag">Time: O(n)</span><span class="complexity-tag">Space: O(n)</span></div>
             <button class="interactive-button" onclick="toggleCode('nge-stack')">Show Code</button>
             <pre id="nge-stack" style="display:none;"><code class="language-java">import java.util.Stack;
@@ -383,7 +440,7 @@ class NextGreaterElement {
 
         // Iterate from right to left
         for (int i = n - 1; i >= 0; i--) {
-            // While stack is not empty and top is smaller than current element
+            // Maintain a monotonically decreasing stack
             while (!stack.isEmpty() && stack.peek() <= arr[i]) {
                 stack.pop();
             }
@@ -396,7 +453,7 @@ class NextGreaterElement {
                 nge[i] = stack.peek();
             }
 
-            // Push current element to the stack for subsequent elements
+            // Push current element to the stack
             stack.push(arr[i]);
         }
         return nge;
@@ -411,6 +468,46 @@ class NextGreaterElement {
 </code></pre>
             <button class="interactive-button" onclick="dryRunNGE()">Dry Run</button>
             <div id="nge-dry-run" class="dry-run-output" style="display:none;"></div>
+        </div>
+
+        <!-- Largest Rectangle in Histogram -->
+        <h2 class="text-3xl font-bold text-gray-800">9. Problem: Largest Rectangle in Histogram</h2>
+        <div class="example-box border-l-yellow-500">
+            <h3 class="text-xl font-bold text-gray-800 mt-0">Using a Monotonic Stack for Optimal Area</h3>
+            <p>Given an array of integers <code>heights</code> representing the histogram's bar height where the width of each bar is 1, find the area of the largest rectangle in the histogram.</p>
+            <p><strong>Example:</strong> For <code>heights = [2,1,5,6,2,3]</code>, the largest rectangle has an area of 10.</p>
+            <p><strong>Approach:</strong> For each bar, the largest rectangle using that bar's height is bounded by the first shorter bar to its left (Previous Less Element) and the first shorter bar to its right (Next Less Element). We can find these boundaries efficiently using a <strong>monotonically increasing stack</strong>, where we store indices of the bars.</p>
+            <p>We iterate through the bars. If the current bar is shorter than the bar at the stack's top, it means the current bar is the "Next Less Element" for the bar at the top. We can then pop the top bar, calculate its potential area, and update our maximum area. The "Previous Less Element" for the popped bar is the new top of the stack.</p>
+             <div><span class="complexity-tag">Time: O(n)</span><span class="complexity-tag">Space: O(n)</span></div>
+            <button class="interactive-button" onclick="toggleCode('histogram-code')">Show Code</button>
+            <pre id="histogram-code" style="display:none;"><code class="language-java">import java.util.Stack;
+
+class LargestRectangleHistogram {
+    public int largestRectangleArea(int[] heights) {
+        Stack&lt;Integer&gt; stack = new Stack&lt;&gt;();
+        int maxArea = 0;
+        int n = heights.length;
+
+        for (int i = 0; i <= n; i++) {
+            // Use a virtual bar of height 0 at the end to process remaining bars
+            int h = (i == n) ? 0 : heights[i];
+            
+            // Maintain a monotonically increasing stack of indices
+            while (!stack.isEmpty() && h < heights[stack.peek()]) {
+                int height = heights[stack.pop()];
+                // Left boundary is the new stack top, right boundary is current index i
+                int width = stack.isEmpty() ? i : i - stack.peek() - 1;
+                maxArea = Math.max(maxArea, height * width);
+            }
+            // Push current index onto the stack
+            stack.push(i);
+        }
+        
+        return maxArea;
+    }
+}</code></pre>
+            <button class="interactive-button" onclick="dryRunHistogram()">Dry Run</button>
+            <div id="histogram-dry-run" class="dry-run-output" style="display:none;"></div>
         </div>
 
     </div>
@@ -530,6 +627,89 @@ class NextGreaterElement {
 
         output += '--- Final Result ---\n';
         output += 'nge: [5, 25, 25, -1]\n';
+
+        outputEl.textContent = output;
+    }
+    
+    function dryRunMonotonicIncreasing() {
+        const outputEl = document.getElementById('monotonic-increasing-dry-run');
+        outputEl.style.display = 'block';
+        let output = '--- Dry Run for findPLE({4, 2, 5, 1, 3}) ---\n\n';
+        output += 'Array: [4, 2, 5, 1, 3]\n';
+        output += 'Result Array (ple): [?, ?, ?, ?, ?]\n';
+        output += 'Stack: [] (empty)\n\n';
+
+        output += '--- i = 0 (arr[0] = 4) ---\n';
+        output += 'Stack is empty. Pop loop is skipped.\n';
+        output += 'ple[0] = -1.\n';
+        output += 'Push 4 to stack.\n';
+        output += 'ple: [-1, ?, ?, ?, ?], Stack: [4]\n\n';
+
+        output += '--- i = 1 (arr[1] = 2) ---\n';
+        output += 'Stack top (4) >= 2. Pop 4.\n';
+        output += 'Stack is now empty. Pop loop ends.\n';
+        output += 'ple[1] = -1.\n';
+        output += 'Push 2 to stack.\n';
+        output += 'ple: [-1, -1, ?, ?, ?], Stack: [2]\n\n';
+
+        output += '--- i = 2 (arr[2] = 5) ---\n';
+        output += 'Stack top (2) < 5. Pop loop is skipped.\n';
+        output += 'ple[2] = stack.peek() which is 2.\n';
+        output += 'Push 5 to stack.\n';
+        output += 'ple: [-1, -1, 2, ?, ?], Stack: [2, 5]\n\n';
+
+        output += '--- i = 3 (arr[3] = 1) ---\n';
+        output += 'Stack top (5) >= 1. Pop 5.\n';
+        output += 'Stack: [2]\n';
+        output += 'Stack top (2) >= 1. Pop 2.\n';
+        output += 'Stack is now empty. Pop loop ends.\n';
+        output += 'ple[3] = -1.\n';
+        output += 'Push 1 to stack.\n';
+        output += 'ple: [-1, -1, 2, -1, ?], Stack: [1]\n\n';
+
+        output += '--- i = 4 (arr[4] = 3) ---\n';
+        output += 'Stack top (1) < 3. Pop loop is skipped.\n';
+        output += 'ple[4] = stack.peek() which is 1.\n';
+        output += 'Push 3 to stack.\n';
+        output += 'ple: [-1, -1, 2, -1, 1], Stack: [1, 3]\n\n';
+
+        output += '--- Final Result ---\n';
+        output += 'ple: [-1, -1, 2, -1, 1]\n';
+
+        outputEl.textContent = output;
+    }
+
+    function dryRunHistogram() {
+        const outputEl = document.getElementById('histogram-dry-run');
+        outputEl.style.display = 'block';
+        let output = '--- Dry Run for largestRectangleArea({2, 1, 5, 6, 2, 3}) ---\n\n';
+        output += 'Heights: [2, 1, 5, 6, 2, 3]\n';
+        output += 'maxArea = 0, Stack: [] (stores indices)\n\n';
+
+        output += 'i = 0, h = 2: Stack empty or h >= top. Push 0. Stack: [0]\n';
+        output += 'i = 1, h = 1: h < heights[0](2). WHILE loop starts.\n';
+        output += '  - Pop 0. height=2. width=1. area=2. maxArea=2.\n';
+        output += '  - Stack is now empty. Loop ends. Push 1. Stack: [1]\n\n';
+
+        output += 'i = 2, h = 5: h > heights[1](1). Push 2. Stack: [1, 2]\n';
+        output += 'i = 3, h = 6: h > heights[2](5). Push 3. Stack: [1, 2, 3]\n';
+        output += 'i = 4, h = 2: h < heights[3](6). WHILE loop starts.\n';
+        output += '  - Pop 3. height=6. width=4-2-1=1. area=6. maxArea=6.\n';
+        output += '  - Stack: [1, 2]. h < heights[2](5). Loop continues.\n';
+        output += '  - Pop 2. height=5. width=4-1-1=2. area=10. maxArea=10.\n';
+        output += '  - Stack: [1]. h > heights[1](1). Loop ends. Push 4. Stack: [1, 4]\n\n';
+        
+        output += 'i = 5, h = 3: h > heights[4](2). Push 5. Stack: [1, 4, 5]\n\n';
+
+        output += 'i = 6, h = 0 (virtual bar): h < heights[5](3). WHILE loop starts.\n';
+        output += '  - Pop 5. height=3. width=6-4-1=1. area=3. maxArea=10.\n';
+        output += '  - Stack: [1, 4]. h < heights[4](2). Loop continues.\n';
+        output += '  - Pop 4. height=2. width=6-1-1=4. area=8. maxArea=10.\n';
+        output += '  - Stack: [1]. h < heights[1](1). Loop continues.\n';
+        output += '  - Pop 1. height=1. width=6. area=6. maxArea=10.\n';
+        output += '  - Stack is empty. Loop ends. Push 6. Stack: [6]\n\n';
+        
+        output += 'Loop ends. Final maxArea = 10\n';
 
         outputEl.textContent = output;
     }
