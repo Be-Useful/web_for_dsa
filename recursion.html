@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lecture: Introduction to Recursion</title>
+    <!-- Tailwind CSS CDN for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Prism.js for code highlighting -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <style>
+        /* Custom CSS for 'Inter' font and base styles from existing site */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f3f4f6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column; 
+        }
+
+        .content-area {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 2rem;
+            box-sizing: border-box;
+        }
+
+        .presentation-card {
+            background-color: #ffffff;
+            border-radius: 1.5rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            padding: 2.5rem;
+            width: 90%;
+            max-width: 960px;
+            box-sizing: border-box;
+        }
+
+        .presentation-card h1, .presentation-card h2 {
+            color: #1f2937;
+            margin-bottom: 1.5rem;
+            font-weight: 800;
+        }
+        
+        .presentation-card h3 {
+             color: #1f2937;
+             font-weight: 700;
+             margin-top: 1.5rem;
+             margin-bottom: 1rem;
+        }
+
+        .presentation-card p, .presentation-card li {
+            color: #4b5563;
+            line-height: 1.7;
+            margin-bottom: 1rem;
+            font-size: 1.05rem;
+        }
+        
+        .presentation-card code:not(pre > code) {
+            background-color: #eef2ff;
+            color: #4338ca;
+            padding: 0.2rem 0.5rem;
+            border-radius: 0.375rem;
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: 600;
+        }
+        
+        .presentation-card pre {
+            border-radius: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .presentation-card .example-box {
+            background-color: #f9fafb;
+            border-left-width: 4px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            margin-bottom: 2.5rem;
+            border-radius: 0.5rem;
+        }
+        
+        .interactive-button {
+            background-color: #4f46e5;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            margin-right: 0.5rem;
+        }
+        .interactive-button:hover {
+            background-color: #4338ca;
+        }
+        .dry-run-output {
+            background-color: #eef2ff;
+            border: 1px solid #c7d2fe;
+            padding: 1rem;
+            margin-top: 1rem;
+            border-radius: 0.5rem;
+            font-family: 'Courier New', Courier, monospace;
+            white-space: pre-wrap;
+        }
+
+        @media (max-width: 768px) {
+            .presentation-card { padding: 1.5rem; width: 95%; }
+            .presentation-card h1 { font-size: 2.2rem; }
+            .presentation-card h2 { font-size: 1.8rem; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Main Content Area -->
+<main class="content-area">
+    <div class="presentation-card">
+        <div class="text-center mb-8">
+            <h1 class="text-4xl lg:text-5xl font-extrabold text-indigo-700 mb-4">Introduction to Recursion</h1>
+            <p class="text-lg text-gray-600">A powerful programming technique where a function calls itself.</p>
+        </div>
+
+        <hr class="my-12 border-t-2 border-gray-200">
+        
+        <h2 class="text-3xl font-bold text-gray-800">1. What is Recursion?</h2>
+        <div class="example-box border-l-blue-500">
+            <h3 class="text-xl font-bold text-gray-800 mt-0">The Core Idea</h3>
+            <p>Recursion is a process in which a function calls itself directly or indirectly. A recursive function solves a problem by breaking it down into smaller, simpler versions of the same problem until it reaches a point where the solution is known.</p>
+            <p>Every recursive function must have two parts:</p>
+            <ul>
+                <li><strong>Base Case:</strong> The simplest version of the problem, for which the solution is known. This is the condition that stops the recursion.</li>
+                <li><strong>Recursive Case:</strong> The part of the function that breaks the problem down and calls itself with a modified input.</li>
+            </ul>
+        </div>
+
+        <h2 class="text-3xl font-bold text-gray-800">2. How Recursion Works: The Call Stack</h2>
+        <div class="example-box border-l-orange-500">
+            <h3 class="text-xl font-bold text-gray-800 mt-0">Visualizing Function Calls</h3>
+            <p>When a function is called, it's pushed onto the <strong>call stack</strong>. The call stack is a stack data structure that stores information about the active functions. When a function finishes, it's popped off the stack.</p>
+            <p>In recursion, each recursive call adds a new frame to the stack. The base case stops the calls, and then the stack starts to unwind as each function returns.</p>
+            <pre class="bg-gray-800 text-white p-4 rounded-lg">
+|-------------------|
+|  Function Call 3  | (Top of Stack)
+|-------------------|
+|  Function Call 2  |
+|-------------------|
+|  Function Call 1  |
+|-------------------|
+|       main()      | (Bottom of Stack)
+|-------------------|
+            </pre>
+        </div>
+
+        <h2 class="text-3xl font-bold text-gray-800">3. Printing Numbers (1 to 5)</h2>
+        <div class="example-box border-l-green-500">
+            <h3 class="text-xl font-bold text-gray-800 mt-0">A Simple Start</h3>
+            <p>Let's print numbers from 1 to 5. The function will call itself with `n-1` until it hits the base case (`n=0`). The printing happens after the recursive call, so numbers are printed as the stack unwinds.</p>
+            <button class="interactive-button" onclick="toggleCode('print-1-5-code')">Show Code</button>
+            <pre id="print-1-5-code" style="display:none;"><code class="language-java">class PrintNumbers {
+    public static void print(int n) {
+        // Base Case: Stop when n is 0
+        if (n == 0) {
+            return;
+        }
+        // Recursive Call: Call the function with a smaller input
+        print(n - 1);
+        // Action: Print the number after the recursive call returns
+        System.out.println(n);
+    }
+
+    public static void main(String[] args) {
+        print(5);
+    }
+}</code></pre>
+            <button class="interactive-button" onclick="dryRunPrint1to5()">Dry Run</button>
+            <div id="print-1-5-dry-run" class="dry-run-output" style="display:none;"></div>
+        </div>
+        
+        <h2 class="text-3xl font-bold text-gray-800">4. Printing Numbers (5 to 1)</h2>
+        <div class="example-box border-l-purple-500">
+            <h3 class="text-xl font-bold text-gray-800 mt-0">In Reverse Order</h3>
+            <p>To print in reverse, we simply change the order of operations. We print the number first and then make the recursive call. This way, `5` is printed, then `print(4)` is called, and so on.</p>
+            <button class="interactive-button" onclick="toggleCode('print-5-1-code')">Show Code</button>
+            <pre id="print-5-1-code" style="display:none;"><code class="language-java">class PrintNumbersReverse {
+    public static void printReverse(int n) {
+        // Base Case: Stop when n is 0
+        if (n == 0) {
+            return;
+        }
+        // Action: Print the number before the recursive call
+        System.out.println(n);
+        // Recursive Call
+        printReverse(n - 1);
+    }
+
+    public static void main(String[] args) {
+        printReverse(5);
+    }
+}</code></pre>
+            <button class="interactive-button" onclick="dryRunPrint5to1()">Dry Run</button>
+            <div id="print-5-1-dry-run" class="dry-run-output" style="display:none;"></div>
+        </div>
+
+        <h2 class="text-3xl font-bold text-gray-800">5. Factorial of a Number</h2>
+        <div class="example-box border-l-cyan-500">
+            <h3 class="text-xl font-bold text-gray-800 mt-0">A Classic Example</h3>
+            <p>The factorial of a non-negative integer `n`, denoted by `n!`, is the product of all positive integers less than or equal to `n`. For example, `5! = 5 * 4 * 3 * 2 * 1 = 120`.</p>
+            <p>The recursive definition is `n! = n * (n-1)!` with the base case `0! = 1`.</p>
+            <button class="interactive-button" onclick="toggleCode('factorial-code')">Show Code</button>
+            <pre id="factorial-code" style="display:none;"><code class="language-java">class Factorial {
+    public static int calculateFactorial(int n) {
+        // Base Case: Factorial of 0 is 1
+        if (n == 0) {
+            return 1;
+        }
+        // Recursive Case: n * factorial of (n-1)
+        return n * calculateFactorial(n - 1);
+    }
+
+    public static void main(String[] args) {
+        System.out.println("Factorial of 5 is: " + calculateFactorial(5));
+    }
+}</code></pre>
+            <button class="interactive-button" onclick="dryRunFactorial()">Dry Run</button>
+            <div id="factorial-dry-run" class="dry-run-output" style="display:none;"></div>
+        </div>
+
+        <h2 class="text-3xl font-bold text-gray-800">6. Fibonacci Numbers</h2>
+        <div class="example-box border-l-red-500">
+            <h3 class="text-xl font-bold text-gray-800 mt-0">The Two-Call Recursion</h3>
+            <p>The Fibonacci sequence is a series of numbers where each number is the sum of the two preceding ones, usually starting with 0 and 1. `0, 1, 1, 2, 3, 5, 8, ...`</p>
+            <p>The recursive definition is `fib(n) = fib(n-1) + fib(n-2)` with base cases `fib(0) = 0` and `fib(1) = 1`.</p>
+            <button class="interactive-button" onclick="toggleCode('fibonacci-code')">Show Code</button>
+            <pre id="fibonacci-code" style="display:none;"><code class="language-java">class Fibonacci {
+    public static int fib(int n) {
+        // Base Cases
+        if (n <= 1) {
+            return n;
+        }
+        // Recursive Case: Sum of the previous two numbers
+        return fib(n - 1) + fib(n - 2);
+    }
+
+    public static void main(String[] args) {
+        System.out.println("The 5th Fibonacci number is: " + fib(5)); // Result is 5
+    }
+}</code></pre>
+        </div>
+
+        <h2 class="text-3xl font-bold text-gray-800">7. Sum of First N Natural Numbers</h2>
+        <div class="example-box border-l-yellow-500">
+            <h3 class="text-xl font-bold text-gray-800 mt-0">Simple Summation</h3>
+            <p>To find the sum of the first `N` natural numbers, we can say `sum(n) = n + sum(n-1)`. The base case is when `n=1`, the sum is 1.</p>
+            <button class="interactive-button" onclick="toggleCode('sum-n-code')">Show Code</button>
+            <pre id="sum-n-code" style="display:none;"><code class="language-java">class SumOfN {
+    public static int sum(int n) {
+        // Base Case
+        if (n == 1) {
+            return 1;
+        }
+        // Recursive Case
+        return n + sum(n - 1);
+    }
+
+    public static void main(String[] args) {
+        System.out.println("Sum of first 5 numbers: " + sum(5)); // 5+4+3+2+1 = 15
+    }
+}</code></pre>
+        </div>
+
+        <h2 class="text-3xl font-bold text-gray-800">8. Power Function (x^n)</h2>
+        <div class="example-box border-l-pink-500">
+            <h3 class="text-xl font-bold text-gray-800 mt-0">Calculating Exponents</h3>
+            <p>To calculate `x` raised to the power of `n`, we can use the recursive definition `power(x, n) = x * power(x, n-1)`. The base case is when `n=0`, any number to the power of 0 is 1.</p>
+            <button class="interactive-button" onclick="toggleCode('power-code')">Show Code</button>
+            <pre id="power-code" style="display:none;"><code class="language-java">class PowerFunction {
+    public static int power(int x, int n) {
+        // Base Case
+        if (n == 0) {
+            return 1;
+        }
+        // Recursive Case
+        return x * power(x, n - 1);
+    }
+
+    public static void main(String[] args) {
+        System.out.println("2 to the power of 3 is: " + power(2, 3)); // 2*2*2 = 8
+    }
+}</code></pre>
+        </div>
+
+        <h2 class="text-3xl font-bold text-gray-800">9. Common Mistakes & Quiz</h2>
+        <div class="example-box border-l-red-700">
+            <h3 class="text-xl font-bold text-gray-800 mt-0">Things to Avoid</h3>
+            <ul>
+                <li><strong>Missing Base Case:</strong> If you forget the base case, the function will call itself infinitely, leading to a <strong>StackOverflowError</strong>.</li>
+                <li><strong>No Progress Towards Base Case:</strong> The recursive call must move closer to the base case. For example, calling `factorial(n)` from within `factorial(n)` will also cause infinite recursion.</li>
+            </ul>
+        </div>
+
+        <h2 class="text-3xl font-bold text-gray-800">10. More Problems</h2>
+        <div class="example-box border-l-teal-500">
+            <h3 class="text-xl font-bold text-gray-800 mt-0">For Curious Students</h3>
+            <p><strong>1. Reverse an Array:</strong> Write a recursive function to reverse an array. Hint: you might need a helper function that takes start and end indices.</p>
+            <button class="interactive-button" onclick="toggleCode('reverse-array-code')">Show Code</button>
+            <pre id="reverse-array-code" style="display:none;"><code class="language-java">import java.util.Arrays;
+class ReverseArray {
+    public static void reverse(int[] arr, int start, int end) {
+        if (start >= end) {
+            return;
+        }
+        int temp = arr[start];
+        arr[start] = arr[end];
+        arr[end] = temp;
+        reverse(arr, start + 1, end - 1);
+    }
+    public static void main(String[] args) {
+        int[] myArray = {1, 2, 3, 4, 5};
+        reverse(myArray, 0, myArray.length - 1);
+        System.out.println("Reversed Array: " + Arrays.toString(myArray));
+    }
+}</code></pre>
+            <p class="mt-4"><strong>2. Check for Palindrome:</strong> Write a recursive function to check if a string is a palindrome (reads the same forwards and backward).</p>
+            <button class="interactive-button" onclick="toggleCode('palindrome-code')">Show Code</button>
+            <pre id="palindrome-code" style="display:none;"><code class="language-java">class PalindromeCheck {
+    public static boolean isPalindrome(String s, int start, int end) {
+        if (start >= end) {
+            return true;
+        }
+        if (s.charAt(start) != s.charAt(end)) {
+            return false;
+        }
+        return isPalindrome(s, start + 1, end - 1);
+    }
+    public static void main(String[] args) {
+        String test = "racecar";
+        System.out.println("Is 'racecar' a palindrome? " + isPalindrome(test, 0, test.length() - 1));
+    }
+}</code></pre>
+        </div>
+
+    </div>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+<script>
+    function toggleCode(id) {
+        const element = document.getElementById(id);
+        if (element.style.display === 'none') {
+            element.style.display = 'block';
+            Prism.highlightAllUnder(element);
+        } else {
+            element.style.display = 'none';
+        }
+    }
+
+    function dryRunPrint1to5() {
+        const outputEl = document.getElementById('print-1-5-dry-run');
+        outputEl.style.display = 'block';
+        let output = '--- Dry Run for print(3) ---\n\n';
+        output += '1. print(3) is called. n is not 0. Calls print(2).\n';
+        output += '   Stack: [main, print(3)]\n\n';
+        output += '2. print(2) is called. n is not 0. Calls print(1).\n';
+        output += '   Stack: [main, print(3), print(2)]\n\n';
+        output += '3. print(1) is called. n is not 0. Calls print(0).\n';
+        output += '   Stack: [main, print(3), print(2), print(1)]\n\n';
+        output += '4. print(0) is called. n is 0. Base case hit. Returns.\n';
+        output += '   Stack: [main, print(3), print(2), print(1)] -> [main, print(3), print(2)]\n\n';
+        output += '5. print(1) resumes. Prints 1. Returns.\n';
+        output += '   Output: 1\n';
+        output += '   Stack: [main, print(3), print(2)] -> [main, print(3)]\n\n';
+        output += '6. print(2) resumes. Prints 2. Returns.\n';
+        output += '   Output: 1, 2\n';
+        output += '   Stack: [main, print(3)] -> [main]\n\n';
+        output += '7. print(3) resumes. Prints 3. Returns.\n';
+        output += '   Output: 1, 2, 3\n';
+        output += '   Stack: [main] -> []\n\n';
+        output += 'Final Output for print(5): 1 2 3 4 5';
+        outputEl.textContent = output;
+    }
+
+    function dryRunPrint5to1() {
+        const outputEl = document.getElementById('print-5-1-dry-run');
+        outputEl.style.display = 'block';
+        let output = '--- Dry Run for printReverse(3) ---\n\n';
+        output += '1. printReverse(3) is called. Prints 3. Calls printReverse(2).\n';
+        output += '   Output: 3\n';
+        output += '   Stack: [main, printReverse(3)]\n\n';
+        output += '2. printReverse(2) is called. Prints 2. Calls printReverse(1).\n';
+        output += '   Output: 3, 2\n';
+        output += '   Stack: [main, printReverse(3), printReverse(2)]\n\n';
+        output += '3. printReverse(1) is called. Prints 1. Calls printReverse(0).\n';
+        output += '   Output: 3, 2, 1\n';
+        output += '   Stack: [main, printReverse(3), printReverse(2), printReverse(1)]\n\n';
+        output += '4. printReverse(0) is called. Base case hit. Returns.\n';
+        output += '   Stack unwinds.\n\n';
+        output += 'Final Output for printReverse(5): 5 4 3 2 1';
+        outputEl.textContent = output;
+    }
+    
+    function dryRunFactorial() {
+        const outputEl = document.getElementById('factorial-dry-run');
+        outputEl.style.display = 'block';
+        let output = '--- Dry Run for calculateFactorial(4) ---\n\n';
+        output += '1. fact(4) calls fact(3). Returns 4 * fact(3).\n';
+        output += '   Stack: [fact(4)]\n\n';
+        output += '2. fact(3) calls fact(2). Returns 3 * fact(2).\n';
+        output += '   Stack: [fact(4), fact(3)]\n\n';
+        output += '3. fact(2) calls fact(1). Returns 2 * fact(1).\n';
+        output += '   Stack: [fact(4), fact(3), fact(2)]\n\n';
+        output += '4. fact(1) calls fact(0). Returns 1 * fact(0).\n';
+        output += '   Stack: [fact(4), fact(3), fact(2), fact(1)]\n\n';
+        output += '5. fact(0) hits base case. Returns 1.\n';
+        output += '   Stack: [fact(4), fact(3), fact(2), fact(1)] -> [fact(4), fact(3), fact(2)]\n\n';
+        output += '6. fact(1) returns 1 * 1 = 1.\n';
+        output += '   Stack: -> [fact(4), fact(3)]\n\n';
+        output += '7. fact(2) returns 2 * 1 = 2.\n';
+        output += '   Stack: -> [fact(4)]\n\n';
+        output += '8. fact(3) returns 3 * 2 = 6.\n';
+        output += '   Stack: -> []\n\n';
+        output += '9. fact(4) returns 4 * 6 = 24.\n\n';
+        output += 'Final Result: 24';
+        outputEl.textContent = output;
+    }
+</script>
+</body>
+</html>

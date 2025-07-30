@@ -14,7 +14,8 @@ function updateNavigation() {
         { href: 'linkedList.html', text: 'Linked List' },
         { href: 'LinkedList_problems.html', text: 'Linked List Problems' },
         { href: 'binary_search.html', text: 'Binary Search' },
-        { href: 'stack.html', text: 'Stacks' }
+        { href: 'stack.html', text: 'Stacks' },
+        { href: 'recursion.html', text: 'Recursion' }
     ];
 
     const nav = document.querySelector('nav.navbar');
