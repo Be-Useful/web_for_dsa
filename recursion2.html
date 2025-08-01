@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recursion Lecture 2: Conceptual Problems</title>
+    <!-- Tailwind CSS CDN for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Prism.js for code highlighting -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <style>
+        /* Custom CSS for 'Inter' font and base styles */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+            color: #374151;
+        }
+        .content-card {
+            background-color: #ffffff;
+            border-radius: 1rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            margin-bottom: 2.5rem;
+        }
+        .content-card h2 {
+            font-weight: 700;
+            color: #1e40af; /* Deeper Blue for main headings */
+            border-bottom: 2px solid #dbeafe;
+            padding-bottom: 0.75rem;
+        }
+        .content-card h3 {
+            font-weight: 600;
+            color: #1d4ed8; /* Slightly lighter blue for sub-headings */
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        .content-card p, .content-card li {
+            line-height: 1.75;
+            font-size: 1.1rem;
+        }
+        .content-card code:not(pre > code) {
+            background-color: #eef2ff;
+            color: #4338ca;
+            padding: 0.2rem 0.5rem;
+            border-radius: 0.375rem;
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: 600;
+        }
+        .explanation-box {
+            background-color: #f9fafb;
+            border-left: 4px solid #3b82f6;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            border-radius: 0.5rem;
+        }
+        .code-block pre {
+            border-radius: 0.5rem;
+        }
+        .visualization {
+            background-color: #f0f9ff;
+            border: 1px solid #e0f2fe;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            font-family: 'Courier New', Courier, monospace;
+            white-space: pre-wrap;
+            text-align: center;
+            font-size: 1rem;
+        }
+    </style>
+</head>
+<body class="p-4 sm:p-6 md:p-10">
+
+    <div class="max-w-4xl mx-auto">
+
+        <header class="text-center mb-12">
+            <h1 class="text-4xl md:text-5xl font-extrabold text-gray-800 mb-2">Recursion Lecture 2</h1>
+            <p class="text-xl text-gray-600">Deep Dive into Conceptual Problems</p>
+        </header>
+
+        <!-- Problem 1: Tower of Hanoi -->
+        <div class="content-card p-6 md:p-8">
+            <h2 class="text-3xl mb-6">1. Tower of Hanoi</h2>
+            <div class="explanation-box">
+                <h3 class="text-2xl mt-0">The Problem</h3>
+                <p>The Tower of Hanoi is a classic puzzle that consists of three rods and a number of disks of different sizes which can slide onto any rod. The puzzle starts with the disks in a neat stack in ascending order of size on one rod, the smallest at the top, thus making a conical shape.</p>
+                <p class="font-semibold mt-4">The objective is to move the entire stack to another rod, obeying the following simple rules:</p>
+                <ul class="list-disc list-inside mt-2 space-y-1">
+                    <li>Only one disk can be moved at a time.</li>
+                    <li>Each move consists of taking the upper disk from one of the stacks and placing it on top of another stack.</li>
+                    <li>No disk may be placed on top of a smaller disk.</li>
+                </ul>
+            </div>
+
+            <h3 class="text-2xl">Recursive Approach and Logic</h3>
+            <p>The key to solving this puzzle is to think recursively. To move N disks from a 'Source' rod to a 'Destination' rod using a 'Helper' rod, we can break it down into three steps:</p>
+            <ol class="list-decimal list-inside mt-4 space-y-2">
+                <li>Move the top `N-1` disks from the <strong>Source</strong> rod to the <strong>Helper</strong> rod.</li>
+                <li>Move the largest disk (the Nth disk) from the <strong>Source</strong> rod to the <strong>Destination</strong> rod.</li>
+                <li>Move the `N-1` disks from the <strong>Helper</strong> rod to the <strong>Destination</strong> rod.</li>
+            </ol>
+            <p class="mt-4">Notice that steps 1 and 3 are smaller versions of the original problem. This is where recursion shines!</p>
+
+            <h3 class="text-2xl">Base Case and Recursive Step</h3>
+            <ul class="list-disc list-inside mt-4 space-y-2">
+                <li><strong>Base Case:</strong> If there is only one disk (`N=1`), the solution is simple: move it directly from the Source to the Destination rod.</li>
+                <li><strong>Recursive Step:</strong> For `N > 1`, we follow the three-step logic described above. The function calls itself to solve the smaller subproblems.</li>
+            </ul>
+
+            <h3 class="text-2xl">Visualization for N=3 Disks</h3>
+            <div class="visualization">
+                <p class="font-bold mb-4">Goal: Move 3 disks from A to C</p>
+                <p>towerOfHanoi(3, 'A', 'C', 'B')</p>
+                <p>  |--&gt; towerOfHanoi(2, 'A', 'B', 'C')</p>
+                <p>  |     |--&gt; towerOfHanoi(1, 'A', 'C', 'B')</p>
+                <p>  |     |      |--&gt; Move disk 1 from A to C</p>
+                <p>  |     |--&gt; Move disk 2 from A to B</p>
+                <p>  |     |--&gt; towerOfHanoi(1, 'C', 'B', 'A')</p>
+                <p>  |            |--&gt; Move disk 1 from C to B</p>
+                <p>  |--&gt; Move disk 3 from A to C</p>
+                <p>  |--&gt; towerOfHanoi(2, 'B', 'C', 'A')</p>
+                <p>        |--&gt; towerOfHanoi(1, 'B', 'A', 'C')</p>
+                <p>        |      |--&gt; Move disk 1 from B to A</p>
+                <p>        |--&gt; Move disk 2 from B to C</p>
+                <p>        |--&gt; towerOfHanoi(1, 'A', 'C', 'B')</p>
+                <p>               |--&gt; Move disk 1 from A to C</p>
+            </div>
+
+            <h3 class="text-2xl">Java Code</h3>
+            <div class="code-block mt-4">
+                <pre><code class="language-java">
+public class TowerOfHanoi {
+
+    /**
+     * Solves the Tower of Hanoi puzzle.
+     * @param n The number of disks.
+     * @param source The source rod.
+     * @param destination The destination rod.
+     * @param helper The helper rod.
+     */
+    public static void solve(int n, char source, char destination, char helper) {
+        // Base Case: If there's only one disk, move it and return.
+        if (n == 1) {
+            System.out.println("Move disk 1 from " + source + " to " + destination);
+            return;
+        }
+
+        // Recursive Step 1: Move n-1 disks from source to helper, using destination as the helper.
+        solve(n - 1, source, helper, destination);
+
+        // Step 2: Move the nth disk (the largest) from source to destination.
+        System.out.println("Move disk " + n + " from " + source + " to " + destination);
+
+        // Recursive Step 3: Move the n-1 disks from helper to destination, using source as the helper.
+        solve(n - 1, helper, destination, source);
+    }
+
+    public static void main(String[] args) {
+        int numberOfDisks = 3;
+        System.out.println("Solving Tower of Hanoi for " + numberOfDisks + " disks:");
+        // A is source, C is destination, B is helper
+        solve(numberOfDisks, 'A', 'C', 'B');
+    }
+}
+                </code></pre>
+            </div>
+        </div>
+
+        <!-- Problem 2: Subsequence Generation -->
+        <div class="content-card p-6 md:p-8">
+            <h2 class="text-3xl mb-6">2. Generate All Subsequences of a String</h2>
+            <div class="explanation-box">
+                <h3 class="text-2xl mt-0">The Problem</h3>
+                <p>A subsequence is a sequence that can be derived from another sequence by deleting some or no elements without changing the order of the remaining elements. For example, "ace" is a subsequence of "abcde".</p>
+                <p class="font-semibold mt-4">The goal is to generate all possible subsequences of a given string. For "abc", the subsequences are: "", "c", "b", "bc", "a", "ac", "ab", "abc".</p>
+            </div>
+
+            <h3 class="text-2xl">Recursive Approach: The "Include/Exclude" Pattern</h3>
+            <p>This is a classic decision-making problem. For every character in the string, we have two choices:</p>
+            <ol class="list-decimal list-inside mt-4 space-y-2">
+                <li><strong>Include</strong> the character in our current subsequence.</li>
+                <li><strong>Exclude</strong> the character from our current subsequence.</li>
+            </ol>
+            <p class="mt-4">We can build a recursion tree where each level corresponds to a decision for a character. The left branch can represent excluding the character, and the right branch can represent including it.</p>
+
+            <h3 class="text-2xl">Base Case and Recursive Step</h3>
+            <ul class="list-disc list-inside mt-4 space-y-2">
+                <li><strong>Base Case:</strong> When we have considered all characters in the input string (i.e., our index reaches the end of the string), we have formed a complete subsequence. We print it and return.</li>
+                <li><strong>Recursive Step:</strong> For the character at the current index, we make two recursive calls: one where we don't add the character to our current subsequence, and one where we do. Both calls then move to the next character.</li>
+            </ul>
+
+            <h3 class="text-2xl">Recursion Tree for "abc"</h3>
+            <div class="visualization">
+                <p class="font-bold mb-4">f(index=0, current="")</p>
+                <p>/                     \</p>
+                <p>Exclude 'a'              Include 'a'</p>
+                <p>f(1, "")                  f(1, "a")</p>
+                <p>/      \                /      \</p>
+                <p>Excl 'b'  Incl 'b'      Excl 'b'  Incl 'b'</p>
+                <p>f(2,"")   f(2,"b")      f(2,"a")  f(2,"ab")</p>
+                <p>/  \      /  \          /  \      /  \</p>
+                <p>f(3,"") f(3,"c") f(3,"b") f(3,"bc") f(3,"a") f(3,"ac") f(3,"ab") f(3,"abc")</p>
+                <p>|       |        |        |         |        |         |         |</p>
+                <p>""      "c"      "b"      "bc"      "a"      "ac"      "ab"      "abc"</p>
+            </div>
+
+            <h3 class="text-2xl">Java Code</h3>
+            <div class="code-block mt-4">
+                <pre><code class="language-java">
+import java.util.ArrayList;
+import java.util.List;
+
+public class Subsequences {
+
+    /**
+     * Finds and prints all subsequences of a string.
+     * @param input The original string.
+     * @param index The current character index we are considering.
+     * @param currentSubsequence The subsequence built so far.
+     */
+    public static void findSubsequences(String input, int index, String currentSubsequence) {
+        // Base Case: If we have processed all characters, print the subsequence.
+        if (index == input.length()) {
+            System.out.println("\"" + currentSubsequence + "\"");
+            return;
+        }
+
+        char currentChar = input.charAt(index);
+
+        // Recursive Call 1: Exclude the current character.
+        // We simply move to the next character without adding the current one.
+        findSubsequences(input, index + 1, currentSubsequence);
+
+        // Recursive Call 2: Include the current character.
+        // We add the current character to the subsequence and move to the next.
+        findSubsequences(input, index + 1, currentSubsequence + currentChar);
+    }
+
+    public static void main(String[] args) {
+        String str = "abc";
+        System.out.println("Subsequences of \"" + str + "\":");
+        findSubsequences(str, 0, "");
+    }
+}
+                </code></pre>
+            </div>
+        </div>
+
+        <!-- Problem 3: Subset Sum -->
+        <div class="content-card p-6 md:p-8">
+            <h2 class="text-3xl mb-6">3. Subset Sum / Target Sum</h2>
+            <div class="explanation-box">
+                <h3 class="text-2xl mt-0">The Problem</h3>
+                <p>Given an array of non-negative integers and a target sum, find the number of subsets of the given array that sum up to the target. Each number can be used once in a subset.</p>
+                <p class="font-semibold mt-4">Example: `arr = [2, 3, 5]`, `target = 5`.<br>The subsets that sum to 5 are `{2, 3}` and `{5}`. So the answer is 2.</p>
+            </div>
+
+            <h3 class="text-2xl">Recursive Approach: Include/Exclude Again!</h3>
+            <p>This problem follows the exact same "Include/Exclude" pattern as subsequence generation. For each element in the array, we have two choices:</p>
+            <ol class="list-decimal list-inside mt-4 space-y-2">
+                <li><strong>Include</strong> the element in our subset. If we do, we subtract its value from the target sum and move to the next element.</li>
+                <li><strong>Exclude</strong> the element from our subset. If we do, the target sum remains the same, and we move to the next element.</li>
+            </ol>
+            <p class="mt-4">The total number of ways is the sum of ways from both choices: `ways = (ways if we include) + (ways if we exclude)`.</p>
+
+            <h3 class="text-2xl">Base Cases and Recursive Step</h3>
+            <ul class="list-disc list-inside mt-4 space-y-2">
+                <li><strong>Successful Base Case:</strong> If the `target` sum becomes 0, it means we have found a valid subset. We return 1 (representing one way found).</li>
+                <li><strong>Unsuccessful Base Case:</strong> If we run out of elements to consider (`index` reaches the end of the array) but the `target` is still greater than 0, it means this path did not lead to a solution. We return 0.</li>
+                <li><strong>Edge Case:</strong> If at any point the `target` becomes negative, it's impossible to reach the original target, so we can prune this path by returning 0.</li>
+                <li><strong>Recursive Step:</strong> For the element at the current index, we make two recursive calls (include and exclude) and return the sum of their results.</li>
+            </ul>
+
+            <h3 class="text-2xl">Dry Run for `arr=[2,3], target=3`</h3>
+            <div class="visualization">
+                <p class="font-bold mb-4">count(arr, index=0, target=3)</p>
+                <p>/                                \</p>
+                <p>Exclude 2                          Include 2</p>
+                <p>count(arr, 1, 3)                   count(arr, 1, 3-2=1)</p>
+                <p>/                \                 /                  \</p>
+                <p>Exclude 3          Include 3       Exclude 3            Include 3</p>
+                <p>count(2, 3)        count(2, 3-3=0) count(2, 1)          count(2, 1-3=-2)</p>
+                <p>|                  |               |                    |</p>
+                <p>index==len, ret 0  target==0, ret 1  index==len, ret 0    target<0, ret 0</p>
+                <p>\------------------/</p>
+                <p>Returns 0 + 1 = 1</p>
+                <p>                                   \--------------------/</p>
+                <p>                                   Returns 0 + 0 = 0</p>
+                <p>\----------------------------------------------------/</p>
+                <p>Total = 1 + 0 = 1. (The subset is {3})</p>
+            </div>
+
+            <h3 class="text-2xl">Java Code</h3>
+            <div class="code-block mt-4">
+                <pre><code class="language-java">
+public class SubsetSum {
+
+    /**
+     * Counts the number of subsets with a given sum.
+     * @param arr The array of numbers.
+     * @param index The current index being considered.
+     * @param target The remaining sum to achieve.
+     * @return The number of subsets that sum up to the target.
+     */
+    public static int countSubsets(int[] arr, int index, int target) {
+        // Successful Base Case: If target is 0, we found a valid subset.
+        if (target == 0) {
+            return 1;
+        }
+
+        // Unsuccessful Base Case: If we're out of elements or target is negative.
+        if (index == arr.length || target < 0) {
+            return 0;
+        }
+
+        // Recursive Call 1: Include the current element.
+        // We take the element arr[index] and look for the remaining sum (target - arr[index]).
+        int includeWays = countSubsets(arr, index + 1, target - arr[index]);
+
+        // Recursive Call 2: Exclude the current element.
+        // We skip arr[index] and look for the same target sum from the rest of the array.
+        int excludeWays = countSubsets(arr, index + 1, target);
+
+        // Total ways is the sum of ways from both choices.
+        return includeWays + excludeWays;
+    }
+
+    public static void main(String[] args) {
+        int[] arr = {2, 3, 5, 8, 10};
+        int target = 10;
+        int count = countSubsets(arr, 0, target);
+        // Subsets are {2, 8}, {10}, {2, 3, 5} -> 3 ways
+        System.out.println("Number of subsets with sum " + target + " is: " + count);
+
+        int[] arr2 = {2, 3, 5};
+        int target2 = 5;
+        System.out.println("Number of subsets with sum " + target2 + " is: " + countSubsets(arr2, 0, target2)); // {2,3}, {5} -> 2
+    }
+}
+                </code></pre>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html>
