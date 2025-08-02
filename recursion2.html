@@ -53,6 +53,37 @@
             margin-top: 1.5rem;
             border-radius: 0.5rem;
         }
+
+        /* Navigation Bar Styles */
+        .navbar {
+            background-color: #4338ca; /* Darker Indigo background for navbar */
+            padding: 1rem 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap; /* Allow items to wrap on smaller screens */
+            gap: 1rem; /* Space between nav items */
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem; /* Rounded corners for nav links */
+            font-weight: 600;
+            transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
+        }
+
+        .navbar a:hover {
+            background-color: #4f46e5; /* Lighter indigo on hover */
+            transform: translateY(-2px);
+        }
+
+        .navbar a.active-nav {
+            background-color: #6d28d9; /* Purple for active link */
+            font-weight: 700;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
         .code-block pre {
             border-radius: 0.5rem;
         }
@@ -68,7 +99,10 @@
         }
     </style>
 </head>
-<body class="p-4 sm:p-6 md:p-10">
+<body>
+    <nav class="navbar">
+        <!-- Navigation links will be inserted here by update_nav.js -->
+    </nav>
 
     <div class="max-w-4xl mx-auto">
 
@@ -344,5 +378,6 @@ public class SubsetSum {
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="update_nav.js"></script>
 </body>
 </html>

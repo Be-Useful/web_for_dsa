@@ -111,11 +111,48 @@
             .presentation-card h1 { font-size: 2.2rem; }
             .presentation-card h2 { font-size: 1.8rem; }
         }
+
+        /* Navigation Bar Styles */
+        .navbar {
+            background-color: #4338ca; /* Darker Indigo background for navbar */
+            padding: 1rem 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap; /* Allow items to wrap on smaller screens */
+            gap: 1rem; /* Space between nav items */
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem; /* Rounded corners for nav links */
+            font-weight: 600;
+            transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
+        }
+
+        .navbar a:hover {
+            background-color: #4f46e5; /* Lighter indigo on hover */
+            transform: translateY(-2px);
+        }
+
+        .navbar a.active-nav {
+            background-color: #6d28d9; /* Purple for active link */
+            font-weight: 700;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
     </style>
 </head>
 <body>
 
 <!-- Main Content Area -->
+<nav class="navbar">
+        <!-- Navigation links will be inserted here by update_nav.js -->
+    </nav>
+    
+    <!-- Include the navigation update script -->
+    <script src="update_nav.js"></script>
 <main class="content-area">
     <div class="presentation-card">
         <div class="text-center mb-8">
@@ -427,5 +464,8 @@ class ReverseArray {
         outputEl.textContent = output;
     }
 </script>
+    </div>
+</main>
+<script src="update_nav.js"></script>
 </body>
 </html>
