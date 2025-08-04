@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2D Arrays and Matrix Problems</title>
+    <!-- Tailwind CSS CDN for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Prism.js for code highlighting -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <style>
+        /* Custom CSS for 'Inter' font and base styles from the Binary Search page */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f3f4f6; /* Light gray background */
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .content-area {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 2rem;
+            box-sizing: border-box;
+        }
+
+        .presentation-card {
+            background-color: #ffffff;
+            border-radius: 1.5rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            padding: 2.5rem;
+            width: 90%;
+            max-width: 960px;
+            box-sizing: border-box;
+            overflow-y: auto;
+        }
+
+        .presentation-card h1, .presentation-card h2 {
+            color: #1f2937;
+            margin-bottom: 1.5rem;
+            font-weight: 800;
+        }
+        
+        .presentation-card h3 {
+             color: #1f2937;
+             font-weight: 700;
+             margin-top: 2rem;
+             margin-bottom: 1rem;
+        }
+        
+        .presentation-card h4 {
+             color: #374151;
+             font-weight: 700;
+             margin-top: 1.5rem;
+             margin-bottom: 0.5rem;
+             font-size: 1.1rem;
+        }
+
+        .presentation-card p, .presentation-card li {
+            color: #4b5563;
+            line-height: 1.7;
+            margin-bottom: 1rem;
+            font-size: 1.05rem;
+        }
+
+        .example-container {
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-top: 2rem;
+            margin-bottom: 2.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+        }
+        
+        .presentation-card code:not(pre > code) {
+            background-color: #eef2ff;
+            color: #4338ca;
+            padding: 0.2rem 0.5rem;
+            border-radius: 0.375rem;
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: 600;
+        }
+
+        .presentation-card pre {
+            border-radius: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .presentation-card pre code {
+            background-color: transparent;
+            padding: 0;
+            color: #d1d5db;
+            font-weight: normal;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+        
+        .presentation-card pre .comment { color: #6b7280; font-style: italic; }
+        .presentation-card pre .keyword { color: #c4b5fd; }
+        .presentation-card pre .class-name { color: #a7f3d0; }
+        .presentation-card pre .method { color: #fde047; }
+        .presentation-card pre .string { color: #fdba74; }
+
+        .presentation-card .dry-run-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1.5rem;
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+            border-radius: 0.75rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .presentation-card .dry-run-table th,
+        .presentation-card .dry-run-table td {
+            border: 1px solid #e5e7eb;
+            padding: 0.75rem;
+            text-align: center;
+            font-size: 0.95rem;
+        }
+        .presentation-card .dry-run-table th { background-color: #f3f4f6; font-weight: 600; }
+        .presentation-card .dry-run-table code { font-size: 0.9rem; }
+        
+        .highlight-blue { background-color: #dbeafe; } /* Light Blue */
+        .highlight-red { background-color: #fecaca; } /* Light Red */
+        .highlight-green { background-color: #dcfce7; } /* Light Green */
+        .highlight-yellow { background-color: #fef9c3; } /* Light Yellow */
+
+        .presentation-card ul, .presentation-card ol { margin-left: 1.5rem; padding-left: 0.5rem; margin-bottom: 1rem; }
+        .presentation-card a { color: #4f46e5; text-decoration: none; font-weight: 600; transition: color 0.2s ease-in-out; }
+        .presentation-card a:hover { color: #3730a3; text-decoration: underline; }
+
+        .code-toggle-button { background-color: #4f46e5; color: white; padding: 0.5rem 1rem; border-radius: 0.5rem; font-weight: 600; cursor: pointer; transition: background-color 0.2s; display: inline-block; margin-top: 1rem; margin-right: 0.5rem; }
+        .code-toggle-button:hover { background-color: #4338ca; }
+        .hidden-code { display: none; }
+
+        /* Navigation Bar Styles */
+        .navbar {
+            background-color: #4338ca; /* Darker Indigo background for navbar */
+            padding: 1rem 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap; /* Allow items to wrap on smaller screens */
+            gap: 1rem; /* Space between nav items */
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem; /* Rounded corners for nav links */
+            font-weight: 600;
+            transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
+        }
+
+        .navbar a:hover {
+            background-color: #4f46e5; /* Lighter indigo on hover */
+            transform: translateY(-2px);
+        }
+
+        .navbar a.active-nav {
+            background-color: #6d28d9; /* Purple for active link */
+            font-weight: 700;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        @media (max-width: 768px) {
+            .presentation-card { padding: 1.5rem; width: 95%; }
+            .presentation-card h1 { font-size: 2.2rem; }
+            .presentation-card h2 { font-size: 1.8rem; }
+            .example-container { padding: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar">
+        <!-- Navigation links will be inserted here by update_nav.js -->
+    </nav>
+    
+    <!-- Include the navigation update script -->
+    <script src="update_nav.js"></script>
+    
+    <!-- Include the navigation update script -->
+    <script src="update_nav.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-java.min.js"></script>
+
+<main class="content-area">
+    <div class="presentation-card">
+        <div class="text-center mb-8">
+            <h1 class="text-4xl lg:text-5xl font-extrabold text-indigo-700 mb-4">2D Arrays and Matrix Problems</h1>
+            <p class="text-lg text-gray-600">Mastering grid-based data structures and traversals.</p>
+        </div>
+
+        <hr class="my-8 border-t-2 border-gray-200">
+
+        <h2 class="text-3xl font-bold mb-2 text-gray-800">1. What is a 2D Array?</h2>
+        <p>A 2D array, also known as a matrix, is an array of arrays. It's a grid-like structure organized in rows and columns. You can think of it like a spreadsheet or a chessboard. Each element is accessed using two indices: one for the row and one for the column, typically as <code>matrix[row][col]</code>.</p>
+        
+        <div class="example-container">
+            <h3>Visual Representation</h3>
+            <p>A 3x4 matrix (3 rows, 4 columns) would look like this:</p>
+            <table class="dry-run-table">
+                <tbody>
+                    <tr><td>matrix[0][0]</td><td>matrix[0][1]</td><td>matrix[0][2]</td><td>matrix[0][3]</td></tr>
+                    <tr><td>matrix[1][0]</td><td>matrix[1][1]</td><td>matrix[1][2]</td><td>matrix[1][3]</td></tr>
+                    <tr><td>matrix[2][0]</td><td>matrix[2][1]</td><td>matrix[2][2]</td><td>matrix[2][3]</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h2 class="text-3xl font-bold mb-2 text-gray-800">2. Common Operations</h2>
+        <div class="example-container">
+            <h3>Traversals</h3>
+            <p><strong>Row-wise Traversal:</strong> Iterate through each row, and for each row, iterate through all its columns. This is the most common traversal.</p>
+            <p><strong>Column-wise Traversal:</strong> Iterate through each column, and for each column, iterate through all its rows.</p>
+            <p><strong>Diagonal Traversal:</strong> Traversing elements along the main diagonal (where <code>row == col</code>) or anti-diagonal (where <code>row + col == n-1</code>).</p>
+            
+            <h3>Transformations</h3>
+            <p><strong>Transpose:</strong> Swap the rows and columns. The element at <code>matrix[i][j]</code> moves to <code>matrix[j][i]</code>.</p>
+            <p><strong>Rotate by 90°:</strong> A common interview task that can often be solved by first transposing the matrix and then reversing each row.</p>
+        </div>
+        
+        <h2 class="text-3xl font-bold mb-2 text-gray-800">3. Real-World Applications</h2>
+        <ul>
+            <li><strong>Image Processing:</strong> Images are represented as a 2D grid of pixels.</li>
+            <li><strong>Game Boards:</strong> Chess, Tic-Tac-Toe, and Sudoku boards are natural fits for 2D arrays.</li>
+            <li><strong>Spreadsheets:</strong> Applications like Excel use a 2D grid to store data.</li>
+            <li><strong>Graph Adjacency Matrices:</strong> Representing connections between nodes in a graph.</li>
+        </ul>
+
+        <h2 class="text-3xl font-bold mb-2 text-gray-800">4. Classic Interview Problems</h2>
+        <hr class="my-8 border-t-2 border-gray-200">
+
+        <!-- Problem 1: Row With Maximum Ones -->
+        <div class="example-container">
+            <h3>Problem 1: Row With Maximum Ones</h3>
+            <p><strong>Task:</strong> Given a binary matrix (contains only 0s and 1s), find the row with the maximum number of 1s.</p>
+            <h4>Intuition</h4>
+            <p>The problem asks us to find which row has the most 1s. The most straightforward approach is to check each row one by one. We'll maintain two variables: one to keep track of the maximum count of 1s found so far (<code>maxOnesCount</code>) and another to store the index of that row (<code>rowIndex</code>). We iterate through the matrix, row by row. For each row, we count the number of 1s. If this count is greater than our current <code>maxOnesCount</code>, we update <code>maxOnesCount</code> to this new count and update <code>rowIndex</code> to the current row's index.</p>
+            <button class="code-toggle-button">Show Code</button>
+            <button class="code-toggle-button">Show Dry Run</button>
+            <pre class="hidden-code"><code class="language-java">
+<span class="keyword">public class</span> <span class="class-name">MaxOnesRow</span> {
+    <span class="keyword">public int</span>[] <span class="method">rowAndMaximumOnes</span>(<span class="keyword">int</span>[][] mat) {
+        <span class="keyword">int</span> maxOnesCount = -1;
+        <span class="keyword">int</span> rowIndex = -1;
+
+        <span class="keyword">for</span> (<span class="keyword">int</span> i = 0; i < mat.length; i++) {
+            <span class="keyword">int</span> currentOnesCount = 0;
+            <span class="keyword">for</span> (<span class="keyword">int</span> j = 0; j < mat[i].length; j++) {
+                <span class="keyword">if</span> (mat[i][j] == 1) {
+                    currentOnesCount++;
+                }
+            }
+            <span class="keyword">if</span> (currentOnesCount > maxOnesCount) {
+                maxOnesCount = currentOnesCount;
+                rowIndex = i;
+            }
+        }
+        <span class="keyword">return new int</span>[]{rowIndex, maxOnesCount};
+    }
+}
+            </code></pre>
+            <div class="hidden-code">
+                <h4 class="mt-4">Dry Run: `mat = [[0,1],[1,0],[1,1]]`</h4>
+                <table class="dry-run-table">
+                    <thead><tr><th>Iteration (Row i)</th><th>Row Content</th><th>`currentOnesCount`</th><th>`maxOnesCount`</th><th>`rowIndex`</th><th>Action</th></tr></thead>
+                    <tbody>
+                        <tr><td>-</td><td>-</td><td>-</td><td class="highlight-yellow">-1</td><td class="highlight-yellow">-1</td><td>Initial values</td></tr>
+                        <tr><td>0</td><td>`[0, 1]`</td><td class="highlight-blue">1</td><td class="highlight-green">1</td><td class="highlight-green">0</td><td>`1 > -1`, update max and index.</td></tr>
+                        <tr><td>1</td><td>`[1, 0]`</td><td class="highlight-blue">1</td><td>1</td><td>0</td><td>`1` is not > `1`, no change.</td></tr>
+                        <tr><td>2</td><td>`[1, 1]`</td><td class="highlight-blue">2</td><td class="highlight-green">2</td><td class="highlight-green">2</td><td>`2 > 1`, update max and index.</td></tr>
+                    </tbody>
+                </table>
+                 <p>Final Result: `[2, 2]`</p>
+            </div>
+        </div>
+
+        <!-- Problem 2: Zig-Zag Traversal -->
+        <div class="example-container">
+            <h3>Problem 2: Zig-Zag Traversal</h3>
+            <p><strong>Task:</strong> Traverse a matrix in a zig-zag (or diagonal) pattern.</p>
+            <h4>Intuition</h4>
+            <p>The core idea is to observe a pattern in the indices. For any element <code>mat[r][c]</code>, the sum of its indices <code>r + c</code> determines which diagonal it belongs to. Furthermore, the parity (even or odd) of this sum determines the direction of traversal.
+            <br/>- If <code>r + c</code> is <strong>even</strong>, the traversal is upwards (row decreases, column increases).
+            <br/>- If <code>r + c</code> is <strong>odd</strong>, the traversal is downwards (row increases, column decreases).
+            We simply iterate from the top-left corner, adding the current element to our result, and then calculate the next position based on the current direction, carefully handling the boundary conditions (hitting the edges of the matrix) to switch directions correctly.</p>
+            <button class="code-toggle-button">Show Code</button>
+            <button class="code-toggle-button">Show Dry Run</button>
+            <pre class="hidden-code"><code class="language-java">
+<span class="keyword">import</span> java.util.ArrayList;
+<span class="keyword">import</span> java.util.Collections;
+<span class="keyword">import</span> java.util.List;
+
+<span class="keyword">public class</span> <span class="class-name">ZigZagTraversal</span> {
+    <span class="keyword">public int</span>[] <span class="method">findDiagonalOrder</span>(<span class="keyword">int</span>[][] mat) {
+        <span class="keyword">if</span> (mat == null || mat.length == 0) <span class="keyword">return new int</span>[0];
+        <span class="keyword">int</span> m = mat.length, n = mat[0].length;
+        <span class="keyword">int</span>[] result = <span class="keyword">new int</span>[m * n];
+        <span class="keyword">int</span> row = 0, col = 0;
+
+        <span class="keyword">for</span> (<span class="keyword">int</span> i = 0; i < result.length; i++) {
+            result[i] = mat[row][col];
+            <span class="comment">// (row + col) is even for upward diagonals</span>
+            <span class="keyword">if</span> ((row + col) % 2 == 0) { <span class="comment">// Moving up</span>
+                <span class="keyword">if</span> (col == n - 1) { row++; } <span class="comment">// Hit right wall</span>
+                <span class="keyword">else if</span> (row == 0) { col++; } <span class="comment">// Hit top wall</span>
+                <span class="keyword">else</span> { row--; col++; }
+            } <span class="keyword">else</span> { <span class="comment">// Moving down</span>
+                <span class="keyword">if</span> (row == m - 1) { col++; } <span class="comment">// Hit bottom wall</span>
+                <span class="keyword">else if</span> (col == 0) { row++; } <span class="comment">// Hit left wall</span>
+                <span class="keyword">else</span> { row++; col--; }
+            }
+        }
+        <span class="keyword">return</span> result;
+    }
+}
+            </code></pre>
+            <div class="hidden-code">
+                <h4 class="mt-4">Dry Run: `mat = [[1,2,3],[4,5,6]]`</h4>
+                <table class="dry-run-table">
+                    <thead><tr><th>Step</th><th>`(row, col)`</th><th>`mat[row][col]`</th><th>`(row+col)` Parity</th><th>Next Move</th><th>Result Array</th></tr></thead>
+                    <tbody>
+                        <tr><td>1</td><td>(0,0)</td><td class="highlight-blue">1</td><td>Even (Up)</td><td>Hit top -> `col++`</td><td>`[1]`</td></tr>
+                        <tr><td>2</td><td>(0,1)</td><td class="highlight-blue">2</td><td>Odd (Down)</td><td>Normal -> `row++, col--`</td><td>`[1, 2]`</td></tr>
+                        <tr><td>3</td><td>(1,0)</td><td class="highlight-blue">4</td><td>Odd (Down)</td><td>Hit left -> `row++`</td><td>`[1, 2, 4]`</td></tr>
+                        <tr><td>4</td><td>(1,1)</td><td class="highlight-blue">5</td><td>Even (Up)</td><td>Normal -> `row--, col++`</td><td>`[1, 2, 4, 5]`</td></tr>
+                        <tr><td>5</td><td>(0,2)</td><td class="highlight-blue">3</td><td>Even (Up)</td><td>Hit right -> `row++`</td><td>`[1, 2, 4, 5, 3]`</td></tr>
+                        <tr><td>6</td><td>(1,2)</td><td class="highlight-blue">6</td><td>Odd (Down)</td><td>Hit bottom -> `col++` (ends)</td><td>`[1, 2, 4, 5, 3, 6]`</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Problem 3: Set Matrix Zeroes -->
+        <div class="example-container">
+            <h3>Problem 3: Set Matrix Zeroes</h3>
+            <p><strong>Task:</strong> If an element in an M x N matrix is 0, its entire row and column are set to 0. This must be done in-place.</p>
+            <h4>Intuition</h4>
+            <p>A naive approach using O(M+N) extra space would be to have two boolean arrays, one for rows and one for columns, to mark which ones to zero out. To achieve O(1) space, we can cleverly use the first row and first column of the matrix itself as our markers.
+            <br>1. We first check if the original first column contains any zeros and store this in a boolean variable, `isFirstColZero`.
+            <br>2. We then iterate from the second element of the first row (`matrix[0][1]`) to see if the first row needs to be zeroed.
+            <br>3. We iterate through the rest of the matrix (from `[1][1]`). If we find a `0` at `matrix[i][j]`, we mark its corresponding header: `matrix[i][0] = 0` and `matrix[0][j] = 0`.
+            <br>4. After marking, we iterate through the matrix again (from `[1][1]`) and set `matrix[i][j]` to `0` if its row or column header (`matrix[i][0]` or `matrix[0][j]`) is `0`.
+            <br>5. Finally, we handle the first row and column based on our initial checks.</p>
+            <button class="code-toggle-button">Show Code</button>
+            <button class="code-toggle-button">Show Dry Run</button>
+            <pre class="hidden-code"><code class="language-java">
+<span class="keyword">public class</span> <span class="class-name">SetMatrixZeroes</span> {
+    <span class="keyword">public void</span> <span class="method">setZeroes</span>(<span class="keyword">int</span>[][] matrix) {
+        <span class="keyword">int</span> m = matrix.length;
+        <span class="keyword">int</span> n = matrix[0].length;
+        <span class="keyword">boolean</span> isFirstColZero = false;
+
+        <span class="comment">// 1. Use first row/col as markers</span>
+        <span class="keyword">for</span> (<span class="keyword">int</span> i = 0; i < m; i++) {
+            <span class="keyword">if</span> (matrix[i][0] == 0) {
+                isFirstColZero = true;
+            }
+            <span class="keyword">for</span> (<span class="keyword">int</span> j = 1; j < n; j++) {
+                <span class="keyword">if</span> (matrix[i][j] == 0) {
+                    matrix[i][0] = 0;
+                    matrix[0][j] = 0;
+                }
+            }
+        }
+
+        <span class="comment">// 2. Zero out based on markers</span>
+        <span class="keyword">for</span> (<span class="keyword">int</span> i = 1; i < m; i++) {
+            <span class="keyword">for</span> (<span class="keyword">int</span> j = 1; j < n; j++) {
+                <span class="keyword">if</span> (matrix[i][0] == 0 || matrix[0][j] == 0) {
+                    matrix[i][j] = 0;
+                }
+            }
+        }
+
+        <span class="comment">// 3. Zero out first row if needed</span>
+        <span class="keyword">if</span> (matrix[0][0] == 0) {
+            <span class="keyword">for</span> (<span class="keyword">int</span> j = 0; j < n; j++) {
+                matrix[0][j] = 0;
+            }
+        }
+
+        <span class="comment">// 4. Zero out first column if needed</span>
+        <span class="keyword">if</span> (isFirstColZero) {
+            <span class="keyword">for</span> (<span class="keyword">int</span> i = 0; i < m; i++) {
+                matrix[i][0] = 0;
+            }
+        }
+    }
+}
+            </code></pre>
+            <div class="hidden-code">
+                <h4 class="mt-4">Dry Run: `mat = [[1,1,1],[1,0,1],[1,1,1]]`</h4>
+                <p><strong>Initial State:</strong> `isFirstColZero = false`</p>
+                <p><strong>After Marking (Pass 1):</strong> Found `mat[1][1] == 0`. So, mark `mat[1][0] = 0` and `mat[0][1] = 0`.</p>
+                <table class="dry-run-table">
+                    <tbody>
+                        <tr><td>1</td><td class="highlight-red">0</td><td>1</td></tr>
+                        <tr><td class="highlight-red">0</td><td>0</td><td>1</td></tr>
+                        <tr><td>1</td><td>1</td><td>1</td></tr>
+                    </tbody>
+                </table>
+                <p><strong>After Zeroing (Pass 2):</strong> Iterate from `[1][1]`. `mat[1][0]` is 0, so `mat[1][2]` becomes 0. `mat[0][1]` is 0, so `mat[2][1]` becomes 0.</p>
+                 <table class="dry-run-table">
+                    <tbody>
+                        <tr><td>1</td><td class="highlight-red">0</td><td>1</td></tr>
+                        <tr><td class="highlight-red">0</td><td>0</td><td class="highlight-green">0</td></tr>
+                        <tr><td>1</td><td class="highlight-green">0</td><td>1</td></tr>
+                    </tbody>
+                </table>
+                 <p><strong>Final Pass (First Row/Col):</strong> `mat[0][0]` is not 0. `isFirstColZero` is false. No change. Final matrix is the one above.</p>
+            </div>
+        </div>
+
+        <!-- Problem 4: Matrix Rotations -->
+        <div class="example-container">
+            <h3>Problem 4: Rotate Matrix by 90° Clockwise</h3>
+            <p><strong>Task:</strong> Rotate an N x N matrix by 90 degrees clockwise, in-place.</p>
+            <h4>Intuition</h4>
+            <p>Rotating a matrix can seem complex, but it breaks down into two simple, sequential transformations.
+            <br>1. <strong>Transpose the matrix:</strong> A transpose operation swaps an element `matrix[i][j]` with `matrix[j][i]`. This effectively flips the matrix over its main diagonal (from top-left to bottom-right). After this step, the columns have become rows, but in the correct order for a rotation.
+            <br>2. <strong>Reverse each row:</strong> After transposing, if you reverse the elements in each row, you will find that the matrix has been perfectly rotated 90 degrees clockwise.</p>
+            <button class="code-toggle-button">Show Code</button>
+            <button class="code-toggle-button">Show Dry Run</button>
+            <pre class="hidden-code"><code class="language-java">
+<span class="keyword">public class</span> <span class="class-name">RotateMatrix</span> {
+    <span class="keyword">public void</span> <span class="method">rotate</span>(<span class="keyword">int</span>[][] matrix) {
+        <span class="keyword">int</span> n = matrix.length;
+
+        <span class="comment">// 1. Transpose the matrix</span>
+        <span class="keyword">for</span> (<span class="keyword">int</span> i = 0; i < n; i++) {
+            <span class="keyword">for</span> (<span class="keyword">int</span> j = i; j < n; j++) {
+                <span class="keyword">int</span> temp = matrix[i][j];
+                matrix[i][j] = matrix[j][i];
+                matrix[j][i] = temp;
+            }
+        }
+
+        <span class="comment">// 2. Reverse each row</span>
+        <span class="keyword">for</span> (<span class="keyword">int</span> i = 0; i < n; i++) {
+            <span class="keyword">int</span> left = 0, right = n - 1;
+            <span class="keyword">while</span> (left < right) {
+                <span class="keyword">int</span> temp = matrix[i][left];
+                matrix[i][left] = matrix[i][right];
+                matrix[i][right] = temp;
+                left++;
+                right--;
+            }
+        }
+    }
+}
+            </code></pre>
+             <div class="hidden-code">
+                <h4 class="mt-4">Dry Run: `mat = [[1,2],[3,4]]`</h4>
+                <p><strong>Step 1: Transpose</strong></p>
+                <table class="dry-run-table">
+                    <thead><tr><th>Initial</th><th>After Transpose</th></tr></thead>
+                    <tbody>
+                        <tr>
+                            <td><pre>[[1, 2],
+ [3, 4]]</pre></td>
+                            <td class="highlight-blue"><pre>[[1, 3],
+ [2, 4]]</pre></td>
+                        </tr>
+                    </tbody>
+                </table>
+                 <p><strong>Step 2: Reverse Each Row</strong></p>
+                <table class="dry-run-table">
+                    <thead><tr><th>Transposed</th><th>Final (Reversed Rows)</th></tr></thead>
+                    <tbody>
+                        <tr>
+                            <td><pre>[[1, 3],
+ [2, 4]]</pre></td>
+                            <td class="highlight-green"><pre>[[3, 1],
+ [4, 2]]</pre></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Problem 5: Count Negative Numbers in a Sorted Matrix -->
+        <div class="example-container">
+            <h3>Problem 5: Count Negative Numbers in a Sorted Matrix</h3>
+            <p><strong>Task:</strong> Given an <code>m x n</code> matrix <code>grid</code> which is sorted in non-increasing order both row-wise and column-wise, return the number of negative numbers.</p>
+            <h4>Intuition</h4>
+            <p>Since each row is sorted in non-increasing order, we can efficiently find the number of negative values in that row. For a given row, if we find the <em>first</em> negative number at index `j`, then all subsequent numbers in that row (from `j` to `n-1`) must also be negative. This is a perfect scenario for Binary Search. We can iterate through each row and perform a binary search to find the index of the first negative number. The number of negative elements in that row will then be `(number of columns) - (index of first negative)`. We sum these counts for all rows to get the total.</p>
+            <button class="code-toggle-button">Show Code</button>
+            <button class="code-toggle-button">Show Dry Run</button>
+            <pre class="hidden-code"><code class="language-java">
+<span class="keyword">public class</span> <span class="class-name">CountNegatives</span> {
+    <span class="keyword">public int</span> <span class="method">countNegatives</span>(<span class="keyword">int</span>[][] grid) {
+        <span class="keyword">int</span> count = 0;
+        <span class="keyword">int</span> n = grid[0].length;
+        <span class="keyword">for</span> (<span class="keyword">int</span>[] row : grid) {
+            <span class="comment">// Binary search to find the first negative number in this row</span>
+            <span class="keyword">int</span> left = 0, right = n - 1;
+            <span class="keyword">int</span> firstNegativeIndex = n;
+            <span class="keyword">while</span> (left <= right) {
+                <span class="keyword">int</span> mid = left + (right - left) / 2;
+                <span class="keyword">if</span> (row[mid] < 0) {
+                    firstNegativeIndex = mid;
+                    right = mid - 1; <span class="comment">// Try to find an earlier one</span>
+                } <span class="keyword">else</span> {
+                    left = mid + 1;
+                }
+            }
+            count += (n - firstNegativeIndex);
+        }
+        <span class="keyword">return</span> count;
+    }
+}
+            </code></pre>
+             <div class="hidden-code">
+                <h4 class="mt-4">Dry Run: `grid = [[4,3,2,-1],[3,2,1,-1],[1,1,-1,-2]]`</h4>
+                <table class="dry-run-table">
+                    <thead><tr><th>Row</th><th>Binary Search for First Negative</th><th>Negatives Found</th><th>Total Count</th></tr></thead>
+                    <tbody>
+                        <tr><td>`[4,3,2,-1]`</td><td>Finds `-1` at index 3.</td><td class="highlight-blue">4 - 3 = 1</td><td class="highlight-green">1</td></tr>
+                        <tr><td>`[3,2,1,-1]`</td><td>Finds `-1` at index 3.</td><td class="highlight-blue">4 - 3 = 1</td><td class="highlight-green">1 + 1 = 2</td></tr>
+                        <tr><td>`[1,1,-1,-2]`</td><td>Finds `-1` at index 2.</td><td class="highlight-blue">4 - 2 = 2</td><td class="highlight-green">2 + 2 = 4</td></tr>
+                    </tbody>
+                </table>
+                <p>Final Result: `4`</p>
+            </div>
+        </div>
+
+        <!-- Problem 6: Binary Search in a 2D Matrix -->
+        <div class="example-container">
+            <h3>Problem 6: Search in a 2D Matrix</h3>
+            <p><strong>Task:</strong> Search for a value in an <code>m x n</code> matrix where each row is sorted, and the first integer of each row is greater than the last of the previous row.</p>
+            <h4>Intuition</h4>
+            <p>The specific properties of this matrix (sorted rows, and each row starting with a larger number than the previous one ended with) mean the entire matrix can be viewed as a single, large, sorted 1D array. This allows us to apply a standard binary search. We can imagine "flattening" the matrix into an array of size `rows * cols`. A regular binary search is performed on the index range `[0, rows * cols - 1]`. The main trick is to convert the 1D `mid` index from our binary search back into a 2D `(row, col)` pair to access the element in the actual matrix. This is done with `row = mid / cols` and `col = mid % cols`.</p>
+            <button class="code-toggle-button">Show Code</button>
+            <button class="code-toggle-button">Show Dry Run</button>
+            <pre class="hidden-code"><code class="language-java">
+<span class="keyword">public class</span> <span class="class-name">Search2DMatrix</span> {
+    <span class="keyword">public boolean</span> <span class="method">searchMatrix</span>(<span class="keyword">int</span>[][] matrix, <span class="keyword">int</span> target) {
+        <span class="keyword">if</span> (matrix.length == 0) <span class="keyword">return false</span>;
+        <span class="keyword">int</span> rows = matrix.length;
+        <span class="keyword">int</span> cols = matrix[0].length;
+        
+        <span class="comment">// Treat the matrix as a flattened 1D array</span>
+        <span class="keyword">int</span> low = 0;
+        <span class="keyword">int</span> high = rows * cols - 1;
+
+        <span class="keyword">while</span> (low <= high) {
+            <span class="keyword">int</span> mid = low + (high - low) / 2;
+            <span class="keyword">int</span> midValue = matrix[mid / cols][mid % cols];
+
+            <span class="keyword">if</span> (midValue == target) {
+                <span class="keyword">return true</span>;
+            } <span class="keyword">else if</span> (midValue < target) {
+                low = mid + 1;
+            } <span class="keyword">else</span> {
+                high = mid - 1;
+            }
+        }
+        <span class="keyword">return false</span>;
+    }
+}
+            </code></pre>
+            <div class="hidden-code">
+                <h4 class="mt-4">Dry Run: `matrix = [[1,3,5,7],[10,11,16,20],[23,30,34,60]]`, `target = 16`</h4>
+                <p>Total elements = 12. Search space `low=0`, `high=11`.</p>
+                <table class="dry-run-table">
+                    <thead><tr><th>`low`</th><th>`high`</th><th>`mid`</th><th>`row=mid/4`</th><th>`col=mid%4`</th><th>`matrix[row][col]`</th><th>Action</th></tr></thead>
+                    <tbody>
+                        <tr><td class="highlight-red">0</td><td class="highlight-green">11</td><td class="highlight-blue">5</td><td>1</td><td>1</td><td>11</td><td>`11 < 16`, so `low = 6`</td></tr>
+                        <tr><td class="highlight-red">6</td><td class="highlight-green">11</td><td class="highlight-blue">8</td><td>2</td><td>0</td><td>23</td><td>`23 > 16`, so `high = 7`</td></tr>
+                        <tr><td class="highlight-red">6</td><td class="highlight-green">7</td><td class="highlight-blue">6</td><td>1</td><td>2</td><td class="highlight-yellow">16</td><td>`16 == 16`, target found!</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Problem 7: Spiral Traversal -->
+        <div class="example-container">
+            <h3>Problem 7: Spiral Traversal</h3>
+            <p><strong>Task:</strong> Given a matrix, return all of its elements in spiral order.</p>
+            <h4>Intuition</h4>
+            <p>The approach is to simulate the spiral path by defining four boundary pointers: `top`, `bottom`, `left`, and `right`, which initially point to the outermost edges of the matrix. We traverse in a loop, layer by layer, shrinking the boundaries after each full traversal of a side.
+            <br>1. <strong>Go Right:</strong> Traverse the `top` row from `left` to `right`. Then, move the `top` boundary down.
+            <br>2. <strong>Go Down:</strong> Traverse the `right` column from `top` to `bottom`. Then, move the `right` boundary left.
+            <br>3. <strong>Go Left:</strong> Traverse the `bottom` row from `right` to `left`. Then, move the `bottom` boundary up.
+            <br>4. <strong>Go Up:</strong> Traverse the `left` column from `bottom` to `top`. Then, move the `left` boundary right.
+            <br>We repeat this until the `left` boundary crosses the `right`, or the `top` boundary crosses the `bottom`.</p>
+            <button class="code-toggle-button">Show Code</button>
+            <button class="code-toggle-button">Show Dry Run</button>
+            <pre class="hidden-code"><code class="language-java">
+<span class="keyword">import</span> java.util.ArrayList;
+<span class="keyword">import</span> java.util.List;
+
+<span class="keyword">public class</span> <span class="class-name">SpiralMatrix</span> {
+    <span class="keyword">public List&lt;Integer&gt;</span> <span class="method">spiralOrder</span>(<span class="keyword">int</span>[][] matrix) {
+        List&lt;Integer&gt; result = <span class="keyword">new</span> ArrayList<>();
+        <span class="keyword">if</span> (matrix.length == 0) <span class="keyword">return</span> result;
+
+        <span class="keyword">int</span> top = 0, bottom = matrix.length - 1;
+        <span class="keyword">int</span> left = 0, right = matrix[0].length - 1;
+
+        <span class="keyword">while</span> (top <= bottom && left <= right) {
+            <span class="comment">// Traverse Right</span>
+            <span class="keyword">for</span> (<span class="keyword">int</span> i = left; i <= right; i++) result.add(matrix[top][i]);
+            top++;
+
+            <span class="comment">// Traverse Down</span>
+            <span class="keyword">for</span> (<span class="keyword">int</span> i = top; i <= bottom; i++) result.add(matrix[i][right]);
+            right--;
+
+            <span class="keyword">if</span> (top <= bottom) {
+                <span class="comment">// Traverse Left</span>
+                <span class="keyword">for</span> (<span class="keyword">int</span> i = right; i >= left; i--) result.add(matrix[bottom][i]);
+                bottom--;
+            }
+
+            <span class="keyword">if</span> (left <= right) {
+                <span class="comment">// Traverse Up</span>
+                <span class="keyword">for</span> (<span class="keyword">int</span> i = bottom; i >= top; i--) result.add(matrix[i][left]);
+                left++;
+            }
+        }
+        <span class="keyword">return</span> result;
+    }
+}
+            </code></pre>
+            <div class="hidden-code">
+                <h4 class="mt-4">Dry Run: `mat = [[1,2,3],[4,5,6],[7,8,9]]`</h4>
+                <table class="dry-run-table">
+                    <thead><tr><th>Direction</th><th>Boundaries (T,B,L,R)</th><th>Elements Added</th><th>Result</th></tr></thead>
+                    <tbody>
+                        <tr><td>Initial</td><td>(0,2,0,2)</td><td>-</td><td>[]</td></tr>
+                        <tr><td class="highlight-blue">Right</td><td>(0,2,0,2) -> T=1</td><td>1, 2, 3</td><td>[1,2,3]</td></tr>
+                        <tr><td class="highlight-green">Down</td><td>(1,2,0,2) -> R=1</td><td>6, 9</td><td>[1,2,3,6,9]</td></tr>
+                        <tr><td class="highlight-red">Left</td><td>(1,2,0,1) -> B=1</td><td>8, 7</td><td>[1,2,3,6,9,8,7]</td></tr>
+                        <tr><td class="highlight-yellow">Up</td><td>(1,1,0,1) -> L=1</td><td>4</td><td>[1,2,3,6,9,8,7,4]</td></tr>
+                        <tr><td class="highlight-blue">Right</td><td>(1,1,1,1) -> T=2</td><td>5</td><td>[1,2,3,6,9,8,7,4,5]</td></tr>
+                        <tr><td>End</td><td>T=2, B=1. Loop ends.</td><td>-</td><td>-</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</main>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const exampleContainers = document.querySelectorAll('.example-container');
+
+        exampleContainers.forEach(container => {
+            const buttons = container.querySelectorAll('.code-toggle-button');
+            const codeBlock = container.querySelector('pre.hidden-code');
+            const dryRunBlock = container.querySelector('div.hidden-code');
+
+            buttons.forEach(button => {
+                if (button.textContent.includes('Code')) {
+                    button.addEventListener('click', () => {
+                        if (codeBlock) {
+                            const isHidden = codeBlock.style.display === 'none' || codeBlock.style.display === '';
+                            codeBlock.style.display = isHidden ? 'block' : 'none';
+                            button.textContent = isHidden ? 'Hide Code' : 'Show Code';
+                            if (isHidden) {
+                                Prism.highlightAllUnder(codeBlock);
+                            }
+                        }
+                    });
+                } else if (button.textContent.includes('Dry Run')) {
+                    button.addEventListener('click', () => {
+                        if (dryRunBlock) {
+                            const isHidden = dryRunBlock.style.display === 'none' || dryRunBlock.style.display === '';
+                            dryRunBlock.style.display = isHidden ? 'block' : 'none';
+                            button.textContent = isHidden ? 'Hide Dry Run' : 'Show Dry Run';
+                        }
+                    });
+                }
+            });
+        });
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/prism.min.js"></script>
+ </body>
+</html>
