@@ -17,7 +17,7 @@ function updateNavigation() {
         { href: 'stack.html', text: 'Stacks' },
         { href: 'recursion.html', text: 'Recursion' },
         { href: 'recursion2.html', text: 'Recursion II' },
-        { href: '2d_array.html', text: '2D Arrays' },
+        { href: '2d_Array.html', text: '2D Arrays' },
         { href: 'tree.html', text: 'Trees' },
         { href: 'tree2.html', text: 'Trees II' }
     ];
