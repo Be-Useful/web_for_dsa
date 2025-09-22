@@ -15,11 +15,7 @@ function updateNavigation() {
         { href: 'LinkedList_problems.html', text: 'Linked List Problems' },
         { href: 'binary_search.html', text: 'Binary Search' },
         { href: 'stack.html', text: 'Stacks' },
-        { href: 'recursion.html', text: 'Recursion' },
-        { href: 'recursion2.html', text: 'Recursion II' },
-        { href: '2d_Array.html', text: '2D Arrays' },
-        { href: 'tree.html', text: 'Trees' },
-        { href: 'tree2.html', text: 'Trees II' }
+        { href: 'bit_manipulation.html', text: 'Bit Manipulation' }
     ];
 
     const nav = document.querySelector('nav.navbar');

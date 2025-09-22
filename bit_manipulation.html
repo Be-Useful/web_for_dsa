@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lecture 10: Mastering Bit Manipulation</title>
+    <!-- Tailwind CSS CDN for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Prism.js for code highlighting -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <style>
+        /* Custom CSS for 'Inter' font and base styles from the existing site */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f3f4f6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .content-area {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 2rem;
+            box-sizing: border-box;
+        }
+
+        .presentation-card {
+            background-color: #ffffff;
+            border-radius: 1.5rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            padding: 2.5rem;
+            width: 90%;
+            max-width: 960px;
+            box-sizing: border-box;
+        }
+
+        .presentation-card h1, .presentation-card h2 {
+            color: #1f2937;
+            margin-bottom: 1.5rem;
+            font-weight: 800;
+        }
+        
+        .presentation-card h3 {
+             color: #1f2937;
+             font-weight: 700;
+             margin-top: 1.5rem;
+             margin-bottom: 1rem;
+        }
+
+        .presentation-card p, .presentation-card li {
+            color: #4b5563;
+            line-height: 1.7;
+            margin-bottom: 1rem;
+            font-size: 1.05rem;
+        }
+        
+        .presentation-card code:not(pre > code) {
+            background-color: #eef2ff;
+            color: #4338ca;
+            padding: 0.2rem 0.5rem;
+            border-radius: 0.375rem;
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: 600;
+        }
+        
+        .presentation-card pre {
+            border-radius: 0.5rem;
+            margin-top: 1rem;
+            background-color: #2d2d2d; /* Matching prism-tomorrow */
+            color: #e5e7eb; /* Light text for dark background */
+            padding: 1.5rem; /* Added padding for better spacing */
+            overflow-x: auto; /* Ensures horizontal scroll if content is too wide */
+        }
+
+        .presentation-card .example-box {
+            background-color: #f9fafb;
+            border-left-width: 4px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            margin-bottom: 2.5rem;
+            border-radius: 0.5rem;
+        }
+        
+        .code-toggle-button {
+            background-color: #4f46e5;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            display: inline-block;
+            margin-top: 1rem;
+        }
+        .code-toggle-button:hover {
+            background-color: #4338ca;
+        }
+        
+        .hidden-code {
+            display: none;
+        }
+
+        /* Navigation Bar Styles to match site */
+        .navbar {
+            background-color: #4338ca;
+            padding: 1rem 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
+        }
+
+        .navbar a:hover {
+            background-color: #4f46e5;
+            transform: translateY(-2px);
+        }
+
+        .navbar a.active-nav {
+            background-color: #6d28d9;
+            font-weight: 700;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1.5rem;
+        }
+        th, td {
+            border: 1px solid #e5e7eb;
+            padding: 0.75rem;
+            text-align: left;
+        }
+        th {
+            background-color: #f9fafb;
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .presentation-card { padding: 1.5rem; width: 95%; }
+            .presentation-card h1 { font-size: 2.2rem; }
+            .presentation-card h2 { font-size: 1.8rem; }
+            .navbar { justify-content: flex-start; overflow-x: auto; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <a href="#">Lecture 1: Arrays</a>
+        <a href="#">Lecture 2: Linked Lists</a>
+        <a href="#">Lecture 9: Trees</a>
+        <a href="#" class="active-nav">Lecture 10: Bit Manipulation</a>
+    </nav>
+    
+    <!-- Main Content Area -->
+    <main class="content-area">
+        <div class="presentation-card">
+            <div class="text-center mb-8">
+                <h1 class="text-4xl lg:text-5xl font-extrabold text-indigo-700 mb-4">Mastering Bit Manipulation</h1>
+                <p class="text-lg text-gray-600">From Basics to Advanced DSA for Competitive Programming and Interviews.</p>
+            </div>
+
+            <hr class="my-12 border-t-2 border-gray-200">
+
+            <h2 class="text-3xl font-bold text-gray-800">Part 1: The Basics</h2>
+            <div class="example-box border-l-green-500">
+                <h3 class="text-xl font-bold text-gray-800 mt-0">What is Bit Manipulation?</h3>
+                <p>Bit Manipulation is a technique that uses <strong>bitwise operators</strong> to work directly on the binary representation (bits) of numbers. It's the art of talking to computers in their native language: 0s and 1s.</p>
+                <h3 class="text-xl font-bold text-gray-800">Why is it important?</h3>
+                 <ul class="list-disc list-inside text-gray-600">
+                    <li>It allows for <strong>highly optimised solutions</strong> in terms of speed and memory.</li>
+                    <li>Many operations can be made more efficient by accessing data at the bit level.</li>
+                    <li>It's a key topic in competitive programming and for optimising low-level code.</li>
+                </ul>
+            </div>
+            
+            <div class="example-box border-l-blue-500">
+                <h3 class="text-xl font-bold text-gray-800 mt-0">How Computers Store Numbers</h3>
+                <p>All data in computers is stored internally as bits (0s and 1s). An n-bit integer is a binary number consisting of n bits.</p>
+                <ul class="list-disc list-inside text-gray-600">
+                    <li><strong>Signed vs. Unsigned:</strong> Signed numbers use the first bit as a sign bit (0 for non-negative, 1 for negative). Unsigned numbers are only non-negative.</li>
+                    <li><strong>Two's Complement:</strong> The standard way to represent negative numbers. It's calculated by inverting all bits and then adding one. For example, <code>-5</code> is <code>~5 + 1</code>.</li>
+                </ul>
+            </div>
+            
+            <div class="example-box border-l-purple-500">
+                <h3 class="text-xl font-bold text-gray-800 mt-0">Core Bitwise Operators</h3>
+                <ul class="list-disc list-inside text-gray-600">
+                    <li><strong>AND (<code>&</code>):</strong> Returns <code>1</code> only if both bits are <code>1</code>. Useful for checking or clearing bits.</li>
+                    <li><strong>OR (<code>|</code>):</strong> Returns <code>1</code> if at least one of the bits is <code>1</code>. Useful for setting bits.</li>
+                    <li><strong>XOR (<code>^</code>):</strong> Returns <code>1</code> if the bits are different. Useful for flipping bits and finding unique elements.</li>
+                    <li><strong>NOT (<code>~</code>):</strong> Inverts all bits of the number (1s become 0s and 0s become 1s).</li>
+                </ul>
+            </div>
+            
+            <div class="example-box border-l-yellow-500">
+                <h3 class="text-xl font-bold text-gray-800 mt-0">Shift Operators</h3>
+                <ul class="list-disc list-inside text-gray-600">
+                    <li><strong>Left Shift (<code><<</code>):</strong> Shifts bits to the left, filling with zeros. <code>x << k</code> is equivalent to multiplying <code>x</code> by <code>2^k</code>.</li>
+                    <li><strong>Right Shift (<code>>></code>):</strong> Shifts bits to the right. <code>x >> k</code> is equivalent to dividing <code>x</code> by <code>2^k</code> (integer division).</li>
+                </ul>
+            </div>
+
+            <hr class="my-12 border-t-2 border-gray-200">
+            
+            <h2 class="text-3xl font-bold text-gray-800">Part 2: Common Tricks & Applications</h2>
+            <div class="example-box border-l-red-500">
+                <h3 class="text-xl font-bold text-gray-800 mt-0">Manipulating Single Bits</h3>
+                <p>Here are the four fundamental operations on the <code>k</code>-th bit of a number <code>num</code> (0-indexed from the right).</p>
+                <ul class="list-disc list-inside text-gray-600">
+                    <li><strong>Check/Get the k-th bit:</strong> Use <code>(num & (1 << k)) != 0</code>. This isolates the k-th bit. If the result is non-zero, the bit was 1.</li>
+                    <li><strong>Set the k-th bit:</strong> Use <code>num = num | (1 << k)</code>. The OR operation sets the bit without changing others.</li>
+                    <li><strong>Clear the k-th bit:</strong> Use <code>num = num & ~(1 << k)</code>. This creates a mask with only the k-th bit as 0, then uses AND to clear it.</li>
+                    <li><strong>Flip the k-th bit:</strong> Use <code>num = num ^ (1 << k)</code>. The XOR operation inverts the k-th bit.</li>
+                </ul>
+            </div>
+
+            <div class="example-box border-l-teal-500">
+                <h3 class="text-xl font-bold text-gray-800 mt-0">The Famous XOR Trick</h3>
+                <p>The XOR operator has two crucial properties for problem-solving:</p>
+                <ol class="list-decimal list-inside text-gray-600">
+                    <li><code>x ^ x = 0</code>: Any number XORed with itself results in zero. This means identical numbers "cancel each other out".</li>
+                    <li><code>x ^ 0 = x</code>: Any number XORed with zero remains unchanged.</li>
+                </ol>
+                <p>This trick means in a sequence like <code>a ^ b ^ c ^ a ^ b</code>, you can remove all pairs of duplicated values, simplifying it to just <code>c</code>.</p>
+            </div>
+            
+            <div class="example-box border-l-orange-500">
+                <h3 class="text-xl font-bold text-gray-800 mt-0">Application: Find the Single Number (LeetCode 136)</h3>
+                <p><strong>Problem:</strong> Given an array where every element appears twice except for one, find that single element in <code>O(n)</code> time and <code>O(1)</code> space.</p>
+                <p><strong>Solution:</strong> XOR all the numbers in the array. All the duplicate pairs will cancel out to <code>0</code>, leaving only the unique number.</p>
+                <button class="code-toggle-button">Show Code</button>
+                <pre class="hidden-code"><code class="language-java">
+class SingleNumberSolution {
+    public int singleNumber(int[] nums) {
+        int result = 0;
+        for (int num : nums) {
+            result = result ^ num;
+        }
+        return result;
+    }
+
+    public static void main(String[] args) {
+        SingleNumberSolution solution = new SingleNumberSolution();
+        int[] arr = {4, 1, 2, 1, 2};
+        int unique = solution.singleNumber(arr);
+        // result = 0 ^ 4 ^ 1 ^ 2 ^ 1 ^ 2
+        // result = 4 ^ (1 ^ 1) ^ (2 ^ 2)
+        // result = 4 ^ 0 ^ 0 = 4
+        System.out.println("The single number is: " + unique); // Expected: 4
+    }
+}
+                </code></pre>
+            </div>
+
+            <div class="example-box border-l-pink-500">
+                <h3 class="text-xl font-bold text-gray-800 mt-0">Application: Swapping Two Numbers In-Place</h3>
+                <p><strong>Problem:</strong> Swap the values of two variables, <code>x</code> and <code>y</code>, without using a temporary variable.</p>
+                <button class="code-toggle-button">Show Code</button>
+                <pre class="hidden-code"><code class="language-java">
+class SwapSolution {
+    public static void main(String[] args) {
+        int x = 10; // Binary: 1010
+        int y = 5;  // Binary: 0101
+        
+        System.out.println("Before swap: x = " + x + ", y = " + y);
+
+        // 1. x becomes x ^ y
+        x = x ^ y; // x = 10 ^ 5 = 15 (Binary: 1111)
+
+        // 2. y becomes y ^ (new x), which simplifies to the original x
+        y = y ^ x; // y = 5 ^ 15 = 10 (Binary: 1010)
+
+        // 3. x becomes (new x) ^ (new y), which simplifies to the original y
+        x = x ^ y; // x = 15 ^ 10 = 5 (Binary: 0101)
+
+        System.out.println("After swap: x = " + x + ", y = " + y); // Expected: x=5, y=10
+    }
+}
+                </code></pre>
+            </div>
+
+            <hr class="my-12 border-t-2 border-gray-200">
+            
+            <h2 class="text-3xl font-bold text-gray-800">Part 3: Beginner Friendly Problems</h2>
+            <div class="example-box border-l-cyan-500">
+                <h3 class="text-xl font-bold text-gray-800 mt-0">Problem: Single Number II (LeetCode 137)</h3>
+                <p><strong>Problem:</strong> You are given an array where every number appears exactly 3 times, except for one number which appears only once. Your task is to find that unique number in <strong>O(n) time</strong> and <strong>O(1) space</strong>.</p>
+                <h3 class="text-xl font-bold text-gray-800 mt-4">Approach: Bit Counting</h3>
+                <p>The core idea is to analyze the bits of all the numbers. If we consider a single bit position (e.g., the 0th bit), the total count of set bits (1s) at that position must be a multiple of 3 if the unique number has a 0 there. If the unique number has a 1 at that position, the total count will not be a multiple of 3. We can use this property to reconstruct the unique number bit by bit.</p>
+                <ol class="list-decimal list-inside text-gray-600">
+                    <li>Iterate through each bit position from 0 to 31.</li>
+                    <li>For each bit position, count how many numbers in the array have that bit set.</li>
+                    <li>If the count modulo 3 is not zero, it means the unique number has a 1 at this bit position.</li>
+                    <li>Set the corresponding bit in our answer variable. After checking all 32 bits, the answer variable will hold the unique number.</li>
+                </ol>
+                <button class="code-toggle-button">Show Code</button>
+                <pre class="hidden-code"><code class="language-java">
+class SingleNumberThreeTimesSolution {
+    public int singleNumber(int[] nums) {
+        int ans = 0;
+        // Iterate through each bit position (0 to 31 for a 32-bit integer)
+        for (int i = 0; i < 32; i++) {
+            int sum = 0;
+            // For each bit, count how many numbers in the array have it set
+            for (int num : nums) {
+                if (((num >> i) & 1) == 1) {
+                    sum++;
+                }
+            }
+            // If the sum is not a multiple of 3, the unique number has this bit set
+            if (sum % 3 != 0) {
+                ans |= (1 << i);
+            }
+        }
+        return ans;
+    }
+
+    public static void main(String[] args) {
+        SingleNumberThreeTimesSolution solution = new SingleNumberThreeTimesSolution();
+        int[] arr = {2, 2, 3, 2}; // 2 (010), 3 (011)
+        System.out.println("The unique number is: " + solution.singleNumber(arr)); // Expected: 3
+        
+        int[] arr2 = {0, 1, 0, 1, 0, 1, 99};
+        System.out.println("The unique number is: " + solution.singleNumber(arr2)); // Expected: 99
+    }
+}
+                </code></pre>
+            </div>
+
+            <div class="example-box border-l-indigo-500">
+                <h3 class="text-xl font-bold text-gray-800 mt-0">Problem: Check if a number is a power of 4</h3>
+                <p><strong>Problem:</strong> Given a 32-bit signed integer, write a function to determine if it is a power of four.</p>
+                <p><strong>Approach 1 (Mathematical Property):</strong> A number <code>n</code> is a power of 4 if it meets three conditions:</p>
+                 <ol class="list-decimal list-inside text-gray-600">
+                    <li>It must be positive (<code>n > 0</code>).</li>
+                    <li>It must be a power of two. We can check this with <code>(n & (n - 1)) == 0</code>. This works because a power of two has only one bit set (e.g., 8 is 1000), and subtracting one flips all bits to the right of it (e.g., 7 is 0111). ANDing them gives zero.</li>
+                    <li>The single set bit must be in an "odd" position (0th, 2nd, 4th, etc. from the right). An interesting property of powers of 4 is that <code>(n-1)</code> is always divisible by 3. For example, 4-1=3, 16-1=15, 64-1=63.</li>
+                </ol>
+                 <button class="code-toggle-button">Show Code</button>
+                <pre class="hidden-code"><code class="language-java">
+class PowerOfFourSolution {
+    public boolean isPowerOfFour(int n) {
+        // Condition 1: Must be positive
+        // Condition 2: Must be a power of two
+        // Condition 3: (n-1) must be divisible by 3
+        return n > 0 && (n & (n - 1)) == 0 && (n - 1) % 3 == 0;
+    }
+
+    public static void main(String[] args) {
+        PowerOfFourSolution solution = new PowerOfFourSolution();
+        System.out.println("Is 16 a power of four? " + solution.isPowerOfFour(16)); // true
+        System.out.println("Is 8 a power of four? " + solution.isPowerOfFour(8));   // false
+        System.out.println("Is 1 a power of four? " + solution.isPowerOfFour(1));   // true
+    }
+}
+                </code></pre>
+
+                <h3 class="text-xl font-bold text-gray-800 mt-8">Approach 2 (Bitmask)</h3>
+                <p>This approach also first verifies that the number is a power of two, which ensures only one bit is set. Then, it uses a bitmask to check if that single bit is in one of the positions that a power of four can occupy (0, 2, 4, 6, ...).</p>
+                <ol class="list-decimal list-inside text-gray-600">
+                    <li>Check if <code>n</code> is a power of two: <code>n > 0 && (n & (n-1)) == 0</code>.</li>
+                    <li>Create a mask that has 1s only at the even bit positions. For a 32-bit integer, this mask is <code>01010101010101010101010101010101</code> in binary, which is <code>0x55555555</code> in hexadecimal. (Because <code>0101</code> is <code>5</code> in hex).</li>
+                    <li>Use the AND operator (<code>&</code>) between the number <code>n</code> and the mask. If the result is not zero, it means the single set bit in <code>n</code> coincided with a set bit in the mask, proving it's at an even position.</li>
+                </ol>
+                <button class="code-toggle-button">Show Code</button>
+                <pre class="hidden-code"><code class="language-java">
+class PowerOfFourSolutionAlt {
+    public boolean isPowerOfFour(int n) {
+        // First, check if it's a power of two (only one bit is set).
+        if (n <= 0 || (n & (n - 1)) != 0) {
+            return false;
+        }
+        
+        // Now, check if the single set bit is at an even position.
+        // The mask 0x55555555 has 1s at all even positions (0, 2, 4,...).
+        // For a power of 4, its single bit MUST be at an even position.
+        // ANDing n with the mask will be non-zero if the bit is at an even position.
+        return (n & 0x55555555) != 0;
+    }
+
+    public static void main(String[] args) {
+        PowerOfFourSolutionAlt solution = new PowerOfFourSolutionAlt();
+        System.out.println("Is 16 a power of four? " + solution.isPowerOfFour(16)); // true
+        System.out.println("Is 8 a power of four? " + solution.isPowerOfFour(8));   // false
+        System.out.println("Is 1 a power of four? " + solution.isPowerOfFour(1));   // true
+    }
+}
+                </code></pre>
+            </div>
+
+            <hr class="my-12 border-t-2 border-gray-200">
+
+            <h2 class="text-3xl font-bold text-gray-800">Part 4: Advanced Topics</h2>
+            <div class="example-box border-l-cyan-500">
+                <h3 class="text-xl font-bold text-gray-800 mt-0">Representing Sets with Bitmasks</h3>
+                <p>A subset of {0, 1, ..., n-1} can be represented as an n-bit integer, called a <strong>bitmask</strong>. If the <code>i</code>-th bit is 1, the element <code>i</code> is in the set. If the bit is 0, it is not.</p>
+                <p>For example, with n=5, the set {0, 3, 4} is represented by the binary number <code>11001</code> (25 in decimal).</p>
+                <h3 class="text-xl font-bold text-gray-800">Set Operations using Bitwise Logic</h3>
+                 <ul class="list-disc list-inside text-gray-600">
+                    <li><strong>Union (A &cup; B):</strong> <code>A | B</code></li>
+                    <li><strong>Intersection (A &cap; B):</strong> <code>A & B</code></li>
+                    <li><strong>Difference (A \ B):</strong> <code>A & (~B)</code></li>
+                </ul>
+            </div>
+
+            <div class="example-box border-l-indigo-500">
+                <h3 class="text-xl font-bold text-gray-800 mt-0">Application: Generating All Subsets (LeetCode 78)</h3>
+                <p><strong>Problem:</strong> Given an array of unique elements, return all possible subsets (the power set).</p>
+                <p><strong>Approach:</strong> An array of size <code>n</code> has <code>2^n</code> subsets. We can loop from <code>0</code> to <code>2^n - 1</code>. Each number <code>i</code> in this range is a bitmask that represents one unique subset. This is a highly efficient and standard bit manipulation technique for this problem.</p>
+                <button class="code-toggle-button">Show Code</button>
+                <pre class="hidden-code"><code class="language-java">
+import java.util.ArrayList;
+import java.util.List;
+
+class SubsetsSolution {
+    public List&lt;List&lt;Integer&gt;&gt; subsets(int[] nums) {
+        int n = nums.length;
+        int numSubsets = 1 << n; // 2^n
+        List&lt;List&lt;Integer&gt;&gt; powerSet = new ArrayList&lt;&gt;();
+
+        // Loop from 0 to 2^n - 1
+        for (int i = 0; i < numSubsets; i++) {
+            List&lt;Integer&gt; currentSubset = new ArrayList&lt;&gt;();
+            // Check each bit of the mask 'i'
+            for (int j = 0; j < n; j++) {
+                if ((i & (1 << j)) != 0) {
+                    currentSubset.add(nums[j]);
+                }
+            }
+            powerSet.add(currentSubset);
+        }
+        return powerSet;
+    }
+
+    public static void main(String[] args) {
+        SubsetsSolution solution = new SubsetsSolution();
+        int[] arr = {1, 2, 3};
+        List&lt;List&lt;Integer&gt;&gt; result = solution.subsets(arr);
+
+        System.out.println("All subsets of {1, 2, 3}:");
+        for (List&lt;Integer&gt; subset : result) {
+            System.out.println(subset);
+        }
+    }
+}
+                </code></pre>
+            </div>
+            
+            <hr class="my-12 border-t-2 border-gray-200">
+            
+            <h2 class="text-3xl font-bold text-gray-800">Part 5: Practice Problems</h2>
+
+            <div class="example-box border-l-green-500">
+                <h3 class="text-xl font-bold text-gray-800 mt-0">Easy Problems</h3>
+                <ul class="list-disc list-inside text-gray-600">
+                    <li><a href="https://leetcode.com/problems/single-number/" class="text-indigo-600 hover:underline">136. Single Number</a></li>
+                    <li><a href="https://leetcode.com/problems/number-of-1-bits/" class="text-indigo-600 hover:underline">191. Number of 1 Bits</a></li>
+                    <li><a href="https://leetcode.com/problems/power-of-two/" class="text-indigo-600 hover:underline">231. Power of Two</a> (Hint: <code>n > 0 && (n & (n - 1)) == 0</code>)</li>
+                    <li><a href="https://leetcode.com/problems/missing-number/" class="text-indigo-600 hover:underline">268. Missing Number</a> (Hint: Use the XOR trick)</li>
+                </ul>
+            </div>
+            
+            <div class="example-box border-l-yellow-500">
+                <h3 class="text-xl font-bold text-gray-800 mt-0">Medium Problems</h3>
+                <ul class="list-disc list-inside text-gray-600">
+                    <li><a href="https://leetcode.com/problems/subsets/" class="text-indigo-600 hover:underline">78. Subsets</a></li>
+                    <li><a href="https://leetcode.com/problems/counting-bits/" class="text-indigo-600 hover:underline">338. Counting Bits</a></li>
+                    <li><a href="https://leetcode.com/problems/maximum-xor-of-two-numbers-in-an-array/" class="text-indigo-600 hover:underline">421. Maximum XOR of Two Numbers in an Array</a></li>
+                    <li><a href="https://leetcode.com/problems/xor-queries-of-a-subarray/" class="text-indigo-600 hover:underline">1310. XOR Queries of a Subarray</a></li>
+                </ul>
+            </div>
+            
+             <hr class="my-12 border-t-2 border-gray-200">
+             
+             <h2 class="text-3xl font-bold text-gray-800">Part 6: Conclusion</h2>
+             <div class="example-box border-l-gray-500">
+                <h3 class="text-xl font-bold text-gray-800 mt-0">Recap & Summary</h3>
+                 <ul class="list-disc list-inside text-gray-600">
+                     <li><strong>The Basics:</strong> Key operators are <code>&</code>, <code>|</code>, <code>^</code>, <code>~</code>, <code><<</code>, <code>>></code>.</li>
+                     <li><strong>Core Techniques:</strong> You can get, set, clear, and flip individual bits using simple operations.</li>
+                     <li><strong>The XOR Trick:</strong> The properties <code>x ^ x = 0</code> and <code>x ^ 0 = x</code> are powerful for problems involving duplicates or missing elements.</li>
+                     <li><strong>Bitmasking:</strong> Integers can represent sets, allowing for efficient subset generation and set operations.</li>
+                 </ul>
+            </div>
+
+        </div>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script>
+        // JavaScript to handle the "Show/Hide Code" functionality
+        document.addEventListener('DOMContentLoaded', () => {
+            const buttons = document.querySelectorAll('.code-toggle-button');
+            buttons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const codeBlock = button.nextElementSibling;
+                    if (codeBlock.classList.contains('hidden-code')) {
+                        codeBlock.classList.remove('hidden-code');
+                        button.textContent = 'Hide Code';
+                    } else {
+                        codeBlock.classList.add('hidden-code');
+                        button.textContent = 'Show Code';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
+
+
+
+
